@@ -385,12 +385,6 @@ This is a research-oriented project. Contributions should:
 
 ---
 
-## License
-
-[Specify your license]
-
----
-
 ## Acknowledgments
 
 - Tableau Hyper API documentation
