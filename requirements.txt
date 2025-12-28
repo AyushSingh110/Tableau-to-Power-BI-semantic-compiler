@@ -1,0 +1,10 @@
+#Tableau hyperapi
+tableauhyperapi
+# Data handling & validation
+pandas
+numpy
+# XML parsing (Tableau TWB)
+lxml
+# JSON handling & utilities
+jsonschema
+tqdm
