@@ -86,7 +86,7 @@ The pipeline consists of 11 deterministic stages, each producing auditable inter
 
 **Implementation**: `parsing_tableau.py`
 
-**Guarantees**: Uses only documented Tableau XML structures—no reverse engineering
+**Guarantees**: Uses only documented Tableau XML structures no reverse engineering
 
 ---
 
@@ -100,9 +100,9 @@ The pipeline consists of 11 deterministic stages, each producing auditable inter
 - `parsed_hyper_schema.json` (table schemas, column types)
 - `hyper_raw_data.csv` (sampled data for validation)
 
-**API**: Tableau Hyper API (official, supported)
+**API**: Tableau Hyper API (Official API)
 
-**Usage**: Validation and data-driven inference only—not for bulk data migration
+**Usage**: Validation and data-driven inference only not for bulk data migration
 
 ---
 
@@ -144,9 +144,9 @@ The pipeline consists of 11 deterministic stages, each producing auditable inter
 **Output**: `calculation_classification.json`
 
 **Categories**:
-- ✅ **Directly Convertible**: Simple aggregations, arithmetic expressions
-- ⚠️ **Requires Redesign**: Complex logic needing DAX-specific patterns
-- ❌ **Unsupported**: LOD expressions, table calculations, window functions
+-  **Directly Convertible**: Simple aggregations, arithmetic expressions
+-  **Requires Redesign**: Complex logic needing DAX-specific patterns
+-  **Unsupported**: LOD expressions, table calculations, window functions
 
 **Policy**: No silent drops—all skipped measures are documented with justification
 
@@ -156,7 +156,7 @@ The pipeline consists of 11 deterministic stages, each producing auditable inter
 
 ### Stage 6: Safe DAX Rewriting
 
-**Purpose**: Convert only engine-safe Tableau expressions to DAX
+**Purpose**: Convert only engine safe Tableau expressions to DAX
 
 **Output**: `converted_dax_measures.json`
 
@@ -234,7 +234,7 @@ The pipeline consists of 11 deterministic stages, each producing auditable inter
 
 ### Stage 11: Tabular Object Model (TOM) Export
 
-**Purpose**: Generate Power BI-compatible model definition
+**Purpose**: Generate Power BI compatible model definition
 
 **Output**: `powerbi_tom_model.json`
 
@@ -348,7 +348,7 @@ python run_pipeline.py extracted/
 ### Power BI Constraints
 
 - **DirectQuery Limitations**: Some DAX patterns only work in Import mode
-- **Relationship Cardinality**: Must be explicitly defined (no Tableau-style deferred joins)
+- **Relationship Cardinality**: Must be explicitly defined (no Tableau style deferred joins)
 - **Calculation Groups**: Advanced time intelligence may need manual implementation
 
 ---
@@ -391,14 +391,6 @@ This is a research-oriented project. Contributions should:
 - Power BI Tabular Object Model (TOM) specification
 - DAX language reference
 
----
-
-## Support
-
-For issues, questions, or feature requests, please open a GitHub issue with:
-- Sample Tableau workbook (anonymized if needed)
-- Expected behavior
-- Actual output and conversion report
 
 ---
 
