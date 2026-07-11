@@ -4,12 +4,13 @@ This document explains how to measure whether the DAX that `tab2pbi` generates
 actually reproduces Tableau's numbers, and — critically — what our automated
 number does and does **not** prove.
 
-> **Current status (Superstore):** engine-verified correctness is **0/0
-> (pending author hand-check)**; proxy-correctness is **1/1**. The proxy number
-> validates the parser/IR, not the generated DAX — do not read it as
-> engine-verified. The moment you fill `powerbi_value` in the ground-truth CSV,
-> the harness recomputes the engine-verified number automatically (no code
-> change needed).
+> **Current status (Superstore):** engine-verified correctness is **1/1**
+> (Power BI `0.1247` vs Tableau `0.1246721724`, hand-checked); proxy-correctness
+> is **1/1**. Because the Power BI value was hand-read to 4 decimals, the
+> engine-verified assertion uses a hand-read tolerance of `1e-3`:
+> `python eval/evaluate.py --ground-truth examples/eval/ground_truth_superstore.csv --tolerance 1e-3`.
+> At the machine default `1e-6` the run shows 0/1 from display rounding alone,
+> not a real mismatch — read full precision off Power BI if you need `1e-6`.
 
 ## The two numbers (do not conflate them)
 

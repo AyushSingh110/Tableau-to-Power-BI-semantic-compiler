@@ -16,20 +16,23 @@ bucket.
 
 These are the only things blocking a fully-anchored result. None block the code.
 
-1. **Engine-verify correctness in Power BI (the real anchor).**
-   - Open `data/Model.json` in Tabular Editor 2/3, load into Power BI Desktop.
-   - **Measure:** put `[Calculation_1368249927221915648]` on a card (no filters),
-     read the value, and write it into the `powerbi_value` column of
-     `examples/eval/ground_truth_superstore.csv`. Re-running
-     `python eval/evaluate.py --ground-truth examples/eval/ground_truth_superstore.csv`
-     then recomputes the **engine-verified** number automatically — no code
-     change needed.
-   - **Calculated column:** the generated `DATEDIFF(Orders[Order Date],
-     Orders[Ship Date], DAY)` is row-level, so it is a manual **spot-check** —
-     pick one order, compare Tableau's value to Power BI's calculated-column
-     value. Record the result here or in the CHANGELOG. (Details:
-     `docs/EVALUATION.md`.)
-   - Current status: **engine-verified 0/0 (pending); proxy 1/1.**
+1. ~~**Engine-verify correctness in Power BI (the real anchor).**~~ **DONE.**
+   - The generated measure `[Calculation_1368249927221915648]`
+     (`SUM(Orders[Profit]) / SUM(Orders[Sales])`) was hand-checked in Power BI
+     Desktop against the same Superstore data: Power BI reads **0.1247**, Tableau
+     reads **0.1246721724** — a match to the 4 decimals hand-read off the card.
+     `powerbi_value=0.1247` is recorded in
+     `examples/eval/ground_truth_superstore.csv`.
+   - **Tolerance note (honest, reproducible):** because the value was hand-read
+     to 4 decimals, engine-verification is asserted at a hand-read tolerance of
+     `1e-3`, not the machine default `1e-6`. Reproduce with:
+     `python eval/evaluate.py --ground-truth examples/eval/ground_truth_superstore.csv --tolerance 1e-3`
+     → **engine-verified 1/1 (100%)**. At the default `1e-6` the same run shows
+     0/1 purely from display rounding, not a real error.
+   - **Calculated column** `DATEDIFF(Orders[Order Date], Orders[Ship Date], DAY)`:
+     row-level spot-check pending in Power BI (add the column, compare one order's
+     delay to Tableau). Low risk; not blocking.
+   - Current status: **engine-verified 1/1 (proxy 1/1).**
 
 2. **Confirm the `from_twb` dead-end decision (raised in Part A).**
    Declared TWB relationships are extracted to `relationships_from_twb.json` but
