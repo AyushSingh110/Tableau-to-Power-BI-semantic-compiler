@@ -216,17 +216,70 @@ Suggested logical commits (one change each): `feat: tokenizer+parser`,
 
 ---
 
+## Paper draft (tool-demo / workshop paper)
+
+**Location:** `docs/paper/paper.md` (Markdown, ~4–6 pages equivalent) +
+`docs/paper/references.bib`. Convert to the workshop LaTeX template later.
+
+**What's written:** Abstract + 10 sections — Introduction/motivation, the
+semantic-mismatch problem (README mismatch table), method/architecture
+(pipeline + IR + AST measure-vs-column split + relationship inference), the
+failure taxonomy (counts table), evaluation methodology (two numbers +
+threat-to-validity + tolerance rationale), results, demo (Fig. 1 placeholder),
+related work (positioned, not claiming kinship), limitations/future work,
+reproducibility appendix.
+
+**Framing (as approved):** honesty/rigor is the contribution, not coverage; the
+11.8% is presented as a *finding*. Data-integration and provenance references
+are used as **vocabulary only** (1–2 sentences each), explicitly not claiming a
+theoretical contribution. Engine-verified is presented as an honest **n=1**
+hand-anchor.
+
+**Every number is pinned** to its source with an inline `<!-- source: -->`
+comment (abstract included — grep `source:` to audit). Pins:
+
+| Number in paper | Pinned to |
+| --------------- | --------- |
+| 3 tables, 17 calcs, 1 measure, 1 column, 4 params, 11 skipped, 11.8% | `data/final_powerbi_semantic_model.json` → `conversion_report`, via `python run_pipeline.py --twbx examples/Superstore.twbx` |
+| failure taxonomy (4/2/2/1/1/1) | `conversion_report.failure_taxonomy` |
+| 1 relationship, coverage 1.0 | `data/inferred_powerbi_relationships.json` |
+| proxy 1/1; engine-verified 1/1 @1e-3 (0/1 @1e-6) | `python eval/evaluate.py --ground-truth examples/eval/ground_truth_superstore.csv --tolerance 1e-3` |
+| Tableau 0.1246721724 vs Power BI 0.1247 | `examples/eval/ground_truth_superstore.csv` |
+| 39 tests | `python -m pytest -q` |
+
+**`[CITATION NEEDED]` / verification items (must be resolved before submission):**
+
+1. **`paper.md` §1** — `[CITATION NEEDED — verify specific claims about existing
+   commercial Tableau→Power BI migration tools]`. The motivation asserts that
+   existing tools do visual/best-guess conversion and silently drop calcs. I have
+   **no verifiable source** for that specific claim; either cite a real
+   comparison/survey or soften the sentence to a general observation.
+2. **`references.bib` (all entries)** — author/title/venue/year are for
+   well-established works and believed correct, but **exact DOIs, page numbers,
+   and publisher fields are NOT included/verified**. Verify each against
+   DBLP/ACM before camera-ready (noted at the top of the `.bib`).
+3. **`sqlglot` entry** — cited as `@misc` software (Mao, GitHub URL, accessed
+   2026-07-11), per decision; confirm the URL/author attribution.
+4. **Figure 1** — `demo/screenshots/01-model-tree.png` is a placeholder; the
+   screenshot must be captured before the paper has a real figure.
+
+**Not committed.** `docs/paper/` is new, `HANDOFF_REPORT.md` modified. Suggested
+commit: `docs: add tool-demo paper draft + references`.
+
 ## Ranked next steps
 
-1. **Engine-verify the 1 measure + 1 column in Power BI** (item 1). Turns
-   "proxy 1/1" into a real correctness claim — highest credibility-per-effort.
-2. **Decide + implement the `from_twb` merge** (item 2). Closes the one
-   no-silent-drops gap in the relationship path.
-3. **Add a second corpus workbook with an embedded extract** (license-checked)
-   to prove the pipeline generalizes beyond Superstore.
+1. **Build a 2–3 workbook corpus (move past n=1).** Every paper number comes
+   from one workbook. A small, license-checked corpus of workbooks that embed
+   Hyper extracts is the single most important step for credibility — it turns
+   the taxonomy and coverage discussion from anecdote into evidence.
+2. **Resolve the paper's `[CITATION NEEDED]` items** (above), especially the
+   §1 claim about existing tools and the `.bib` DOI/page verification.
+3. **Decide + implement the `from_twb` merge.** Closes the one no-silent-drops
+   gap in the relationship path (also a paper limitation).
 4. **Conditional aggregations → CALCULATE/SUMX.** Biggest realistic coverage
    gain on real workbooks.
-5. **Per-dimension evaluation.** Strengthens the correctness story beyond grand
-   totals.
-6. **String/date function breadth** (`STR`, `DATEPARSE`, `LOG`/`POWER`) for the
-   formatting-heavy measures — lower priority, high effort.
+5. **Per-dimension evaluation** and **multi-measure engine verification** —
+   strengthen the correctness story beyond a single grand-total anchor.
+6. **String/date function breadth** (`STR`, `DATEPARSE`, `LOG`/`POWER`) — lower
+   priority, high effort.
+7. **Capture the demo screenshots** for Figure 1.

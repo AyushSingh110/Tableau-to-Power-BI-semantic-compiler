@@ -19,3 +19,4 @@ venv/
 
 # --- Power BI ---
 *.pbix
+docs/paper
