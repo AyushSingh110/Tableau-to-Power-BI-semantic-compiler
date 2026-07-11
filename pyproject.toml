@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tab2pbi"
+version = "0.1.0"
+description = "Deterministic Tableau to Power BI semantic compiler (Tableau workbook -> Power BI TOM via a semantic IR)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Ayush Singh" }]
+keywords = ["tableau", "power-bi", "tom", "dax", "semantic-model", "transpiler"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "tableauhyperapi==0.0.24081",
+    "pandas==2.2.3",
+    "numpy==2.1.3",
+    "lxml==5.3.0",
+    "jsonschema==4.23.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.3.4",
+    "ruff==0.8.6",
+]
+
+[project.scripts]
+tab2pbi = "tab2pbi.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

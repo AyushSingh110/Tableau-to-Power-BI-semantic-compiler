@@ -1,0 +1,14 @@
+[
+    {
+        "mode": "logical_relationship_raw",
+        "raw_attributes": {},
+        "note": "Tableau logical relationship \u2014 join keys resolved at query time",
+        "confidence": "engine-resolved"
+    },
+    {
+        "mode": "logical_relationship_raw",
+        "raw_attributes": {},
+        "note": "Tableau logical relationship \u2014 join keys resolved at query time",
+        "confidence": "engine-resolved"
+    }
+]

@@ -1,0 +1,134 @@
+[
+    {
+        "logical_field": "Order ID",
+        "physical_column": "Order ID",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Order ID",
+        "physical_column": "Order ID",
+        "table": "Returns_2AA0FE4D737A4F63970131D0E7480A03",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Order Date",
+        "physical_column": "Order Date",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Ship Date",
+        "physical_column": "Ship Date",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Ship Mode",
+        "physical_column": "Ship Mode",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Customer Name",
+        "physical_column": "Customer Name",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Segment",
+        "physical_column": "Segment",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Country/Region",
+        "physical_column": "Country/Region",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "City",
+        "physical_column": "City",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "State",
+        "physical_column": "State",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Postal Code",
+        "physical_column": "Postal Code",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Region",
+        "physical_column": "Region",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Region",
+        "physical_column": "Region",
+        "table": "People_D73023733B004CC1B3CB1ACF62F4A965",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Category",
+        "physical_column": "Category",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Sub-Category",
+        "physical_column": "Sub-Category",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Product Name",
+        "physical_column": "Product Name",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Sales",
+        "physical_column": "Sales",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Quantity",
+        "physical_column": "Quantity",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Discount",
+        "physical_column": "Discount",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Profit",
+        "physical_column": "Profit",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Regional Manager",
+        "physical_column": "Regional Manager",
+        "table": "People_D73023733B004CC1B3CB1ACF62F4A965",
+        "schema": "Extract"
+    },
+    {
+        "logical_field": "Returned",
+        "physical_column": "Returned",
+        "table": "Returns_2AA0FE4D737A4F63970131D0E7480A03",
+        "schema": "Extract"
+    }
+]

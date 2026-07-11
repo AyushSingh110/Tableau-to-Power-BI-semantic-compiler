@@ -1,4 +1,21 @@
+# --- Generated pipeline artifacts (regenerate with run_pipeline.py) ---
+# The canonical labeled sample set is kept under examples/expected_output/.
+/data/
 hyperd.log
-__pycache__/
-*.pbix
+
+# --- Tableau extraction scratch ---
 twbx_extracted/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+*.egg-info/
+.venv/
+venv/
+
+# --- Power BI ---
+*.pbix

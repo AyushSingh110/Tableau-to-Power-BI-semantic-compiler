@@ -1,0 +1,166 @@
+{
+    "model_type": "relational_model",
+    "tables": {
+        "Orders_ECFCA1FB690A41FE803BC071773BA862": {
+            "columns": [
+                "Order ID",
+                "Order Date",
+                "Ship Date",
+                "Ship Mode",
+                "Customer Name",
+                "Segment",
+                "Country/Region",
+                "City",
+                "State",
+                "Postal Code",
+                "Region",
+                "Category",
+                "Sub-Category",
+                "Product Name",
+                "Sales",
+                "Quantity",
+                "Discount",
+                "Profit"
+            ],
+            "type": "fact",
+            "source": "tableau_hyper"
+        },
+        "Returns_2AA0FE4D737A4F63970131D0E7480A03": {
+            "columns": [
+                "Returned",
+                "Order ID"
+            ],
+            "type": "dimension",
+            "source": "tableau_hyper"
+        },
+        "People_D73023733B004CC1B3CB1ACF62F4A965": {
+            "columns": [
+                "Regional Manager",
+                "Region"
+            ],
+            "type": "dimension",
+            "source": "tableau_hyper"
+        }
+    },
+    "measures": {
+        "[Calculation_1368249927221915648]": "SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Profit]) / SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Sales])"
+    },
+    "relationships": [
+        {
+            "from_table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+            "from_column": "Region",
+            "to_table": "People_D73023733B004CC1B3CB1ACF62F4A965",
+            "to_column": "Region",
+            "cardinality": "ManyToOne",
+            "cross_filter_direction": "Single",
+            "confidence": 1.0,
+            "evidence": {
+                "fk_coverage": 1.0,
+                "pk_verified": true
+            }
+        }
+    ],
+    "provenance": {
+        "fact_table_inference": {
+            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+            "method": "inferred_by_size",
+            "note": "fact table inferred by size (most columns), not declared"
+        },
+        "ast_builder": "phase1-regex",
+        "relationship_inference": "data-driven",
+        "engine_assumptions": "none"
+    },
+    "measure_table_map": {
+        "[Calculation_1368249927221915648]": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+    },
+    "conversion_report": {
+        "total_measures": 17,
+        "converted_count": 1,
+        "skipped_count": 16,
+        "skipped_measures": [
+            {
+                "calculation_name": "[Parameter 1]",
+                "reason": "unsupported_expression"
+            },
+            {
+                "calculation_name": "[Parameter 2]",
+                "reason": "unsupported_expression"
+            },
+            {
+                "calculation_name": "[% Diff Shape (copy)]",
+                "reason": "conditional_logic"
+            },
+            {
+                "calculation_name": "[Calculation_1054123792576798720]",
+                "reason": "conditional_logic"
+            },
+            {
+                "calculation_name": "[Calculation_1069041984833634338]",
+                "reason": "conditional_logic"
+            },
+            {
+                "calculation_name": "[Calculation_267682741503590407]",
+                "reason": "table_calculation"
+            },
+            {
+                "calculation_name": "[Calculation_774619140457381925]",
+                "reason": "unsupported_expression"
+            },
+            {
+                "calculation_name": "[Calculation_774619140497559607]",
+                "reason": "unsupported_expression"
+            },
+            {
+                "calculation_name": "[Calculation_774619140519575609]",
+                "reason": "unsupported_expression"
+            },
+            {
+                "calculation_name": "[Calculation_870883616845938712]",
+                "reason": "conditional_logic"
+            },
+            {
+                "calculation_name": "[Calculation_870883616872980509]",
+                "reason": "table_calculation"
+            },
+            {
+                "calculation_name": "[Calculation_870883616948187188]",
+                "reason": "unsupported_expression"
+            },
+            {
+                "calculation_name": "[Calculation_902971729521315845]",
+                "reason": "table_calculation"
+            },
+            {
+                "calculation_name": "[Max (copy)]",
+                "reason": "table_calculation"
+            },
+            {
+                "calculation_name": "[Product Name (group)]",
+                "reason": "empty_formula"
+            },
+            {
+                "calculation_name": "[Sales  (copy)_774619140372635663]",
+                "reason": "conditional_logic"
+            }
+        ],
+        "classification_counts": {
+            "unsupported": 6,
+            "requires_redesign": 5,
+            "algebraic_aggregation": 1,
+            "table_calculation": 4,
+            "empty": 1
+        },
+        "fact_table_inference": {
+            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+            "method": "inferred_by_size",
+            "note": "fact table inferred by size (most columns), not declared"
+        },
+        "measures_affected_by_fact_inference": [
+            {
+                "measure": "[Calculation_1368249927221915648]",
+                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+                "note": "fact table inferred by size, not declared"
+            }
+        ]
+    }
+}

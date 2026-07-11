@@ -1,0 +1,10 @@
+[
+    {
+        "parameter_name": "[Parameter 1]",
+        "default_value": "2022"
+    },
+    {
+        "parameter_name": "[Parameter 2]",
+        "default_value": "\"Pradeep Kumar G\""
+    }
+]

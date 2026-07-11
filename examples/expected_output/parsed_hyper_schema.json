@@ -1,0 +1,108 @@
+[
+    {
+        "schema": "Extract",
+        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "columns": [
+            {
+                "column_name": "Order ID",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "Order Date",
+                "data_type": "DATE"
+            },
+            {
+                "column_name": "Ship Date",
+                "data_type": "DATE"
+            },
+            {
+                "column_name": "Ship Mode",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "Customer Name",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "Segment",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "Country/Region",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "City",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "State",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "Postal Code",
+                "data_type": "BIG_INT"
+            },
+            {
+                "column_name": "Region",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "Category",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "Sub-Category",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "Product Name",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "Sales",
+                "data_type": "DOUBLE"
+            },
+            {
+                "column_name": "Quantity",
+                "data_type": "BIG_INT"
+            },
+            {
+                "column_name": "Discount",
+                "data_type": "DOUBLE"
+            },
+            {
+                "column_name": "Profit",
+                "data_type": "DOUBLE"
+            }
+        ]
+    },
+    {
+        "schema": "Extract",
+        "table": "Returns_2AA0FE4D737A4F63970131D0E7480A03",
+        "columns": [
+            {
+                "column_name": "Returned",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "Order ID",
+                "data_type": "TEXT"
+            }
+        ]
+    },
+    {
+        "schema": "Extract",
+        "table": "People_D73023733B004CC1B3CB1ACF62F4A965",
+        "columns": [
+            {
+                "column_name": "Regional Manager",
+                "data_type": "TEXT"
+            },
+            {
+                "column_name": "Region",
+                "data_type": "TEXT"
+            }
+        ]
+    }
+]

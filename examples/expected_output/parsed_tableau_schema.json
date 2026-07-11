@@ -1,0 +1,627 @@
+[
+    {
+        "datasource_name": "Parameters",
+        "fields": [],
+        "calculations": [
+            {
+                "field_name": "[Parameter 1]",
+                "formula": "2022"
+            },
+            {
+                "field_name": "[Parameter 2]",
+                "formula": "\"Pradeep Kumar G\""
+            }
+        ]
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [
+            {
+                "field_name": "Row ID",
+                "role": null,
+                "data_type": "integer"
+            },
+            {
+                "field_name": "Order ID",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Order Date",
+                "role": null,
+                "data_type": "date"
+            },
+            {
+                "field_name": "Ship Date",
+                "role": null,
+                "data_type": "date"
+            },
+            {
+                "field_name": "Ship Mode",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Customer ID",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Customer Name",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Segment",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Country/Region",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "City",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "State",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Postal Code",
+                "role": null,
+                "data_type": "integer"
+            },
+            {
+                "field_name": "Region",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Product ID",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Category",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Sub-Category",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Product Name",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Sales",
+                "role": null,
+                "data_type": "real"
+            },
+            {
+                "field_name": "Quantity",
+                "role": null,
+                "data_type": "integer"
+            },
+            {
+                "field_name": "Discount",
+                "role": null,
+                "data_type": "real"
+            },
+            {
+                "field_name": "Profit",
+                "role": null,
+                "data_type": "real"
+            },
+            {
+                "field_name": "Regional Manager",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Region",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Returned",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Order ID",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "[Category]",
+                "role": "dimension",
+                "data_type": "string"
+            },
+            {
+                "field_name": "[City]",
+                "role": "dimension",
+                "data_type": "string"
+            },
+            {
+                "field_name": "[Country/Region]",
+                "role": "dimension",
+                "data_type": "string"
+            },
+            {
+                "field_name": "[Customer ID]",
+                "role": "dimension",
+                "data_type": "string"
+            },
+            {
+                "field_name": "[Order Date]",
+                "role": "dimension",
+                "data_type": "date"
+            },
+            {
+                "field_name": "[Order ID (Returns)]",
+                "role": "dimension",
+                "data_type": "string"
+            },
+            {
+                "field_name": "[Postal Code]",
+                "role": "dimension",
+                "data_type": "integer"
+            },
+            {
+                "field_name": "[Product ID]",
+                "role": "dimension",
+                "data_type": "string"
+            },
+            {
+                "field_name": "[Product Name]",
+                "role": "dimension",
+                "data_type": "string"
+            },
+            {
+                "field_name": "[Quantity]",
+                "role": "measure",
+                "data_type": "integer"
+            },
+            {
+                "field_name": "[Region (People)]",
+                "role": "dimension",
+                "data_type": "string"
+            },
+            {
+                "field_name": "[Region]",
+                "role": "dimension",
+                "data_type": "string"
+            },
+            {
+                "field_name": "[Row ID]",
+                "role": "dimension",
+                "data_type": "integer"
+            },
+            {
+                "field_name": "[Sales]",
+                "role": "measure",
+                "data_type": "real"
+            },
+            {
+                "field_name": "[Segment]",
+                "role": "dimension",
+                "data_type": "string"
+            },
+            {
+                "field_name": "[State]",
+                "role": "dimension",
+                "data_type": "string"
+            },
+            {
+                "field_name": "[Sub-Category]",
+                "role": "dimension",
+                "data_type": "string"
+            },
+            {
+                "field_name": "[__tableau_internal_object_id__].[Orders_ECFCA1FB690A41FE803BC071773BA862]",
+                "role": "measure",
+                "data_type": "table"
+            },
+            {
+                "field_name": "[__tableau_internal_object_id__].[People_D73023733B004CC1B3CB1ACF62F4A965]",
+                "role": "measure",
+                "data_type": "table"
+            },
+            {
+                "field_name": "[__tableau_internal_object_id__].[Returns_2AA0FE4D737A4F63970131D0E7480A03]",
+                "role": "measure",
+                "data_type": "table"
+            },
+            {
+                "field_name": "Row ID",
+                "role": null,
+                "data_type": "integer"
+            },
+            {
+                "field_name": "Order ID",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Order Date",
+                "role": null,
+                "data_type": "date"
+            },
+            {
+                "field_name": "Ship Date",
+                "role": null,
+                "data_type": "date"
+            },
+            {
+                "field_name": "Ship Mode",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Customer ID",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Customer Name",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Segment",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Country/Region",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "City",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "State",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Postal Code",
+                "role": null,
+                "data_type": "integer"
+            },
+            {
+                "field_name": "Region",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Product ID",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Category",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Sub-Category",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Product Name",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Sales",
+                "role": null,
+                "data_type": "real"
+            },
+            {
+                "field_name": "Quantity",
+                "role": null,
+                "data_type": "integer"
+            },
+            {
+                "field_name": "Discount",
+                "role": null,
+                "data_type": "real"
+            },
+            {
+                "field_name": "Profit",
+                "role": null,
+                "data_type": "real"
+            },
+            {
+                "field_name": "Regional Manager",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Region",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Returned",
+                "role": null,
+                "data_type": "string"
+            },
+            {
+                "field_name": "Order ID",
+                "role": null,
+                "data_type": "string"
+            }
+        ],
+        "calculations": [
+            {
+                "field_name": "[% Diff Shape (copy)]",
+                "formula": "if [Calculation_1069041984833634338]>0 then \"Positive\" \r\nELSEIF[Calculation_1069041984833634338]<0 then \"Negative\" \r\nelse \"No Change\" end"
+            },
+            {
+                "field_name": "[Calculation_1054123792576798720]",
+                "formula": "IF COUNTD([Calculation_870883616948187188])=1 THEN ATTR(STR(YEAR([Order Date])))\r\nELSE (STR(MIN(YEAR([Order Date])))+\" - \"+STR(MAX(YEAR([Order Date]))))\r\nEND"
+            },
+            {
+                "field_name": "[Calculation_1069041984833634338]",
+                "formula": "(SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1] THEN [Sales] ELSE NULL END)\r\n-ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))\r\n/ (SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))"
+            },
+            {
+                "field_name": "[Calculation_1368249927221915648]",
+                "formula": "SUM([Profit])/SUM([Sales])"
+            },
+            {
+                "field_name": "[Calculation_267682741503590407]",
+                "formula": "IF SUM([Sales]) = WINDOW_MAX(SUM([Sales])) THEN SUM([Sales])\r\nELSE NULL END"
+            },
+            {
+                "field_name": "[Calculation_774619140457381925]",
+                "formula": "DATEDIFF('day',[Order Date],[Ship Date])"
+            },
+            {
+                "field_name": "[Calculation_774619140497559607]",
+                "formula": "\" Hi There,\r\n\r\nThanks for downloading my viz!\r\nThis viz was created using the Sample Superstore dataset available in Tableau Desktop.\r\n\r\nThis viz was listed in Ten Most-Favorited Vizzes on Tableau Public.\r\nhttps://public.tableau.com/en-us/s/blog/2020/10/ten-most-favorited-vizzes-celebrate-ten-viz-tastic-years-tableau-public\r\n\r\nLearn how I built this viz:\r\nhttps://www.flerlagetwins.com/2020/04/si-eff-simple-effective-design-approach.html\r\n\r\nCheers,\r\nPradeep (@pradeep_zen) \""
+            },
+            {
+                "field_name": "[Calculation_774619140519575609]",
+                "formula": "\"Highlight\"\r\n\r\n//To prevent highlight on click using hightlight action.\r\n//Blog by Brian Moore: https://sonsofhierarchies.com/default-highlighting/"
+            },
+            {
+                "field_name": "[Calculation_870883616845938712]",
+                "formula": "//Determine if the value is negative\r\nIF SUM([Sales]) < 0 THEN '-' ELSE '' END\r\n+\r\n'$' //Dolar Symbol\r\n+\r\n\r\n//Get Int Amount by Dividing the Value by its' Base 1000 Value\r\nSTR(INT(ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(  ROUND(ABS(SUM([Sales]))/10,0)*10 ,1000))),1)))\r\n+\r\n\r\n//Determine if you need to show a decimal\r\n//If the Modulo is zero, we just want to show blank (Ex 159.0K = 159K)\r\n//Else we want to show the decimal value (Ex 159.4K)\r\nIF (ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(ABS(SUM([Sales])),1000))),1)*10)%10 = 0 THEN ''\r\nELSE '.' + STR((ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(ABS(SUM([Sales])),1000))),1)*10)%10)\r\nEND\r\n+\r\n\r\n//Determine the Unit to display based on the Log Base 1000\r\nCASE INT(LOG(ROUND(ABS(SUM([Sales]))/10,0)*10,1000)) //Unit Symbol\r\nWHEN 1 THEN 'K'\r\nWHEN 2 THEN 'M'\r\nWHEN 3 THEN 'B'\r\nWHEN 4 THEN 'T'\r\nELSE ''\r\nEND"
+            },
+            {
+                "field_name": "[Calculation_870883616872980509]",
+                "formula": "RANK_UNIQUE(SUM([Sales]),'desc')"
+            },
+            {
+                "field_name": "[Calculation_870883616948187188]",
+                "formula": "DATE(DATEPARSE ( \"yyyy\", STR(DATEPART('year', [Order Date])) ))"
+            },
+            {
+                "field_name": "[Calculation_902971729521315845]",
+                "formula": "Index()"
+            },
+            {
+                "field_name": "[Max (copy)]",
+                "formula": "IF SUM([Sales]) = WINDOW_MIN(SUM([Sales])) THEN SUM([Sales])\r\nELSE NULL END"
+            },
+            {
+                "field_name": "[Product Name (group)]",
+                "formula": ""
+            },
+            {
+                "field_name": "[Sales  (copy)_774619140372635663]",
+                "formula": "//Determine if the value is negative\r\nIF SUM([Sales]) < 0 THEN '-' ELSE '' END\r\n+\r\n'$' //Dolar Symbol\r\n+\r\n\r\n//Get Int Amount by Dividing the Value by its' Base 1000 Value\r\nSTR(INT(ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(  ROUND(ABS(SUM([Sales]))/10,0)*10 ,1000))),1)))\r\n\r\n+\r\n\r\n//Determine the Unit to display based on the Log Base 1000\r\nCASE INT(LOG(ROUND(ABS(SUM([Sales]))/10,0)*10,1000)) //Unit Symbol\r\nWHEN 1 THEN 'K'\r\nWHEN 2 THEN 'M'\r\nWHEN 3 THEN 'B'\r\nWHEN 4 THEN 'T'\r\nELSE ''\r\nEND"
+            },
+            {
+                "field_name": "[Parameter 1]",
+                "formula": "2022"
+            }
+        ]
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Parameters",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Parameters",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Parameters",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Parameters",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    },
+    {
+        "datasource_name": "Sample - Superstore (copy)",
+        "fields": [],
+        "calculations": []
+    }
+]

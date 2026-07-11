@@ -1,0 +1,362 @@
+[
+    {
+        "worksheet": "@Download",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "@Download",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "@Download",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "@Download",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "@Download",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "I - Info",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "I - LinkedIn",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "I - Twitter",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Map - Color Legend",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Map - Color Legend",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Map - Color Legend",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Monthly Sales Trend - Category",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Monthly Sales Trend - Category",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Monthly Sales Trend - Category",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Monthly Sales Trend - Region",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Monthly Sales Trend - Region",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Monthly Sales Trend - Region",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Order Details | Show/Hide",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Order Details | Show/Hide",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Order Details | Show/Hide",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Order Details | Show/Hide",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Order Details | Show/Hide",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by Category",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by Category",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by Category",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by City - Tooltip",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by City - Tooltip",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by City - Tooltip",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by City - Tooltip",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by Region",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by Region",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by Segment",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by Segment",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by Segment",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by State - Map",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by State - Map",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by Sub-Category",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by Sub-Category",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by Sub-Category (HeatMap)",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Sales by Sub-Category (HeatMap)",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Showing results (Indicator)",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Top Manufacturers by Sales",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Top Manufacturers by Sales",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Top Manufacturers by Sales",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Top Sales by State - KPI",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Top Sales by State - KPI",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Top Sales by State - KPI",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Top Sales by State - KPI",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Top Sold Products - Tooltip",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Top Sold Products - Tooltip",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Top Sold Products - Tooltip",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Top Sold Products - Tooltip",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Weekly Sales Trend - Header",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "Weekly Sales Trend - Header",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "YOY% -  Region",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "YOY% - Category",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "YOY% - Segment",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "YOY% - Top States",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "YOY% - Top States",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    },
+    {
+        "worksheet": "YOY% - Top States",
+        "field": null,
+        "class": "categorical",
+        "expression": null
+    }
+]

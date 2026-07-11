@@ -1,0 +1,18 @@
+{
+    "relationships": [
+        {
+            "from_table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+            "from_column": "Region",
+            "to_table": "People_D73023733B004CC1B3CB1ACF62F4A965",
+            "to_column": "Region",
+            "cardinality": "ManyToOne",
+            "cross_filter_direction": "Single",
+            "confidence": 1.0,
+            "evidence": {
+                "fk_coverage": 1.0,
+                "pk_verified": true
+            }
+        }
+    ],
+    "unresolved_relationships": []
+}
