@@ -46,6 +46,134 @@ comes from profiling the actual extract data, not from metadata guesses.
 
 ---
 
+## Architecture
+
+The compiler is a **staged pipeline** built around a single canonical
+intermediate representation (IR). Each node below is a real module under
+[`src/tab2pbi/`](src/tab2pbi/); solid arrows are data dependencies.
+
+```mermaid
+flowchart TD
+    A([".twbx workbook"]) --> B["parse/tableau_xml<br/>TWB XML → fields · calcs · filters · params"]
+    A --> C["parse/hyper<br/>.hyper → schema + per-table data"]
+    B --> D["parse/mapping<br/>logical field → physical column"]
+    C --> D
+    B --> E["ir/semantic_model<br/>build AST-shaped IR (+ fact/dim heuristic)"]
+    C --> E
+    D --> F["ir/context<br/>resolve measure → owning table"]
+    E --> F
+    B --> G["relationships/from_twb<br/>declared logical / physical joins"]
+    C --> H["relationships/from_hyper<br/>data-driven FK inference"]
+    F --> I["classify/classifier<br/>convertibility taxonomy (report-only)"]
+    F --> J["rewrite/dax<br/>AST → table-qualified DAX"]
+    F --> K["ir/canonical<br/>tool-agnostic canonical model"]
+    H --> K
+    J --> L["ir/finalize<br/>merge measures + audit report"]
+    K --> L
+    L --> M["export/tom<br/>Power BI TOM"]
+    M --> N["export/tabular_editor<br/>Model.json"]
+    N --> O(["Tabular Editor / Power BI"])
+```
+
+### Stage guarantees
+
+Each stage is deterministic and writes an auditable JSON artifact. In terms of
+input → output → the guarantee it upholds:
+
+- **parse/tableau_xml** — `.twbx` → parsed fields, calculations, filters,
+  parameters. *Guarantee:* only documented TWB XML structures are read.
+- **parse/hyper** — `.hyper` → physical schema + a per-table data sample.
+  *Guarantee:* official Hyper API only; every table is sampled (no silent
+  single-table truncation).
+- **parse/mapping** — logical fields + physical schema → exact, case-insensitive
+  mapping. *Guarantee:* no fuzzy aliases; unmatched fields stay unmapped (later
+  reported, never guessed).
+- **ir/semantic_model** — calculations + schema → the AST-shaped IR, tables
+  tagged fact/dimension. *Guarantee:* un-parseable calcs become `unsupported`
+  nodes **with a reason**; the fact table is a labeled, overridable heuristic.
+- **ir/context** — IR + mapping → measure→table ownership + table-qualified DAX.
+  *Guarantee:* ambiguous fields prefer the fact table; unresolved fields are
+  reported, not invented.
+- **relationships/from_twb** — TWB XML → declared logical/physical relationships.
+  *Guarantee:* query-time-deferred join keys are preserved as such.
+- **relationships/from_hyper** — per-table data → inferred foreign keys.
+  *Guarantee:* emitted only above a referential-coverage threshold; near-misses
+  land in `unresolved_relationships`.
+- **classify / rewrite** — IR → convertibility report + DAX. *Guarantee:*
+  classification and translation are driven by the parsed AST, never substrings;
+  anything not translated is skipped with a reason.
+- **ir/canonical → ir/finalize** — assemble the tool-agnostic model + a full
+  `conversion_report`. *Guarantee:* only genuinely-translated measures ship;
+  skipped ones are enumerated with reasons.
+- **export/tom → export/tabular_editor** — canonical model → Power BI TOM +
+  Tabular Editor `Model.json`. *Guarantee:* measures without a reliable owning
+  table are annotated, not attached with a guessed home.
+
+### Why an intermediate representation?
+
+Tableau and Power BI are **different analytical engines**, not two dialects of
+one language. A direct string-to-string "translator" inevitably encodes
+assumptions from one engine that are wrong in the other. The IR exists to make
+those assumptions explicit and checkable:
+
+| Tableau semantics | Power BI / DAX semantics | Why a naïve port breaks |
+| ----------------- | ------------------------ | ----------------------- |
+| **LOD** `{FIXED …}` and **table calcs** (`WINDOW_*`, `INDEX`, `RANK`) computed over the visual's addressing/partitioning | **Filter/row context** + `CALCULATE`; measures evaluate against the model, not a viz | The same formula means different things depending on visual context that does not survive migration |
+| **Row-level vs aggregate** calcs distinguished at use-time | **Calculated column vs measure** must be decided at model-build time | A row-level `DATEDIFF` emitted as a measure is invalid DAX |
+| **Deferred / query-time joins** (logical relationships) | **Explicit relationships** with cardinality + cross-filter direction | Cardinality must be resolved before the model loads |
+| Field identity by caption, ambiguous across data sources | Column identity by `Table[Column]` | Measures need an unambiguous owning table |
+
+The IR is an **engine-agnostic canonical model** (tables, typed columns,
+measures-as-ASTs, relationships) sitting between the two. Every transformation
+reads and writes the IR, so classification, DAX rewriting, and validation each
+operate on the *same* structured object and each un-handled construct is
+surfaced with a reason instead of being silently mistranslated.
+
+### The IR data model
+
+```mermaid
+classDiagram
+    class CanonicalModel {
+        +string model_type
+        +Provenance provenance
+        +ConversionReport conversion_report
+    }
+    class Table {
+        +string name
+        +string type_fact_or_dimension
+    }
+    class Column {
+        +string name
+        +string dataType
+    }
+    class Measure {
+        +string name
+        +AST ast
+        +string owning_table
+        +string dax
+    }
+    class Relationship {
+        +string from_table_column
+        +string to_table_column
+        +string cardinality
+        +float confidence
+    }
+    CanonicalModel "1" *-- "many" Table
+    Table "1" *-- "many" Column
+    CanonicalModel "1" *-- "many" Measure
+    Measure --> Table : owned_by
+    CanonicalModel "1" *-- "many" Relationship
+    Relationship --> Table : from_to
+```
+
+A `Measure.ast` is a small typed tree — this is the object the transpiler walks
+to emit DAX and the object the classifier inspects to decide convertibility.
+Today it has three node kinds (`single` aggregation, `binary` combination, and
+`unsupported`-with-reason); the broader vocabulary (`conditional`, `function`,
+`constant`) is added by the Phase-2 parser.
+
+---
+
 ## Install
 
 Requires **Python 3.10+** and the Tableau Hyper API (installed via
