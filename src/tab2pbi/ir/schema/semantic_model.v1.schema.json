@@ -1,0 +1,54 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://tab2pbi/schema/semantic_model.v1.json",
+    "title": "tab2pbi semantic model (AST IR) v1",
+    "type": "object",
+    "required": ["tables", "measures", "provenance"],
+    "properties": {
+        "tables": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "required": ["columns", "type"],
+                "properties": {
+                    "columns": { "type": "array", "items": { "type": "string" } },
+                    "type": { "enum": ["fact", "dimension"] },
+                    "source": { "type": "string" }
+                }
+            }
+        },
+        "measures": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "required": ["ast"],
+                "properties": {
+                    "ast": {
+                        "type": "object",
+                        "required": ["node"],
+                        "properties": { "node": { "type": "string" } }
+                    },
+                    "formula": { "type": "string" },
+                    "source": { "type": "string" }
+                }
+            }
+        },
+        "dimensions": { "type": "object" },
+        "filters": { "type": "array" },
+        "provenance": {
+            "type": "object",
+            "required": ["fact_table_inference"],
+            "properties": {
+                "fact_table_inference": {
+                    "type": "object",
+                    "required": ["table", "method"],
+                    "properties": {
+                        "table": { "type": ["string", "null"] },
+                        "method": { "type": "string" },
+                        "note": { "type": "string" }
+                    }
+                }
+            }
+        }
+    }
+}

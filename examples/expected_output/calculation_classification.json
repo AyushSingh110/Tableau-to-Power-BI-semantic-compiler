@@ -1,104 +1,104 @@
 [
     {
-        "calculation_name": "[Parameter 1]",
-        "formula": "2022",
-        "classification": "unsupported",
-        "note": "manual review required"
-    },
-    {
-        "calculation_name": "[Parameter 2]",
-        "formula": "\"Pradeep Kumar G\"",
-        "classification": "unsupported",
-        "note": "manual review required"
-    },
-    {
-        "calculation_name": "[% Diff Shape (copy)]",
-        "formula": "if [Calculation_1069041984833634338]>0 then \"Positive\" \r\nELSEIF[Calculation_1069041984833634338]<0 then \"Negative\" \r\nelse \"No Change\" end",
-        "classification": "requires_redesign",
-        "note": "conditional logic not yet transpiled"
-    },
-    {
-        "calculation_name": "[Calculation_1054123792576798720]",
-        "formula": "IF COUNTD([Calculation_870883616948187188])=1 THEN ATTR(STR(YEAR([Order Date])))\r\nELSE (STR(MIN(YEAR([Order Date])))+\" - \"+STR(MAX(YEAR([Order Date]))))\r\nEND",
-        "classification": "requires_redesign",
-        "note": "conditional logic not yet transpiled"
-    },
-    {
-        "calculation_name": "[Calculation_1069041984833634338]",
-        "formula": "(SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1] THEN [Sales] ELSE NULL END)\r\n-ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))\r\n/ (SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))",
-        "classification": "requires_redesign",
-        "note": "conditional logic not yet transpiled"
-    },
-    {
         "calculation_name": "[Calculation_1368249927221915648]",
         "formula": "SUM([Profit])/SUM([Sales])",
-        "classification": "algebraic_aggregation",
-        "note": "directly convertible"
-    },
-    {
-        "calculation_name": "[Calculation_267682741503590407]",
-        "formula": "IF SUM([Sales]) = WINDOW_MAX(SUM([Sales])) THEN SUM([Sales])\r\nELSE NULL END",
-        "classification": "table_calculation",
-        "note": "table/window calculation \u2014 no direct DAX equivalent"
+        "classification": "measure",
+        "note": "aggregation \u2192 DAX measure"
     },
     {
         "calculation_name": "[Calculation_774619140457381925]",
         "formula": "DATEDIFF('day',[Order Date],[Ship Date])",
-        "classification": "unsupported",
-        "note": "manual review required"
+        "classification": "calculated_column",
+        "note": "row-level \u2192 DAX calculated column"
+    },
+    {
+        "calculation_name": "[Parameter 1]",
+        "formula": "2022",
+        "classification": "parameter",
+        "note": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
+    },
+    {
+        "calculation_name": "[Parameter 2]",
+        "formula": "\"Pradeep Kumar G\"",
+        "classification": "parameter",
+        "note": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
     },
     {
         "calculation_name": "[Calculation_774619140497559607]",
         "formula": "\" Hi There,\r\n\r\nThanks for downloading my viz!\r\nThis viz was created using the Sample Superstore dataset available in Tableau Desktop.\r\n\r\nThis viz was listed in Ten Most-Favorited Vizzes on Tableau Public.\r\nhttps://public.tableau.com/en-us/s/blog/2020/10/ten-most-favorited-vizzes-celebrate-ten-viz-tastic-years-tableau-public\r\n\r\nLearn how I built this viz:\r\nhttps://www.flerlagetwins.com/2020/04/si-eff-simple-effective-design-approach.html\r\n\r\nCheers,\r\nPradeep (@pradeep_zen) \"",
-        "classification": "unsupported",
-        "note": "manual review required"
+        "classification": "parameter",
+        "note": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
     },
     {
         "calculation_name": "[Calculation_774619140519575609]",
         "formula": "\"Highlight\"\r\n\r\n//To prevent highlight on click using hightlight action.\r\n//Blog by Brian Moore: https://sonsofhierarchies.com/default-highlighting/",
-        "classification": "unsupported",
-        "note": "manual review required"
+        "classification": "parameter",
+        "note": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
+    },
+    {
+        "calculation_name": "[% Diff Shape (copy)]",
+        "formula": "if [Calculation_1069041984833634338]>0 then \"Positive\" \r\nELSEIF[Calculation_1069041984833634338]<0 then \"Negative\" \r\nelse \"No Change\" end",
+        "classification": "unresolved",
+        "note": "references an unresolved field or another calculated field"
+    },
+    {
+        "calculation_name": "[Calculation_1054123792576798720]",
+        "formula": "IF COUNTD([Calculation_870883616948187188])=1 THEN ATTR(STR(YEAR([Order Date])))\r\nELSE (STR(MIN(YEAR([Order Date])))+\" - \"+STR(MAX(YEAR([Order Date]))))\r\nEND",
+        "classification": "unsupported_fn",
+        "note": "unsupported function STR"
+    },
+    {
+        "calculation_name": "[Calculation_1069041984833634338]",
+        "formula": "(SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1] THEN [Sales] ELSE NULL END)\r\n-ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))\r\n/ (SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))",
+        "classification": "aggregate_of_expression",
+        "note": "aggregation over a non-field expression (SUM)"
+    },
+    {
+        "calculation_name": "[Calculation_267682741503590407]",
+        "formula": "IF SUM([Sales]) = WINDOW_MAX(SUM([Sales])) THEN SUM([Sales])\r\nELSE NULL END",
+        "classification": "window_fn",
+        "note": "window function WINDOW_MAX"
     },
     {
         "calculation_name": "[Calculation_870883616845938712]",
         "formula": "//Determine if the value is negative\r\nIF SUM([Sales]) < 0 THEN '-' ELSE '' END\r\n+\r\n'$' //Dolar Symbol\r\n+\r\n\r\n//Get Int Amount by Dividing the Value by its' Base 1000 Value\r\nSTR(INT(ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(  ROUND(ABS(SUM([Sales]))/10,0)*10 ,1000))),1)))\r\n+\r\n\r\n//Determine if you need to show a decimal\r\n//If the Modulo is zero, we just want to show blank (Ex 159.0K = 159K)\r\n//Else we want to show the decimal value (Ex 159.4K)\r\nIF (ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(ABS(SUM([Sales])),1000))),1)*10)%10 = 0 THEN ''\r\nELSE '.' + STR((ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(ABS(SUM([Sales])),1000))),1)*10)%10)\r\nEND\r\n+\r\n\r\n//Determine the Unit to display based on the Log Base 1000\r\nCASE INT(LOG(ROUND(ABS(SUM([Sales]))/10,0)*10,1000)) //Unit Symbol\r\nWHEN 1 THEN 'K'\r\nWHEN 2 THEN 'M'\r\nWHEN 3 THEN 'B'\r\nWHEN 4 THEN 'T'\r\nELSE ''\r\nEND",
-        "classification": "requires_redesign",
-        "note": "conditional logic not yet transpiled"
+        "classification": "unsupported_fn",
+        "note": "unsupported function STR"
     },
     {
         "calculation_name": "[Calculation_870883616872980509]",
         "formula": "RANK_UNIQUE(SUM([Sales]),'desc')",
-        "classification": "table_calculation",
-        "note": "table/window calculation \u2014 no direct DAX equivalent"
+        "classification": "table_calc",
+        "note": "table calculation RANK_UNIQUE"
     },
     {
         "calculation_name": "[Calculation_870883616948187188]",
         "formula": "DATE(DATEPARSE ( \"yyyy\", STR(DATEPART('year', [Order Date])) ))",
-        "classification": "unsupported",
-        "note": "manual review required"
+        "classification": "unsupported_fn",
+        "note": "unsupported function DATE"
     },
     {
         "calculation_name": "[Calculation_902971729521315845]",
         "formula": "Index()",
-        "classification": "table_calculation",
-        "note": "table/window calculation \u2014 no direct DAX equivalent"
+        "classification": "table_calc",
+        "note": "table calculation INDEX"
     },
     {
         "calculation_name": "[Max (copy)]",
         "formula": "IF SUM([Sales]) = WINDOW_MIN(SUM([Sales])) THEN SUM([Sales])\r\nELSE NULL END",
-        "classification": "table_calculation",
-        "note": "table/window calculation \u2014 no direct DAX equivalent"
+        "classification": "window_fn",
+        "note": "window function WINDOW_MIN"
     },
     {
         "calculation_name": "[Product Name (group)]",
         "formula": "",
-        "classification": "empty",
-        "note": "empty formula"
+        "classification": "empty_formula",
+        "note": "empty_formula"
     },
     {
         "calculation_name": "[Sales  (copy)_774619140372635663]",
         "formula": "//Determine if the value is negative\r\nIF SUM([Sales]) < 0 THEN '-' ELSE '' END\r\n+\r\n'$' //Dolar Symbol\r\n+\r\n\r\n//Get Int Amount by Dividing the Value by its' Base 1000 Value\r\nSTR(INT(ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(  ROUND(ABS(SUM([Sales]))/10,0)*10 ,1000))),1)))\r\n\r\n+\r\n\r\n//Determine the Unit to display based on the Log Base 1000\r\nCASE INT(LOG(ROUND(ABS(SUM([Sales]))/10,0)*10,1000)) //Unit Symbol\r\nWHEN 1 THEN 'K'\r\nWHEN 2 THEN 'M'\r\nWHEN 3 THEN 'B'\r\nWHEN 4 THEN 'T'\r\nELSE ''\r\nEND",
-        "classification": "requires_redesign",
-        "note": "conditional logic not yet transpiled"
+        "classification": "unsupported_fn",
+        "note": "unsupported function STR"
     }
 ]

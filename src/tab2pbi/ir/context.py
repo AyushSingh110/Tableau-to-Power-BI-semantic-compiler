@@ -1,8 +1,9 @@
-"""Resolve measure table ownership and table-qualified DAX.
+"""Resolve field table ownership within each measure AST.
 
-Enriches each measure AST with the owning physical table (from the
-logical→physical mapping), regenerates table-qualified DAX, and records a
-measure→table ownership map. Ambiguous fields prefer the fact table.
+Annotates every ``field`` node in every measure with its owning physical table
+(from the logical→physical mapping). Ambiguous fields prefer the fact table.
+The transpiler (``rewrite/dax``) consumes these annotations to emit
+table-qualified DAX and to decide measure vs. calculated-column placement.
 """
 
 import json
@@ -10,7 +11,7 @@ from collections import defaultdict
 from pathlib import Path
 
 from ..logging_config import get_logger
-from ..rewrite.dax import ast_to_dax
+from .ast_utils import iter_fields
 
 log = get_logger(__name__)
 
@@ -37,49 +38,24 @@ def build_field_to_table(mappings: list[dict], tables: dict) -> dict:
     return resolved
 
 
-def _enrich(ast: dict, field_to_table: dict) -> dict:
-    node = ast.get("node")
-    if node == "single":
-        ast["table"] = field_to_table.get(normalize_field_name(ast.get("field")))
-    elif node == "binary":
-        for side in ("left", "right"):
-            child = ast.get(side, {})
-            child["table"] = field_to_table.get(normalize_field_name(child.get("field")))
-    return ast
-
-
-def _owning_table(ast: dict) -> str | None:
-    if ast.get("node") == "single":
-        return ast.get("table")
-    if ast.get("node") == "binary":
-        return ast.get("left", {}).get("table")
-    return None
-
-
 def run(semantic_model: dict, mappings: list[dict], data_dir: Path) -> dict:
-    """Enrich the semantic model with table context and persist it."""
+    """Annotate measure ASTs with field table context and persist the model."""
     tables = semantic_model["tables"]
     field_to_table = build_field_to_table(mappings, tables)
 
-    dax_measures = {}
-    measure_table_map = {}
-    for name, measure in semantic_model["measures"].items():
-        measure["ast"] = _enrich(measure["ast"], field_to_table)
-        dax, reason = ast_to_dax(measure["ast"])
-        dax_measures[name] = dax if dax is not None else f"-- SKIPPED: {reason}"
-        owner = _owning_table(measure["ast"])
-        if owner:
-            measure_table_map[name] = owner
-
-    semantic_model["dax_measures"] = dax_measures
-    semantic_model["measure_table_map"] = measure_table_map
+    annotated = 0
+    for measure in semantic_model["measures"].values():
+        for field in iter_fields(measure["ast"]):
+            field["table"] = field_to_table.get(normalize_field_name(field.get("name")))
+            if field["table"]:
+                annotated += 1
 
     with open(data_dir / "semantic_model_with_context.json", "w", encoding="utf-8") as f:
         json.dump(semantic_model, f, indent=4)
 
     log.info(
-        "Table context resolved: %d fields mapped, %d measures owned",
+        "Table context resolved: %d fields mapped, %d field refs annotated",
         len(field_to_table),
-        len(measure_table_map),
+        annotated,
     )
     return semantic_model

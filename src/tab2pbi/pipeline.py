@@ -10,7 +10,7 @@ from pathlib import Path
 
 from .classify import classifier
 from .export import tabular_editor, tom
-from .ir import canonical, context, finalize, semantic_model
+from .ir import canonical, context, finalize, semantic_model, validate
 from .logging_config import get_logger
 from .parse import hyper, mapping, tableau_xml
 from .relationships import from_hyper, from_twb
@@ -52,8 +52,9 @@ def run(
     schema = hyper_result["schema"]
     mappings = mapping.run(parsed["datasources"], schema, data_dir)
 
-    # 2. Build the AST-shaped semantic model.
+    # 2. Build the AST-shaped semantic model (and validate against its schema).
     sm = semantic_model.run(parsed["datasources"], schema, data_dir, fact_table=fact_table)
+    validate.validate(sm, "semantic_model")
 
     # 3. Relationships (declared + data-driven).
     from_twb.run(parsed["twb_path"], data_dir)
@@ -62,13 +63,14 @@ def run(
     # 4. Resolve table context (ownership + table-qualified DAX).
     ctx = context.run(sm, mappings, data_dir)
 
-    # 5. Classify + rewrite (both AST-driven).
-    classification = classifier.run(ctx, data_dir)
+    # 5. Rewrite (AST → DAX) then classify from the transpiler's outcomes.
     converted = dax.run(ctx, data_dir)
+    classification = classifier.run(ctx, converted, data_dir)
 
     # 6. Assemble canonical + final models.
     canon = canonical.run(schema, ctx, inferred, data_dir)
     final_model = finalize.run(canon, ctx, converted, classification, data_dir)
+    validate.validate(final_model, "final_model")
 
     # 7. Export TOM + Tabular Editor model.
     tom_model = tom.run(final_model, schema, data_dir)

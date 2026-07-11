@@ -20,7 +20,7 @@ import json
 from pathlib import Path
 
 from ..logging_config import get_logger
-from .ast_builder import build_ast
+from .parser import build_ast
 
 log = get_logger(__name__)
 
@@ -104,8 +104,9 @@ def run(
     tables = build_tables(hyper_schema, fact_info)
     measures = build_measures(datasources)
 
-    convertible = sum(
-        1 for m in measures.values() if m["ast"]["node"] in ("single", "binary")
+    parsed_ok = sum(
+        1 for m in measures.values()
+        if m["ast"]["node"] not in ("unsupported", "parse_error")
     )
     model = {
         "tables": tables,
@@ -114,18 +115,18 @@ def run(
         "filters": [],
         "provenance": {
             "fact_table_inference": fact_info,
-            "ast_builder": "phase1-regex",
+            "ast_builder": "phase2-pratt-parser",
         },
     }
     with open(data_dir / "semantic_model.json", "w", encoding="utf-8") as f:
         json.dump(model, f, indent=4)
 
     log.info(
-        "Semantic model: %d tables (fact=%s via %s), %d measures (%d convertible AST shapes)",
+        "Semantic model: %d tables (fact=%s via %s), %d calculations (%d parsed to AST)",
         len(tables),
         fact_info["table"],
         fact_info["method"],
         len(measures),
-        convertible,
+        parsed_ok,
     )
     return model

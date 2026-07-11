@@ -19,21 +19,24 @@ def _summary(result: pipeline.PipelineResult) -> str:
         "=" * 60,
         f" tab2pbi summary — {result.twbx_path.name}",
         "=" * 60,
-        f" Tables:            {len(result.tables)}",
-        f" Measures total:    {report.get('total_measures', 0)}",
-        f"   converted:       {report.get('converted_count', 0)}",
-        f"   skipped:         {report.get('skipped_count', 0)}",
-        f" Relationships:     {len(result.final_model.get('relationships', []))}",
+        f" Tables:              {len(result.tables)}",
+        f" Calculations total:  {report.get('total_calculations', 0)}",
+        f"   measures:          {report.get('measures_converted', 0)}",
+        f"   calc columns:      {report.get('columns_converted', 0)}",
+        f"   parameters:        {report.get('parameters_converted', 0)}",
+        f"   skipped:           {report.get('skipped_count', 0)}",
+        f" Coverage:            {report.get('coverage_pct', 0)}%",
+        f" Relationships:       {len(result.final_model.get('relationships', []))}",
     ]
 
     fact = report.get("fact_table_inference", {})
     if fact:
         lines.append(f" Fact table:        {fact.get('table')} ({fact.get('method')})")
 
-    counts = report.get("classification_counts", {})
-    if counts:
-        lines.append(" Classification:")
-        for k, v in sorted(counts.items(), key=lambda kv: -kv[1]):
+    taxonomy = {k: v for k, v in report.get("failure_taxonomy", {}).items() if v}
+    if taxonomy:
+        lines.append(" Failure taxonomy:")
+        for k, v in sorted(taxonomy.items(), key=lambda kv: -kv[1]):
             lines.append(f"   {k:<24} {v}")
 
     skipped = report.get("skipped_measures", [])

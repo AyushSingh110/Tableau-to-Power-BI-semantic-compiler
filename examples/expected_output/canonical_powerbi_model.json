@@ -42,25 +42,7 @@
             "source": "tableau_hyper"
         }
     },
-    "measures": {
-        "[Parameter 1]": "-- SKIPPED: unsupported_expression",
-        "[Parameter 2]": "-- SKIPPED: unsupported_expression",
-        "[% Diff Shape (copy)]": "-- SKIPPED: conditional_logic",
-        "[Calculation_1054123792576798720]": "-- SKIPPED: conditional_logic",
-        "[Calculation_1069041984833634338]": "-- SKIPPED: conditional_logic",
-        "[Calculation_1368249927221915648]": "SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Profit]) / SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Sales])",
-        "[Calculation_267682741503590407]": "-- SKIPPED: table_calculation",
-        "[Calculation_774619140457381925]": "-- SKIPPED: unsupported_expression",
-        "[Calculation_774619140497559607]": "-- SKIPPED: unsupported_expression",
-        "[Calculation_774619140519575609]": "-- SKIPPED: unsupported_expression",
-        "[Calculation_870883616845938712]": "-- SKIPPED: conditional_logic",
-        "[Calculation_870883616872980509]": "-- SKIPPED: table_calculation",
-        "[Calculation_870883616948187188]": "-- SKIPPED: unsupported_expression",
-        "[Calculation_902971729521315845]": "-- SKIPPED: table_calculation",
-        "[Max (copy)]": "-- SKIPPED: table_calculation",
-        "[Product Name (group)]": "-- SKIPPED: empty_formula",
-        "[Sales  (copy)_774619140372635663]": "-- SKIPPED: conditional_logic"
-    },
+    "measures": {},
     "relationships": [
         {
             "from_table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
@@ -82,7 +64,7 @@
             "method": "inferred_by_size",
             "note": "fact table inferred by size (most columns), not declared"
         },
-        "ast_builder": "phase1-regex",
+        "ast_builder": "phase2-pratt-parser",
         "relationship_inference": "data-driven",
         "engine_assumptions": "none"
     }

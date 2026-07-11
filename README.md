@@ -9,12 +9,13 @@ visual layout, and — importantly — it **never guesses**. Any calculation it
 cannot translate with confidence is reported as unsupported, with a reason.
 Nothing is dropped silently and no DAX is fabricated.
 
-> **Status: early / honest.** One measure shape (single and algebraic-binary
-> aggregations) is transpiled to DAX today. Most real-world Tableau
-> calculations (LOD expressions, table calculations, window functions, complex
-> conditionals) are **not** transpiled yet — they are classified and reported,
-> not converted. See [What works today](#what-works-today). A real Tableau
-> expression parser and a broader transpiler are planned (Phase 2).
+> **Status: honest & growing.** A real tokenizer + Pratt parser turns Tableau
+> calculations into a typed AST, and the transpiler emits DAX for aggregations,
+> algebraic combinations, `COUNTD`, `IF`/`CASE`, and basic date functions —
+> splitting results into measures, calculated columns, and parameters. Genuinely
+> hard constructs (LOD, table calculations, window functions, conditional
+> aggregations) are **not** transpiled; they are reported with a machine-readable
+> failure taxonomy, never faked. See [What works today](#what-works-today).
 
 ---
 
@@ -27,22 +28,34 @@ full, auditable trail of intermediate artifacts.
 Sample run output (Superstore):
 
 ```
- Tables:            3
- Measures total:    17
-   converted:       1
-   skipped:         16
- Relationships:     1
- Fact table:        Orders_… (inferred_by_size)
+ Tables:              3
+ Calculations total:  17
+   measures:          1
+   calc columns:      1
+   parameters:        4
+   skipped:           11
+ Coverage:            11.8%
+ Relationships:       1
+ Fact table:          Orders_… (inferred_by_size)
 ```
 
-The single converted measure is table-qualified DAX:
+The converted measure is table-qualified DAX:
 
 ```
 [Calculation_1368…] = SUM(Orders_…[Profit]) / SUM(Orders_…[Sales])
 ```
 
-and the inferred relationship (`Orders.Region → People.Region`, coverage 1.0)
+a row-level calc becomes a calculated column
+(`DATEDIFF(Orders_…[Order Date], Orders_…[Ship Date], DAY)`), the four constant
+calcs are surfaced as parameters, and the 11 skipped calculations each carry a
+reason + a failure-taxonomy bucket (`window_fn`, `table_calc`, `unsupported_fn`,
+…). The inferred relationship (`Orders.Region → People.Region`, coverage 1.0)
 comes from profiling the actual extract data, not from metadata guesses.
+
+> **Coverage** counts measures + calculated columns over total calculations.
+> Parameters (constant calcs) are reported in their own bucket and deliberately
+> excluded from the headline so four constants don't inflate it. Correctness is
+> measured separately by the [evaluation harness](docs/EVALUATION.md).
 
 ---
 
@@ -75,6 +88,11 @@ flowchart TD
     N --> O(["Tabular Editor / Power BI"])
 ```
 
+> **Note:** `relationships/from_twb` (node **G**) is intentionally drawn with no
+> outgoing edge. Declared TWB relationships are *extracted and audited* but not
+> yet *merged* into the canonical model — see the stage guarantee below and
+> Known limitations.
+
 ### Stage guarantees
 
 Each stage is deterministic and writes an auditable JSON artifact. In terms of
@@ -95,7 +113,13 @@ input → output → the guarantee it upholds:
   *Guarantee:* ambiguous fields prefer the fact table; unresolved fields are
   reported, not invented.
 - **relationships/from_twb** — TWB XML → declared logical/physical relationships.
-  *Guarantee:* query-time-deferred join keys are preserved as such.
+  *Guarantee:* query-time-deferred join keys are preserved as such. **Known gap
+  (see diagram):** this artifact is written for audit but is **not yet merged**
+  into the canonical/final model — only data-driven (`from_hyper`) relationships
+  reach the TOM today. In the bundled Superstore workbook the declared
+  relationships are key-less query-time joins that cannot be expressed as TOM
+  relationships anyway, but a workbook with explicit physical-join keys would
+  currently have them recorded-but-not-applied. Tracked for Part B / handoff.
 - **relationships/from_hyper** — per-table data → inferred foreign keys.
   *Guarantee:* emitted only above a referential-coverage threshold; near-misses
   land in `unresolved_relationships`.
@@ -166,11 +190,12 @@ classDiagram
     Relationship --> Table : from_to
 ```
 
-A `Measure.ast` is a small typed tree — this is the object the transpiler walks
-to emit DAX and the object the classifier inspects to decide convertibility.
-Today it has three node kinds (`single` aggregation, `binary` combination, and
-`unsupported`-with-reason); the broader vocabulary (`conditional`, `function`,
-`constant`) is added by the Phase-2 parser.
+A `Measure.ast` is a small typed tree produced by the tokenizer + Pratt parser
+(`ir/tokenizer.py`, `ir/parser.py`) — this is the object the transpiler walks to
+emit DAX and the classifier inspects to decide convertibility. Node kinds:
+`constant`, `field`, `aggregation`, `binary`, `comparison`, `logical`, `not`,
+`unary`, `conditional`, `function`, plus `unsupported`/`parse_error` (each with a
+reason). Full spec: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ---
 
@@ -235,14 +260,18 @@ step-by-step walkthrough.
 | Unzip `.twbx`, parse `.twb` XML (fields, calcs, filters, parameters) | ✅ |
 | Read `.hyper` schema and per-table data via the official Hyper API | ✅ |
 | Logical→physical field mapping (exact, case-insensitive) | ✅ |
-| AST for single aggregations (`SUM([x])`) and algebraic pairs (`SUM([a])/SUM([b])`) | ✅ |
-| Table-qualified DAX for those shapes | ✅ |
+| Real tokenizer + Pratt parser → typed calc AST | ✅ |
+| DAX for aggregations, algebraic combos, `COUNTD`, `IF`/`CASE`, basic date fns | ✅ |
+| Measure vs. calculated-column split (by aggregation); constants → parameters | ✅ |
 | Data-driven relationship inference (PK/FK by referential coverage) | ✅ |
-| Convertibility classification + skip-with-reason report | ✅ |
+| Machine-readable failure taxonomy + skip-with-reason report | ✅ |
+| Versioned IR JSON-Schema validation of every stage | ✅ |
+| pytest suite (unit + golden E2E) + GitHub Actions CI (pytest + ruff) | ✅ |
+| Evaluation harness (proxy + engine-verified correctness) | ✅ |
 | Power BI TOM + Tabular Editor `Model.json` export | ✅ |
-| LOD / table-calc / window / complex-conditional transpilation | ❌ reported, not converted |
-| A real Tableau expression parser | ❌ Phase 2 |
-| IR JSON-Schema validation, tests, CI, evaluation harness | ❌ Phase 2 |
+| LOD / table-calc / window / conditional-aggregation transpilation | ❌ reported, not converted |
+| Merging declared TWB relationships into the model | ❌ extracted only (see below) |
+| Per-dimension correctness (harness compares grand totals) | ❌ TODO |
 
 ### Fact vs. dimension is a heuristic
 
@@ -288,14 +317,30 @@ in [`examples/expected_output/`](examples/expected_output/).
 
 ## Known limitations
 
-- Only two calculation shapes are transpiled; everything else is reported.
+- **Declared TWB relationships are extracted but not merged** into the final
+  model — only data-driven (`from_hyper`) relationships reach the TOM. See the
+  `relationships/from_twb` stage guarantee.
+- LOD, table calculations, window functions, and conditional/parameter-dependent
+  aggregations are reported (with taxonomy), not transpiled.
 - Relationship inference is coverage-based on the sampled extract data.
 - No visual/dashboard migration — this is a semantic-model compiler.
-- Not yet validated against Tableau-computed values (evaluation harness is
-  Phase 2).
+- The evaluation harness compares **grand totals** and, until you hand-check
+  values in Power BI, reports only **proxy** correctness — which validates the
+  parser, not the generated DAX. See [`docs/EVALUATION.md`](docs/EVALUATION.md).
 
-See [`CHANGELOG.md`](CHANGELOG.md) for what changed and
-[`CONTRIBUTING.md`](CONTRIBUTING.md) for the development workflow.
+## Development
+
+```bash
+pip install -e ".[dev]"
+pytest -q            # unit tests + golden end-to-end
+ruff check src tests eval
+python eval/evaluate.py --ground-truth examples/eval/ground_truth_superstore.csv
+```
+
+Further reading: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) (IR spec +
+semantic mismatch + related work), [`docs/EVALUATION.md`](docs/EVALUATION.md),
+[`examples/README.md`](examples/README.md) (corpus provenance),
+[`CHANGELOG.md`](CHANGELOG.md), [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## License
 

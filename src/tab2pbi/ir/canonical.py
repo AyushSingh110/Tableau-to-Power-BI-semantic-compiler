@@ -29,7 +29,7 @@ def run(
     canonical = {
         "model_type": model_type,
         "tables": tables,
-        "measures": context_model.get("dax_measures", {}),
+        "measures": {},  # attached by the finalize stage from transpiler output
         "relationships": relationships,
         "provenance": {
             **context_model.get("provenance", {}),

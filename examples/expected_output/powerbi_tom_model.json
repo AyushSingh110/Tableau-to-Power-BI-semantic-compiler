@@ -95,6 +95,31 @@
                         "name": "Profit",
                         "dataType": "double",
                         "sourceColumn": "Profit"
+                    },
+                    {
+                        "name": "[Calculation_774619140457381925]",
+                        "type": "calculated",
+                        "expression": "DATEDIFF(Orders_ECFCA1FB690A41FE803BC071773BA862[Order Date], Orders_ECFCA1FB690A41FE803BC071773BA862[Ship Date], DAY)"
+                    },
+                    {
+                        "name": "[Parameter 1]",
+                        "type": "calculated",
+                        "expression": "2022"
+                    },
+                    {
+                        "name": "[Parameter 2]",
+                        "type": "calculated",
+                        "expression": "\"Pradeep Kumar G\""
+                    },
+                    {
+                        "name": "[Calculation_774619140497559607]",
+                        "type": "calculated",
+                        "expression": "\" Hi There,\r\n\r\nThanks for downloading my viz!\r\nThis viz was created using the Sample Superstore dataset available in Tableau Desktop.\r\n\r\nThis viz was listed in Ten Most-Favorited Vizzes on Tableau Public.\r\nhttps://public.tableau.com/en-us/s/blog/2020/10/ten-most-favorited-vizzes-celebrate-ten-viz-tastic-years-tableau-public\r\n\r\nLearn how I built this viz:\r\nhttps://www.flerlagetwins.com/2020/04/si-eff-simple-effective-design-approach.html\r\n\r\nCheers,\r\nPradeep (@pradeep_zen) \""
+                    },
+                    {
+                        "name": "[Calculation_774619140519575609]",
+                        "type": "calculated",
+                        "expression": "\"Highlight\""
                     }
                 ],
                 "measures": [
@@ -150,60 +175,56 @@
         ],
         "annotations": [
             {
-                "name": "SkippedMeasure::[Parameter 1]",
-                "value": "unsupported_expression"
+                "name": "ParameterColumn::[Parameter 1]",
+                "value": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
             },
             {
-                "name": "SkippedMeasure::[Parameter 2]",
-                "value": "unsupported_expression"
+                "name": "ParameterColumn::[Parameter 2]",
+                "value": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
+            },
+            {
+                "name": "ParameterColumn::[Calculation_774619140497559607]",
+                "value": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
+            },
+            {
+                "name": "ParameterColumn::[Calculation_774619140519575609]",
+                "value": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
             },
             {
                 "name": "SkippedMeasure::[% Diff Shape (copy)]",
-                "value": "conditional_logic"
+                "value": "references an unresolved field or another calculated field"
             },
             {
                 "name": "SkippedMeasure::[Calculation_1054123792576798720]",
-                "value": "conditional_logic"
+                "value": "unsupported function STR"
             },
             {
                 "name": "SkippedMeasure::[Calculation_1069041984833634338]",
-                "value": "conditional_logic"
+                "value": "aggregation over a non-field expression (SUM)"
             },
             {
                 "name": "SkippedMeasure::[Calculation_267682741503590407]",
-                "value": "table_calculation"
-            },
-            {
-                "name": "SkippedMeasure::[Calculation_774619140457381925]",
-                "value": "unsupported_expression"
-            },
-            {
-                "name": "SkippedMeasure::[Calculation_774619140497559607]",
-                "value": "unsupported_expression"
-            },
-            {
-                "name": "SkippedMeasure::[Calculation_774619140519575609]",
-                "value": "unsupported_expression"
+                "value": "window function WINDOW_MAX"
             },
             {
                 "name": "SkippedMeasure::[Calculation_870883616845938712]",
-                "value": "conditional_logic"
+                "value": "unsupported function STR"
             },
             {
                 "name": "SkippedMeasure::[Calculation_870883616872980509]",
-                "value": "table_calculation"
+                "value": "table calculation RANK_UNIQUE"
             },
             {
                 "name": "SkippedMeasure::[Calculation_870883616948187188]",
-                "value": "unsupported_expression"
+                "value": "unsupported function DATE"
             },
             {
                 "name": "SkippedMeasure::[Calculation_902971729521315845]",
-                "value": "table_calculation"
+                "value": "table calculation INDEX"
             },
             {
                 "name": "SkippedMeasure::[Max (copy)]",
-                "value": "table_calculation"
+                "value": "window function WINDOW_MIN"
             },
             {
                 "name": "SkippedMeasure::[Product Name (group)]",
@@ -211,7 +232,7 @@
             },
             {
                 "name": "SkippedMeasure::[Sales  (copy)_774619140372635663]",
-                "value": "conditional_logic"
+                "value": "unsupported function STR"
             },
             {
                 "name": "MigrationNote",

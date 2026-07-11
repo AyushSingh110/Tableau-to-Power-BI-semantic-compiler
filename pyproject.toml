@@ -36,6 +36,9 @@ tab2pbi = "tab2pbi.cli:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+tab2pbi = ["ir/schema/*.schema.json"]
+
 [tool.ruff]
 line-length = 100
 target-version = "py310"

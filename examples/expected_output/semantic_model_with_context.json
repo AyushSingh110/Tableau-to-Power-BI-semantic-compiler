@@ -44,45 +44,346 @@
     "measures": {
         "[Parameter 1]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "unsupported_expression",
-                "formula": "2022"
+                "node": "constant",
+                "dtype": "number",
+                "value": 2022
             },
             "formula": "2022",
             "source": "tableau"
         },
         "[Parameter 2]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "unsupported_expression",
-                "formula": "\"Pradeep Kumar G\""
+                "node": "constant",
+                "dtype": "string",
+                "value": "Pradeep Kumar G"
             },
             "formula": "\"Pradeep Kumar G\"",
             "source": "tableau"
         },
         "[% Diff Shape (copy)]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "conditional_logic",
-                "formula": "if [Calculation_1069041984833634338]>0 then \"Positive\" \r\nELSEIF[Calculation_1069041984833634338]<0 then \"Negative\" \r\nelse \"No Change\" end"
+                "node": "conditional",
+                "branches": [
+                    {
+                        "when": {
+                            "node": "comparison",
+                            "op": ">",
+                            "left": {
+                                "node": "field",
+                                "name": "Calculation_1069041984833634338",
+                                "table": null
+                            },
+                            "right": {
+                                "node": "constant",
+                                "dtype": "number",
+                                "value": 0
+                            }
+                        },
+                        "then": {
+                            "node": "constant",
+                            "dtype": "string",
+                            "value": "Positive"
+                        }
+                    },
+                    {
+                        "when": {
+                            "node": "comparison",
+                            "op": "<",
+                            "left": {
+                                "node": "field",
+                                "name": "Calculation_1069041984833634338",
+                                "table": null
+                            },
+                            "right": {
+                                "node": "constant",
+                                "dtype": "number",
+                                "value": 0
+                            }
+                        },
+                        "then": {
+                            "node": "constant",
+                            "dtype": "string",
+                            "value": "Negative"
+                        }
+                    }
+                ],
+                "otherwise": {
+                    "node": "constant",
+                    "dtype": "string",
+                    "value": "No Change"
+                }
             },
             "formula": "if [Calculation_1069041984833634338]>0 then \"Positive\" \r\nELSEIF[Calculation_1069041984833634338]<0 then \"Negative\" \r\nelse \"No Change\" end",
             "source": "tableau"
         },
         "[Calculation_1054123792576798720]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "conditional_logic",
-                "formula": "IF COUNTD([Calculation_870883616948187188])=1 THEN ATTR(STR(YEAR([Order Date])))\r\nELSE (STR(MIN(YEAR([Order Date])))+\" - \"+STR(MAX(YEAR([Order Date]))))\r\nEND"
+                "node": "conditional",
+                "branches": [
+                    {
+                        "when": {
+                            "node": "comparison",
+                            "op": "=",
+                            "left": {
+                                "node": "aggregation",
+                                "agg": "COUNTD",
+                                "arg": {
+                                    "node": "field",
+                                    "name": "Calculation_870883616948187188",
+                                    "table": null
+                                }
+                            },
+                            "right": {
+                                "node": "constant",
+                                "dtype": "number",
+                                "value": 1
+                            }
+                        },
+                        "then": {
+                            "node": "aggregation",
+                            "agg": "ATTR",
+                            "arg": {
+                                "node": "function",
+                                "name": "STR",
+                                "args": [
+                                    {
+                                        "node": "function",
+                                        "name": "YEAR",
+                                        "args": [
+                                            {
+                                                "node": "field",
+                                                "name": "Order Date",
+                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "otherwise": {
+                    "node": "binary",
+                    "op": "+",
+                    "left": {
+                        "node": "binary",
+                        "op": "+",
+                        "left": {
+                            "node": "function",
+                            "name": "STR",
+                            "args": [
+                                {
+                                    "node": "aggregation",
+                                    "agg": "MIN",
+                                    "arg": {
+                                        "node": "function",
+                                        "name": "YEAR",
+                                        "args": [
+                                            {
+                                                "node": "field",
+                                                "name": "Order Date",
+                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        "right": {
+                            "node": "constant",
+                            "dtype": "string",
+                            "value": " - "
+                        }
+                    },
+                    "right": {
+                        "node": "function",
+                        "name": "STR",
+                        "args": [
+                            {
+                                "node": "aggregation",
+                                "agg": "MAX",
+                                "arg": {
+                                    "node": "function",
+                                    "name": "YEAR",
+                                    "args": [
+                                        {
+                                            "node": "field",
+                                            "name": "Order Date",
+                                            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                }
             },
             "formula": "IF COUNTD([Calculation_870883616948187188])=1 THEN ATTR(STR(YEAR([Order Date])))\r\nELSE (STR(MIN(YEAR([Order Date])))+\" - \"+STR(MAX(YEAR([Order Date]))))\r\nEND",
             "source": "tableau"
         },
         "[Calculation_1069041984833634338]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "conditional_logic",
-                "formula": "(SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1] THEN [Sales] ELSE NULL END)\r\n-ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))\r\n/ (SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))"
+                "node": "binary",
+                "op": "/",
+                "left": {
+                    "node": "aggregation",
+                    "agg": "SUM",
+                    "arg": {
+                        "node": "binary",
+                        "op": "-",
+                        "left": {
+                            "node": "function",
+                            "name": "ZN",
+                            "args": [
+                                {
+                                    "node": "conditional",
+                                    "branches": [
+                                        {
+                                            "when": {
+                                                "node": "comparison",
+                                                "op": "=",
+                                                "left": {
+                                                    "node": "function",
+                                                    "name": "YEAR",
+                                                    "args": [
+                                                        {
+                                                            "node": "field",
+                                                            "name": "Order Date",
+                                                            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                        }
+                                                    ]
+                                                },
+                                                "right": {
+                                                    "node": "field",
+                                                    "name": "Parameter 1",
+                                                    "table": null
+                                                }
+                                            },
+                                            "then": {
+                                                "node": "field",
+                                                "name": "Sales",
+                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                            }
+                                        }
+                                    ],
+                                    "otherwise": {
+                                        "node": "constant",
+                                        "dtype": "null",
+                                        "value": null
+                                    }
+                                }
+                            ]
+                        },
+                        "right": {
+                            "node": "function",
+                            "name": "ZN",
+                            "args": [
+                                {
+                                    "node": "conditional",
+                                    "branches": [
+                                        {
+                                            "when": {
+                                                "node": "comparison",
+                                                "op": "=",
+                                                "left": {
+                                                    "node": "function",
+                                                    "name": "YEAR",
+                                                    "args": [
+                                                        {
+                                                            "node": "field",
+                                                            "name": "Order Date",
+                                                            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                        }
+                                                    ]
+                                                },
+                                                "right": {
+                                                    "node": "binary",
+                                                    "op": "-",
+                                                    "left": {
+                                                        "node": "field",
+                                                        "name": "Parameter 1",
+                                                        "table": null
+                                                    },
+                                                    "right": {
+                                                        "node": "constant",
+                                                        "dtype": "number",
+                                                        "value": 1
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "node": "field",
+                                                "name": "Sales",
+                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                            }
+                                        }
+                                    ],
+                                    "otherwise": {
+                                        "node": "constant",
+                                        "dtype": "null",
+                                        "value": null
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "right": {
+                    "node": "aggregation",
+                    "agg": "SUM",
+                    "arg": {
+                        "node": "function",
+                        "name": "ZN",
+                        "args": [
+                            {
+                                "node": "conditional",
+                                "branches": [
+                                    {
+                                        "when": {
+                                            "node": "comparison",
+                                            "op": "=",
+                                            "left": {
+                                                "node": "function",
+                                                "name": "YEAR",
+                                                "args": [
+                                                    {
+                                                        "node": "field",
+                                                        "name": "Order Date",
+                                                        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                    }
+                                                ]
+                                            },
+                                            "right": {
+                                                "node": "binary",
+                                                "op": "-",
+                                                "left": {
+                                                    "node": "field",
+                                                    "name": "Parameter 1",
+                                                    "table": null
+                                                },
+                                                "right": {
+                                                    "node": "constant",
+                                                    "dtype": "number",
+                                                    "value": 1
+                                                }
+                                            }
+                                        },
+                                        "then": {
+                                            "node": "field",
+                                            "name": "Sales",
+                                            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                        }
+                                    }
+                                ],
+                                "otherwise": {
+                                    "node": "constant",
+                                    "dtype": "null",
+                                    "value": null
+                                }
+                            }
+                        ]
+                    }
+                }
             },
             "formula": "(SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1] THEN [Sales] ELSE NULL END)\r\n-ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))\r\n/ (SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))",
             "source": "tableau"
@@ -92,14 +393,22 @@
                 "node": "binary",
                 "op": "/",
                 "left": {
+                    "node": "aggregation",
                     "agg": "SUM",
-                    "field": "Profit",
-                    "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                    "arg": {
+                        "node": "field",
+                        "name": "Profit",
+                        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                    }
                 },
                 "right": {
+                    "node": "aggregation",
                     "agg": "SUM",
-                    "field": "Sales",
-                    "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                    "arg": {
+                        "node": "field",
+                        "name": "Sales",
+                        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                    }
                 }
             },
             "formula": "SUM([Profit])/SUM([Sales])",
@@ -107,81 +416,935 @@
         },
         "[Calculation_267682741503590407]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "table_calculation",
-                "formula": "IF SUM([Sales]) = WINDOW_MAX(SUM([Sales])) THEN SUM([Sales])\r\nELSE NULL END"
+                "node": "conditional",
+                "branches": [
+                    {
+                        "when": {
+                            "node": "comparison",
+                            "op": "=",
+                            "left": {
+                                "node": "aggregation",
+                                "agg": "SUM",
+                                "arg": {
+                                    "node": "field",
+                                    "name": "Sales",
+                                    "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                }
+                            },
+                            "right": {
+                                "node": "function",
+                                "name": "WINDOW_MAX",
+                                "args": [
+                                    {
+                                        "node": "aggregation",
+                                        "agg": "SUM",
+                                        "arg": {
+                                            "node": "field",
+                                            "name": "Sales",
+                                            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        "then": {
+                            "node": "aggregation",
+                            "agg": "SUM",
+                            "arg": {
+                                "node": "field",
+                                "name": "Sales",
+                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                            }
+                        }
+                    }
+                ],
+                "otherwise": {
+                    "node": "constant",
+                    "dtype": "null",
+                    "value": null
+                }
             },
             "formula": "IF SUM([Sales]) = WINDOW_MAX(SUM([Sales])) THEN SUM([Sales])\r\nELSE NULL END",
             "source": "tableau"
         },
         "[Calculation_774619140457381925]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "unsupported_expression",
-                "formula": "DATEDIFF('day',[Order Date],[Ship Date])"
+                "node": "function",
+                "name": "DATEDIFF",
+                "args": [
+                    {
+                        "node": "constant",
+                        "dtype": "string",
+                        "value": "day"
+                    },
+                    {
+                        "node": "field",
+                        "name": "Order Date",
+                        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                    },
+                    {
+                        "node": "field",
+                        "name": "Ship Date",
+                        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                    }
+                ]
             },
             "formula": "DATEDIFF('day',[Order Date],[Ship Date])",
             "source": "tableau"
         },
         "[Calculation_774619140497559607]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "unsupported_expression",
-                "formula": "\" Hi There,\r\n\r\nThanks for downloading my viz!\r\nThis viz was created using the Sample Superstore dataset available in Tableau Desktop.\r\n\r\nThis viz was listed in Ten Most-Favorited Vizzes on Tableau Public.\r\nhttps://public.tableau.com/en-us/s/blog/2020/10/ten-most-favorited-vizzes-celebrate-ten-viz-tastic-years-tableau-public\r\n\r\nLearn how I built this viz:\r\nhttps://www.flerlagetwins.com/2020/04/si-eff-simple-effective-design-approach.html\r\n\r\nCheers,\r\nPradeep (@pradeep_zen) \""
+                "node": "constant",
+                "dtype": "string",
+                "value": " Hi There,\r\n\r\nThanks for downloading my viz!\r\nThis viz was created using the Sample Superstore dataset available in Tableau Desktop.\r\n\r\nThis viz was listed in Ten Most-Favorited Vizzes on Tableau Public.\r\nhttps://public.tableau.com/en-us/s/blog/2020/10/ten-most-favorited-vizzes-celebrate-ten-viz-tastic-years-tableau-public\r\n\r\nLearn how I built this viz:\r\nhttps://www.flerlagetwins.com/2020/04/si-eff-simple-effective-design-approach.html\r\n\r\nCheers,\r\nPradeep (@pradeep_zen) "
             },
             "formula": "\" Hi There,\r\n\r\nThanks for downloading my viz!\r\nThis viz was created using the Sample Superstore dataset available in Tableau Desktop.\r\n\r\nThis viz was listed in Ten Most-Favorited Vizzes on Tableau Public.\r\nhttps://public.tableau.com/en-us/s/blog/2020/10/ten-most-favorited-vizzes-celebrate-ten-viz-tastic-years-tableau-public\r\n\r\nLearn how I built this viz:\r\nhttps://www.flerlagetwins.com/2020/04/si-eff-simple-effective-design-approach.html\r\n\r\nCheers,\r\nPradeep (@pradeep_zen) \"",
             "source": "tableau"
         },
         "[Calculation_774619140519575609]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "unsupported_expression",
-                "formula": "\"Highlight\"\r\n\r\n//To prevent highlight on click using hightlight action.\r\n//Blog by Brian Moore: https://sonsofhierarchies.com/default-highlighting/"
+                "node": "constant",
+                "dtype": "string",
+                "value": "Highlight"
             },
             "formula": "\"Highlight\"\r\n\r\n//To prevent highlight on click using hightlight action.\r\n//Blog by Brian Moore: https://sonsofhierarchies.com/default-highlighting/",
             "source": "tableau"
         },
         "[Calculation_870883616845938712]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "conditional_logic",
-                "formula": "//Determine if the value is negative\r\nIF SUM([Sales]) < 0 THEN '-' ELSE '' END\r\n+\r\n'$' //Dolar Symbol\r\n+\r\n\r\n//Get Int Amount by Dividing the Value by its' Base 1000 Value\r\nSTR(INT(ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(  ROUND(ABS(SUM([Sales]))/10,0)*10 ,1000))),1)))\r\n+\r\n\r\n//Determine if you need to show a decimal\r\n//If the Modulo is zero, we just want to show blank (Ex 159.0K = 159K)\r\n//Else we want to show the decimal value (Ex 159.4K)\r\nIF (ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(ABS(SUM([Sales])),1000))),1)*10)%10 = 0 THEN ''\r\nELSE '.' + STR((ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(ABS(SUM([Sales])),1000))),1)*10)%10)\r\nEND\r\n+\r\n\r\n//Determine the Unit to display based on the Log Base 1000\r\nCASE INT(LOG(ROUND(ABS(SUM([Sales]))/10,0)*10,1000)) //Unit Symbol\r\nWHEN 1 THEN 'K'\r\nWHEN 2 THEN 'M'\r\nWHEN 3 THEN 'B'\r\nWHEN 4 THEN 'T'\r\nELSE ''\r\nEND"
+                "node": "binary",
+                "op": "+",
+                "left": {
+                    "node": "binary",
+                    "op": "+",
+                    "left": {
+                        "node": "binary",
+                        "op": "+",
+                        "left": {
+                            "node": "binary",
+                            "op": "+",
+                            "left": {
+                                "node": "conditional",
+                                "branches": [
+                                    {
+                                        "when": {
+                                            "node": "comparison",
+                                            "op": "<",
+                                            "left": {
+                                                "node": "aggregation",
+                                                "agg": "SUM",
+                                                "arg": {
+                                                    "node": "field",
+                                                    "name": "Sales",
+                                                    "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                }
+                                            },
+                                            "right": {
+                                                "node": "constant",
+                                                "dtype": "number",
+                                                "value": 0
+                                            }
+                                        },
+                                        "then": {
+                                            "node": "constant",
+                                            "dtype": "string",
+                                            "value": "-"
+                                        }
+                                    }
+                                ],
+                                "otherwise": {
+                                    "node": "constant",
+                                    "dtype": "string",
+                                    "value": ""
+                                }
+                            },
+                            "right": {
+                                "node": "constant",
+                                "dtype": "string",
+                                "value": "$"
+                            }
+                        },
+                        "right": {
+                            "node": "function",
+                            "name": "STR",
+                            "args": [
+                                {
+                                    "node": "function",
+                                    "name": "INT",
+                                    "args": [
+                                        {
+                                            "node": "function",
+                                            "name": "ROUND",
+                                            "args": [
+                                                {
+                                                    "node": "binary",
+                                                    "op": "/",
+                                                    "left": {
+                                                        "node": "function",
+                                                        "name": "ABS",
+                                                        "args": [
+                                                            {
+                                                                "node": "aggregation",
+                                                                "agg": "SUM",
+                                                                "arg": {
+                                                                    "node": "field",
+                                                                    "name": "Sales",
+                                                                    "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                }
+                                                            }
+                                                        ]
+                                                    },
+                                                    "right": {
+                                                        "node": "function",
+                                                        "name": "POWER",
+                                                        "args": [
+                                                            {
+                                                                "node": "constant",
+                                                                "dtype": "number",
+                                                                "value": 1000
+                                                            },
+                                                            {
+                                                                "node": "function",
+                                                                "name": "INT",
+                                                                "args": [
+                                                                    {
+                                                                        "node": "function",
+                                                                        "name": "LOG",
+                                                                        "args": [
+                                                                            {
+                                                                                "node": "binary",
+                                                                                "op": "*",
+                                                                                "left": {
+                                                                                    "node": "function",
+                                                                                    "name": "ROUND",
+                                                                                    "args": [
+                                                                                        {
+                                                                                            "node": "binary",
+                                                                                            "op": "/",
+                                                                                            "left": {
+                                                                                                "node": "function",
+                                                                                                "name": "ABS",
+                                                                                                "args": [
+                                                                                                    {
+                                                                                                        "node": "aggregation",
+                                                                                                        "agg": "SUM",
+                                                                                                        "arg": {
+                                                                                                            "node": "field",
+                                                                                                            "name": "Sales",
+                                                                                                            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                                                        }
+                                                                                                    }
+                                                                                                ]
+                                                                                            },
+                                                                                            "right": {
+                                                                                                "node": "constant",
+                                                                                                "dtype": "number",
+                                                                                                "value": 10
+                                                                                            }
+                                                                                        },
+                                                                                        {
+                                                                                            "node": "constant",
+                                                                                            "dtype": "number",
+                                                                                            "value": 0
+                                                                                        }
+                                                                                    ]
+                                                                                },
+                                                                                "right": {
+                                                                                    "node": "constant",
+                                                                                    "dtype": "number",
+                                                                                    "value": 10
+                                                                                }
+                                                                            },
+                                                                            {
+                                                                                "node": "constant",
+                                                                                "dtype": "number",
+                                                                                "value": 1000
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                },
+                                                {
+                                                    "node": "constant",
+                                                    "dtype": "number",
+                                                    "value": 1
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "right": {
+                        "node": "conditional",
+                        "branches": [
+                            {
+                                "when": {
+                                    "node": "comparison",
+                                    "op": "=",
+                                    "left": {
+                                        "node": "binary",
+                                        "op": "%",
+                                        "left": {
+                                            "node": "binary",
+                                            "op": "*",
+                                            "left": {
+                                                "node": "function",
+                                                "name": "ROUND",
+                                                "args": [
+                                                    {
+                                                        "node": "binary",
+                                                        "op": "/",
+                                                        "left": {
+                                                            "node": "function",
+                                                            "name": "ABS",
+                                                            "args": [
+                                                                {
+                                                                    "node": "aggregation",
+                                                                    "agg": "SUM",
+                                                                    "arg": {
+                                                                        "node": "field",
+                                                                        "name": "Sales",
+                                                                        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "right": {
+                                                            "node": "function",
+                                                            "name": "POWER",
+                                                            "args": [
+                                                                {
+                                                                    "node": "constant",
+                                                                    "dtype": "number",
+                                                                    "value": 1000
+                                                                },
+                                                                {
+                                                                    "node": "function",
+                                                                    "name": "INT",
+                                                                    "args": [
+                                                                        {
+                                                                            "node": "function",
+                                                                            "name": "LOG",
+                                                                            "args": [
+                                                                                {
+                                                                                    "node": "function",
+                                                                                    "name": "ABS",
+                                                                                    "args": [
+                                                                                        {
+                                                                                            "node": "aggregation",
+                                                                                            "agg": "SUM",
+                                                                                            "arg": {
+                                                                                                "node": "field",
+                                                                                                "name": "Sales",
+                                                                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                                            }
+                                                                                        }
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "node": "constant",
+                                                                                    "dtype": "number",
+                                                                                    "value": 1000
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "node": "constant",
+                                                        "dtype": "number",
+                                                        "value": 1
+                                                    }
+                                                ]
+                                            },
+                                            "right": {
+                                                "node": "constant",
+                                                "dtype": "number",
+                                                "value": 10
+                                            }
+                                        },
+                                        "right": {
+                                            "node": "constant",
+                                            "dtype": "number",
+                                            "value": 10
+                                        }
+                                    },
+                                    "right": {
+                                        "node": "constant",
+                                        "dtype": "number",
+                                        "value": 0
+                                    }
+                                },
+                                "then": {
+                                    "node": "constant",
+                                    "dtype": "string",
+                                    "value": ""
+                                }
+                            }
+                        ],
+                        "otherwise": {
+                            "node": "binary",
+                            "op": "+",
+                            "left": {
+                                "node": "constant",
+                                "dtype": "string",
+                                "value": "."
+                            },
+                            "right": {
+                                "node": "function",
+                                "name": "STR",
+                                "args": [
+                                    {
+                                        "node": "binary",
+                                        "op": "%",
+                                        "left": {
+                                            "node": "binary",
+                                            "op": "*",
+                                            "left": {
+                                                "node": "function",
+                                                "name": "ROUND",
+                                                "args": [
+                                                    {
+                                                        "node": "binary",
+                                                        "op": "/",
+                                                        "left": {
+                                                            "node": "function",
+                                                            "name": "ABS",
+                                                            "args": [
+                                                                {
+                                                                    "node": "aggregation",
+                                                                    "agg": "SUM",
+                                                                    "arg": {
+                                                                        "node": "field",
+                                                                        "name": "Sales",
+                                                                        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "right": {
+                                                            "node": "function",
+                                                            "name": "POWER",
+                                                            "args": [
+                                                                {
+                                                                    "node": "constant",
+                                                                    "dtype": "number",
+                                                                    "value": 1000
+                                                                },
+                                                                {
+                                                                    "node": "function",
+                                                                    "name": "INT",
+                                                                    "args": [
+                                                                        {
+                                                                            "node": "function",
+                                                                            "name": "LOG",
+                                                                            "args": [
+                                                                                {
+                                                                                    "node": "function",
+                                                                                    "name": "ABS",
+                                                                                    "args": [
+                                                                                        {
+                                                                                            "node": "aggregation",
+                                                                                            "agg": "SUM",
+                                                                                            "arg": {
+                                                                                                "node": "field",
+                                                                                                "name": "Sales",
+                                                                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                                            }
+                                                                                        }
+                                                                                    ]
+                                                                                },
+                                                                                {
+                                                                                    "node": "constant",
+                                                                                    "dtype": "number",
+                                                                                    "value": 1000
+                                                                                }
+                                                                            ]
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "node": "constant",
+                                                        "dtype": "number",
+                                                        "value": 1
+                                                    }
+                                                ]
+                                            },
+                                            "right": {
+                                                "node": "constant",
+                                                "dtype": "number",
+                                                "value": 10
+                                            }
+                                        },
+                                        "right": {
+                                            "node": "constant",
+                                            "dtype": "number",
+                                            "value": 10
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "right": {
+                    "node": "conditional",
+                    "branches": [
+                        {
+                            "when": {
+                                "node": "comparison",
+                                "op": "=",
+                                "left": {
+                                    "node": "function",
+                                    "name": "INT",
+                                    "args": [
+                                        {
+                                            "node": "function",
+                                            "name": "LOG",
+                                            "args": [
+                                                {
+                                                    "node": "binary",
+                                                    "op": "*",
+                                                    "left": {
+                                                        "node": "function",
+                                                        "name": "ROUND",
+                                                        "args": [
+                                                            {
+                                                                "node": "binary",
+                                                                "op": "/",
+                                                                "left": {
+                                                                    "node": "function",
+                                                                    "name": "ABS",
+                                                                    "args": [
+                                                                        {
+                                                                            "node": "aggregation",
+                                                                            "agg": "SUM",
+                                                                            "arg": {
+                                                                                "node": "field",
+                                                                                "name": "Sales",
+                                                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "right": {
+                                                                    "node": "constant",
+                                                                    "dtype": "number",
+                                                                    "value": 10
+                                                                }
+                                                            },
+                                                            {
+                                                                "node": "constant",
+                                                                "dtype": "number",
+                                                                "value": 0
+                                                            }
+                                                        ]
+                                                    },
+                                                    "right": {
+                                                        "node": "constant",
+                                                        "dtype": "number",
+                                                        "value": 10
+                                                    }
+                                                },
+                                                {
+                                                    "node": "constant",
+                                                    "dtype": "number",
+                                                    "value": 1000
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "right": {
+                                    "node": "constant",
+                                    "dtype": "number",
+                                    "value": 1
+                                }
+                            },
+                            "then": {
+                                "node": "constant",
+                                "dtype": "string",
+                                "value": "K"
+                            }
+                        },
+                        {
+                            "when": {
+                                "node": "comparison",
+                                "op": "=",
+                                "left": {
+                                    "node": "function",
+                                    "name": "INT",
+                                    "args": [
+                                        {
+                                            "node": "function",
+                                            "name": "LOG",
+                                            "args": [
+                                                {
+                                                    "node": "binary",
+                                                    "op": "*",
+                                                    "left": {
+                                                        "node": "function",
+                                                        "name": "ROUND",
+                                                        "args": [
+                                                            {
+                                                                "node": "binary",
+                                                                "op": "/",
+                                                                "left": {
+                                                                    "node": "function",
+                                                                    "name": "ABS",
+                                                                    "args": [
+                                                                        {
+                                                                            "node": "aggregation",
+                                                                            "agg": "SUM",
+                                                                            "arg": {
+                                                                                "node": "field",
+                                                                                "name": "Sales",
+                                                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "right": {
+                                                                    "node": "constant",
+                                                                    "dtype": "number",
+                                                                    "value": 10
+                                                                }
+                                                            },
+                                                            {
+                                                                "node": "constant",
+                                                                "dtype": "number",
+                                                                "value": 0
+                                                            }
+                                                        ]
+                                                    },
+                                                    "right": {
+                                                        "node": "constant",
+                                                        "dtype": "number",
+                                                        "value": 10
+                                                    }
+                                                },
+                                                {
+                                                    "node": "constant",
+                                                    "dtype": "number",
+                                                    "value": 1000
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "right": {
+                                    "node": "constant",
+                                    "dtype": "number",
+                                    "value": 2
+                                }
+                            },
+                            "then": {
+                                "node": "constant",
+                                "dtype": "string",
+                                "value": "M"
+                            }
+                        },
+                        {
+                            "when": {
+                                "node": "comparison",
+                                "op": "=",
+                                "left": {
+                                    "node": "function",
+                                    "name": "INT",
+                                    "args": [
+                                        {
+                                            "node": "function",
+                                            "name": "LOG",
+                                            "args": [
+                                                {
+                                                    "node": "binary",
+                                                    "op": "*",
+                                                    "left": {
+                                                        "node": "function",
+                                                        "name": "ROUND",
+                                                        "args": [
+                                                            {
+                                                                "node": "binary",
+                                                                "op": "/",
+                                                                "left": {
+                                                                    "node": "function",
+                                                                    "name": "ABS",
+                                                                    "args": [
+                                                                        {
+                                                                            "node": "aggregation",
+                                                                            "agg": "SUM",
+                                                                            "arg": {
+                                                                                "node": "field",
+                                                                                "name": "Sales",
+                                                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "right": {
+                                                                    "node": "constant",
+                                                                    "dtype": "number",
+                                                                    "value": 10
+                                                                }
+                                                            },
+                                                            {
+                                                                "node": "constant",
+                                                                "dtype": "number",
+                                                                "value": 0
+                                                            }
+                                                        ]
+                                                    },
+                                                    "right": {
+                                                        "node": "constant",
+                                                        "dtype": "number",
+                                                        "value": 10
+                                                    }
+                                                },
+                                                {
+                                                    "node": "constant",
+                                                    "dtype": "number",
+                                                    "value": 1000
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "right": {
+                                    "node": "constant",
+                                    "dtype": "number",
+                                    "value": 3
+                                }
+                            },
+                            "then": {
+                                "node": "constant",
+                                "dtype": "string",
+                                "value": "B"
+                            }
+                        },
+                        {
+                            "when": {
+                                "node": "comparison",
+                                "op": "=",
+                                "left": {
+                                    "node": "function",
+                                    "name": "INT",
+                                    "args": [
+                                        {
+                                            "node": "function",
+                                            "name": "LOG",
+                                            "args": [
+                                                {
+                                                    "node": "binary",
+                                                    "op": "*",
+                                                    "left": {
+                                                        "node": "function",
+                                                        "name": "ROUND",
+                                                        "args": [
+                                                            {
+                                                                "node": "binary",
+                                                                "op": "/",
+                                                                "left": {
+                                                                    "node": "function",
+                                                                    "name": "ABS",
+                                                                    "args": [
+                                                                        {
+                                                                            "node": "aggregation",
+                                                                            "agg": "SUM",
+                                                                            "arg": {
+                                                                                "node": "field",
+                                                                                "name": "Sales",
+                                                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "right": {
+                                                                    "node": "constant",
+                                                                    "dtype": "number",
+                                                                    "value": 10
+                                                                }
+                                                            },
+                                                            {
+                                                                "node": "constant",
+                                                                "dtype": "number",
+                                                                "value": 0
+                                                            }
+                                                        ]
+                                                    },
+                                                    "right": {
+                                                        "node": "constant",
+                                                        "dtype": "number",
+                                                        "value": 10
+                                                    }
+                                                },
+                                                {
+                                                    "node": "constant",
+                                                    "dtype": "number",
+                                                    "value": 1000
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "right": {
+                                    "node": "constant",
+                                    "dtype": "number",
+                                    "value": 4
+                                }
+                            },
+                            "then": {
+                                "node": "constant",
+                                "dtype": "string",
+                                "value": "T"
+                            }
+                        }
+                    ],
+                    "otherwise": {
+                        "node": "constant",
+                        "dtype": "string",
+                        "value": ""
+                    }
+                }
             },
             "formula": "//Determine if the value is negative\r\nIF SUM([Sales]) < 0 THEN '-' ELSE '' END\r\n+\r\n'$' //Dolar Symbol\r\n+\r\n\r\n//Get Int Amount by Dividing the Value by its' Base 1000 Value\r\nSTR(INT(ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(  ROUND(ABS(SUM([Sales]))/10,0)*10 ,1000))),1)))\r\n+\r\n\r\n//Determine if you need to show a decimal\r\n//If the Modulo is zero, we just want to show blank (Ex 159.0K = 159K)\r\n//Else we want to show the decimal value (Ex 159.4K)\r\nIF (ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(ABS(SUM([Sales])),1000))),1)*10)%10 = 0 THEN ''\r\nELSE '.' + STR((ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(ABS(SUM([Sales])),1000))),1)*10)%10)\r\nEND\r\n+\r\n\r\n//Determine the Unit to display based on the Log Base 1000\r\nCASE INT(LOG(ROUND(ABS(SUM([Sales]))/10,0)*10,1000)) //Unit Symbol\r\nWHEN 1 THEN 'K'\r\nWHEN 2 THEN 'M'\r\nWHEN 3 THEN 'B'\r\nWHEN 4 THEN 'T'\r\nELSE ''\r\nEND",
             "source": "tableau"
         },
         "[Calculation_870883616872980509]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "table_calculation",
-                "formula": "RANK_UNIQUE(SUM([Sales]),'desc')"
+                "node": "function",
+                "name": "RANK_UNIQUE",
+                "args": [
+                    {
+                        "node": "aggregation",
+                        "agg": "SUM",
+                        "arg": {
+                            "node": "field",
+                            "name": "Sales",
+                            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                        }
+                    },
+                    {
+                        "node": "constant",
+                        "dtype": "string",
+                        "value": "desc"
+                    }
+                ]
             },
             "formula": "RANK_UNIQUE(SUM([Sales]),'desc')",
             "source": "tableau"
         },
         "[Calculation_870883616948187188]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "unsupported_expression",
-                "formula": "DATE(DATEPARSE ( \"yyyy\", STR(DATEPART('year', [Order Date])) ))"
+                "node": "function",
+                "name": "DATE",
+                "args": [
+                    {
+                        "node": "function",
+                        "name": "DATEPARSE",
+                        "args": [
+                            {
+                                "node": "constant",
+                                "dtype": "string",
+                                "value": "yyyy"
+                            },
+                            {
+                                "node": "function",
+                                "name": "STR",
+                                "args": [
+                                    {
+                                        "node": "function",
+                                        "name": "DATEPART",
+                                        "args": [
+                                            {
+                                                "node": "constant",
+                                                "dtype": "string",
+                                                "value": "year"
+                                            },
+                                            {
+                                                "node": "field",
+                                                "name": "Order Date",
+                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
             },
             "formula": "DATE(DATEPARSE ( \"yyyy\", STR(DATEPART('year', [Order Date])) ))",
             "source": "tableau"
         },
         "[Calculation_902971729521315845]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "table_calculation",
-                "formula": "Index()"
+                "node": "function",
+                "name": "INDEX",
+                "args": []
             },
             "formula": "Index()",
             "source": "tableau"
         },
         "[Max (copy)]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "table_calculation",
-                "formula": "IF SUM([Sales]) = WINDOW_MIN(SUM([Sales])) THEN SUM([Sales])\r\nELSE NULL END"
+                "node": "conditional",
+                "branches": [
+                    {
+                        "when": {
+                            "node": "comparison",
+                            "op": "=",
+                            "left": {
+                                "node": "aggregation",
+                                "agg": "SUM",
+                                "arg": {
+                                    "node": "field",
+                                    "name": "Sales",
+                                    "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                }
+                            },
+                            "right": {
+                                "node": "function",
+                                "name": "WINDOW_MIN",
+                                "args": [
+                                    {
+                                        "node": "aggregation",
+                                        "agg": "SUM",
+                                        "arg": {
+                                            "node": "field",
+                                            "name": "Sales",
+                                            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        "then": {
+                            "node": "aggregation",
+                            "agg": "SUM",
+                            "arg": {
+                                "node": "field",
+                                "name": "Sales",
+                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                            }
+                        }
+                    }
+                ],
+                "otherwise": {
+                    "node": "constant",
+                    "dtype": "null",
+                    "value": null
+                }
             },
             "formula": "IF SUM([Sales]) = WINDOW_MIN(SUM([Sales])) THEN SUM([Sales])\r\nELSE NULL END",
             "source": "tableau"
@@ -197,9 +1360,488 @@
         },
         "[Sales  (copy)_774619140372635663]": {
             "ast": {
-                "node": "unsupported",
-                "reason": "conditional_logic",
-                "formula": "//Determine if the value is negative\r\nIF SUM([Sales]) < 0 THEN '-' ELSE '' END\r\n+\r\n'$' //Dolar Symbol\r\n+\r\n\r\n//Get Int Amount by Dividing the Value by its' Base 1000 Value\r\nSTR(INT(ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(  ROUND(ABS(SUM([Sales]))/10,0)*10 ,1000))),1)))\r\n\r\n+\r\n\r\n//Determine the Unit to display based on the Log Base 1000\r\nCASE INT(LOG(ROUND(ABS(SUM([Sales]))/10,0)*10,1000)) //Unit Symbol\r\nWHEN 1 THEN 'K'\r\nWHEN 2 THEN 'M'\r\nWHEN 3 THEN 'B'\r\nWHEN 4 THEN 'T'\r\nELSE ''\r\nEND"
+                "node": "binary",
+                "op": "+",
+                "left": {
+                    "node": "binary",
+                    "op": "+",
+                    "left": {
+                        "node": "binary",
+                        "op": "+",
+                        "left": {
+                            "node": "conditional",
+                            "branches": [
+                                {
+                                    "when": {
+                                        "node": "comparison",
+                                        "op": "<",
+                                        "left": {
+                                            "node": "aggregation",
+                                            "agg": "SUM",
+                                            "arg": {
+                                                "node": "field",
+                                                "name": "Sales",
+                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                            }
+                                        },
+                                        "right": {
+                                            "node": "constant",
+                                            "dtype": "number",
+                                            "value": 0
+                                        }
+                                    },
+                                    "then": {
+                                        "node": "constant",
+                                        "dtype": "string",
+                                        "value": "-"
+                                    }
+                                }
+                            ],
+                            "otherwise": {
+                                "node": "constant",
+                                "dtype": "string",
+                                "value": ""
+                            }
+                        },
+                        "right": {
+                            "node": "constant",
+                            "dtype": "string",
+                            "value": "$"
+                        }
+                    },
+                    "right": {
+                        "node": "function",
+                        "name": "STR",
+                        "args": [
+                            {
+                                "node": "function",
+                                "name": "INT",
+                                "args": [
+                                    {
+                                        "node": "function",
+                                        "name": "ROUND",
+                                        "args": [
+                                            {
+                                                "node": "binary",
+                                                "op": "/",
+                                                "left": {
+                                                    "node": "function",
+                                                    "name": "ABS",
+                                                    "args": [
+                                                        {
+                                                            "node": "aggregation",
+                                                            "agg": "SUM",
+                                                            "arg": {
+                                                                "node": "field",
+                                                                "name": "Sales",
+                                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                "right": {
+                                                    "node": "function",
+                                                    "name": "POWER",
+                                                    "args": [
+                                                        {
+                                                            "node": "constant",
+                                                            "dtype": "number",
+                                                            "value": 1000
+                                                        },
+                                                        {
+                                                            "node": "function",
+                                                            "name": "INT",
+                                                            "args": [
+                                                                {
+                                                                    "node": "function",
+                                                                    "name": "LOG",
+                                                                    "args": [
+                                                                        {
+                                                                            "node": "binary",
+                                                                            "op": "*",
+                                                                            "left": {
+                                                                                "node": "function",
+                                                                                "name": "ROUND",
+                                                                                "args": [
+                                                                                    {
+                                                                                        "node": "binary",
+                                                                                        "op": "/",
+                                                                                        "left": {
+                                                                                            "node": "function",
+                                                                                            "name": "ABS",
+                                                                                            "args": [
+                                                                                                {
+                                                                                                    "node": "aggregation",
+                                                                                                    "agg": "SUM",
+                                                                                                    "arg": {
+                                                                                                        "node": "field",
+                                                                                                        "name": "Sales",
+                                                                                                        "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                                                    }
+                                                                                                }
+                                                                                            ]
+                                                                                        },
+                                                                                        "right": {
+                                                                                            "node": "constant",
+                                                                                            "dtype": "number",
+                                                                                            "value": 10
+                                                                                        }
+                                                                                    },
+                                                                                    {
+                                                                                        "node": "constant",
+                                                                                        "dtype": "number",
+                                                                                        "value": 0
+                                                                                    }
+                                                                                ]
+                                                                            },
+                                                                            "right": {
+                                                                                "node": "constant",
+                                                                                "dtype": "number",
+                                                                                "value": 10
+                                                                            }
+                                                                        },
+                                                                        {
+                                                                            "node": "constant",
+                                                                            "dtype": "number",
+                                                                            "value": 1000
+                                                                        }
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            {
+                                                "node": "constant",
+                                                "dtype": "number",
+                                                "value": 1
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "right": {
+                    "node": "conditional",
+                    "branches": [
+                        {
+                            "when": {
+                                "node": "comparison",
+                                "op": "=",
+                                "left": {
+                                    "node": "function",
+                                    "name": "INT",
+                                    "args": [
+                                        {
+                                            "node": "function",
+                                            "name": "LOG",
+                                            "args": [
+                                                {
+                                                    "node": "binary",
+                                                    "op": "*",
+                                                    "left": {
+                                                        "node": "function",
+                                                        "name": "ROUND",
+                                                        "args": [
+                                                            {
+                                                                "node": "binary",
+                                                                "op": "/",
+                                                                "left": {
+                                                                    "node": "function",
+                                                                    "name": "ABS",
+                                                                    "args": [
+                                                                        {
+                                                                            "node": "aggregation",
+                                                                            "agg": "SUM",
+                                                                            "arg": {
+                                                                                "node": "field",
+                                                                                "name": "Sales",
+                                                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "right": {
+                                                                    "node": "constant",
+                                                                    "dtype": "number",
+                                                                    "value": 10
+                                                                }
+                                                            },
+                                                            {
+                                                                "node": "constant",
+                                                                "dtype": "number",
+                                                                "value": 0
+                                                            }
+                                                        ]
+                                                    },
+                                                    "right": {
+                                                        "node": "constant",
+                                                        "dtype": "number",
+                                                        "value": 10
+                                                    }
+                                                },
+                                                {
+                                                    "node": "constant",
+                                                    "dtype": "number",
+                                                    "value": 1000
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "right": {
+                                    "node": "constant",
+                                    "dtype": "number",
+                                    "value": 1
+                                }
+                            },
+                            "then": {
+                                "node": "constant",
+                                "dtype": "string",
+                                "value": "K"
+                            }
+                        },
+                        {
+                            "when": {
+                                "node": "comparison",
+                                "op": "=",
+                                "left": {
+                                    "node": "function",
+                                    "name": "INT",
+                                    "args": [
+                                        {
+                                            "node": "function",
+                                            "name": "LOG",
+                                            "args": [
+                                                {
+                                                    "node": "binary",
+                                                    "op": "*",
+                                                    "left": {
+                                                        "node": "function",
+                                                        "name": "ROUND",
+                                                        "args": [
+                                                            {
+                                                                "node": "binary",
+                                                                "op": "/",
+                                                                "left": {
+                                                                    "node": "function",
+                                                                    "name": "ABS",
+                                                                    "args": [
+                                                                        {
+                                                                            "node": "aggregation",
+                                                                            "agg": "SUM",
+                                                                            "arg": {
+                                                                                "node": "field",
+                                                                                "name": "Sales",
+                                                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "right": {
+                                                                    "node": "constant",
+                                                                    "dtype": "number",
+                                                                    "value": 10
+                                                                }
+                                                            },
+                                                            {
+                                                                "node": "constant",
+                                                                "dtype": "number",
+                                                                "value": 0
+                                                            }
+                                                        ]
+                                                    },
+                                                    "right": {
+                                                        "node": "constant",
+                                                        "dtype": "number",
+                                                        "value": 10
+                                                    }
+                                                },
+                                                {
+                                                    "node": "constant",
+                                                    "dtype": "number",
+                                                    "value": 1000
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "right": {
+                                    "node": "constant",
+                                    "dtype": "number",
+                                    "value": 2
+                                }
+                            },
+                            "then": {
+                                "node": "constant",
+                                "dtype": "string",
+                                "value": "M"
+                            }
+                        },
+                        {
+                            "when": {
+                                "node": "comparison",
+                                "op": "=",
+                                "left": {
+                                    "node": "function",
+                                    "name": "INT",
+                                    "args": [
+                                        {
+                                            "node": "function",
+                                            "name": "LOG",
+                                            "args": [
+                                                {
+                                                    "node": "binary",
+                                                    "op": "*",
+                                                    "left": {
+                                                        "node": "function",
+                                                        "name": "ROUND",
+                                                        "args": [
+                                                            {
+                                                                "node": "binary",
+                                                                "op": "/",
+                                                                "left": {
+                                                                    "node": "function",
+                                                                    "name": "ABS",
+                                                                    "args": [
+                                                                        {
+                                                                            "node": "aggregation",
+                                                                            "agg": "SUM",
+                                                                            "arg": {
+                                                                                "node": "field",
+                                                                                "name": "Sales",
+                                                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "right": {
+                                                                    "node": "constant",
+                                                                    "dtype": "number",
+                                                                    "value": 10
+                                                                }
+                                                            },
+                                                            {
+                                                                "node": "constant",
+                                                                "dtype": "number",
+                                                                "value": 0
+                                                            }
+                                                        ]
+                                                    },
+                                                    "right": {
+                                                        "node": "constant",
+                                                        "dtype": "number",
+                                                        "value": 10
+                                                    }
+                                                },
+                                                {
+                                                    "node": "constant",
+                                                    "dtype": "number",
+                                                    "value": 1000
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "right": {
+                                    "node": "constant",
+                                    "dtype": "number",
+                                    "value": 3
+                                }
+                            },
+                            "then": {
+                                "node": "constant",
+                                "dtype": "string",
+                                "value": "B"
+                            }
+                        },
+                        {
+                            "when": {
+                                "node": "comparison",
+                                "op": "=",
+                                "left": {
+                                    "node": "function",
+                                    "name": "INT",
+                                    "args": [
+                                        {
+                                            "node": "function",
+                                            "name": "LOG",
+                                            "args": [
+                                                {
+                                                    "node": "binary",
+                                                    "op": "*",
+                                                    "left": {
+                                                        "node": "function",
+                                                        "name": "ROUND",
+                                                        "args": [
+                                                            {
+                                                                "node": "binary",
+                                                                "op": "/",
+                                                                "left": {
+                                                                    "node": "function",
+                                                                    "name": "ABS",
+                                                                    "args": [
+                                                                        {
+                                                                            "node": "aggregation",
+                                                                            "agg": "SUM",
+                                                                            "arg": {
+                                                                                "node": "field",
+                                                                                "name": "Sales",
+                                                                                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+                                                                            }
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                "right": {
+                                                                    "node": "constant",
+                                                                    "dtype": "number",
+                                                                    "value": 10
+                                                                }
+                                                            },
+                                                            {
+                                                                "node": "constant",
+                                                                "dtype": "number",
+                                                                "value": 0
+                                                            }
+                                                        ]
+                                                    },
+                                                    "right": {
+                                                        "node": "constant",
+                                                        "dtype": "number",
+                                                        "value": 10
+                                                    }
+                                                },
+                                                {
+                                                    "node": "constant",
+                                                    "dtype": "number",
+                                                    "value": 1000
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "right": {
+                                    "node": "constant",
+                                    "dtype": "number",
+                                    "value": 4
+                                }
+                            },
+                            "then": {
+                                "node": "constant",
+                                "dtype": "string",
+                                "value": "T"
+                            }
+                        }
+                    ],
+                    "otherwise": {
+                        "node": "constant",
+                        "dtype": "string",
+                        "value": ""
+                    }
+                }
             },
             "formula": "//Determine if the value is negative\r\nIF SUM([Sales]) < 0 THEN '-' ELSE '' END\r\n+\r\n'$' //Dolar Symbol\r\n+\r\n\r\n//Get Int Amount by Dividing the Value by its' Base 1000 Value\r\nSTR(INT(ROUND(ABS(SUM([Sales]))/POWER(1000,INT(LOG(  ROUND(ABS(SUM([Sales]))/10,0)*10 ,1000))),1)))\r\n\r\n+\r\n\r\n//Determine the Unit to display based on the Log Base 1000\r\nCASE INT(LOG(ROUND(ABS(SUM([Sales]))/10,0)*10,1000)) //Unit Symbol\r\nWHEN 1 THEN 'K'\r\nWHEN 2 THEN 'M'\r\nWHEN 3 THEN 'B'\r\nWHEN 4 THEN 'T'\r\nELSE ''\r\nEND",
             "source": "tableau"
@@ -213,28 +1855,6 @@
             "method": "inferred_by_size",
             "note": "fact table inferred by size (most columns), not declared"
         },
-        "ast_builder": "phase1-regex"
-    },
-    "dax_measures": {
-        "[Parameter 1]": "-- SKIPPED: unsupported_expression",
-        "[Parameter 2]": "-- SKIPPED: unsupported_expression",
-        "[% Diff Shape (copy)]": "-- SKIPPED: conditional_logic",
-        "[Calculation_1054123792576798720]": "-- SKIPPED: conditional_logic",
-        "[Calculation_1069041984833634338]": "-- SKIPPED: conditional_logic",
-        "[Calculation_1368249927221915648]": "SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Profit]) / SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Sales])",
-        "[Calculation_267682741503590407]": "-- SKIPPED: table_calculation",
-        "[Calculation_774619140457381925]": "-- SKIPPED: unsupported_expression",
-        "[Calculation_774619140497559607]": "-- SKIPPED: unsupported_expression",
-        "[Calculation_774619140519575609]": "-- SKIPPED: unsupported_expression",
-        "[Calculation_870883616845938712]": "-- SKIPPED: conditional_logic",
-        "[Calculation_870883616872980509]": "-- SKIPPED: table_calculation",
-        "[Calculation_870883616948187188]": "-- SKIPPED: unsupported_expression",
-        "[Calculation_902971729521315845]": "-- SKIPPED: table_calculation",
-        "[Max (copy)]": "-- SKIPPED: table_calculation",
-        "[Product Name (group)]": "-- SKIPPED: empty_formula",
-        "[Sales  (copy)_774619140372635663]": "-- SKIPPED: conditional_logic"
-    },
-    "measure_table_map": {
-        "[Calculation_1368249927221915648]": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+        "ast_builder": "phase2-pratt-parser"
     }
 }

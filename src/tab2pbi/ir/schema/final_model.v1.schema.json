@@ -1,0 +1,105 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://tab2pbi/schema/final_model.v1.json",
+    "title": "tab2pbi final Power BI semantic model v1",
+    "type": "object",
+    "required": [
+        "model_type", "tables", "measures", "relationships",
+        "measure_table_map", "calculated_columns", "parameters",
+        "conversion_report"
+    ],
+    "properties": {
+        "model_type": { "enum": ["flat_extract", "relational_model"] },
+        "tables": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "required": ["columns"],
+                "properties": {
+                    "columns": { "type": "array", "items": { "type": "string" } },
+                    "type": { "type": ["string", "null"] }
+                }
+            }
+        },
+        "measures": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+        },
+        "measure_table_map": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+        },
+        "calculated_columns": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["name", "table", "dax"],
+                "properties": {
+                    "name": { "type": "string" },
+                    "table": { "type": "string" },
+                    "dax": { "type": "string" }
+                }
+            }
+        },
+        "parameters": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["name", "dax", "note"],
+                "properties": {
+                    "name": { "type": "string" },
+                    "table": { "type": ["string", "null"] },
+                    "dax": { "type": "string" },
+                    "note": { "type": "string" }
+                }
+            }
+        },
+        "relationships": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "required": ["from_table", "from_column", "to_table", "to_column", "cardinality"],
+                "properties": {
+                    "from_table": { "type": "string" },
+                    "from_column": { "type": "string" },
+                    "to_table": { "type": "string" },
+                    "to_column": { "type": "string" },
+                    "cardinality": { "type": "string" },
+                    "confidence": { "type": "number" }
+                }
+            }
+        },
+        "conversion_report": {
+            "type": "object",
+            "required": [
+                "total_calculations", "measures_converted", "columns_converted",
+                "parameters_converted", "skipped_count", "coverage_pct",
+                "skipped_measures", "failure_taxonomy"
+            ],
+            "properties": {
+                "total_calculations": { "type": "integer" },
+                "measures_converted": { "type": "integer" },
+                "columns_converted": { "type": "integer" },
+                "parameters_converted": { "type": "integer" },
+                "skipped_count": { "type": "integer" },
+                "coverage_pct": { "type": "number" },
+                "skipped_measures": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "required": ["calculation_name", "reason", "taxonomy"],
+                        "properties": {
+                            "calculation_name": { "type": "string" },
+                            "reason": { "type": "string" },
+                            "taxonomy": { "type": "string" }
+                        }
+                    }
+                },
+                "failure_taxonomy": {
+                    "type": "object",
+                    "additionalProperties": { "type": "integer" }
+                }
+            }
+        }
+    }
+}

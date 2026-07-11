@@ -69,6 +69,21 @@ def run(final_model: dict, hyper_schema: list[dict], data_dir: Path) -> dict:
             {"name": measure_name, "expression": dax_expr, "formatString": "General"}
         )
 
+    # Calculated columns (row-level expressions) and parameters (constant calcs).
+    for col in final_model.get("calculated_columns", []):
+        if col["table"] in table_map:
+            table_map[col["table"]]["columns"].append(
+                {"name": col["name"], "type": "calculated", "expression": col["dax"]}
+            )
+    for prm in final_model.get("parameters", []):
+        if prm.get("table") in table_map:
+            table_map[prm["table"]]["columns"].append(
+                {"name": prm["name"], "type": "calculated", "expression": prm["dax"]}
+            )
+            tom["model"]["annotations"].append(
+                {"name": f"ParameterColumn::{prm['name']}", "value": prm["note"]}
+            )
+
     for rel in final_model.get("relationships", []):
         tom["model"]["relationships"].append(
             {

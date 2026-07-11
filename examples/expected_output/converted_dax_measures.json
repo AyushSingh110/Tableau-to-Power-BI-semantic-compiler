@@ -1,71 +1,102 @@
 {
-    "converted_measures": {
+    "measures": {
         "[Calculation_1368249927221915648]": "SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Profit]) / SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Sales])"
     },
+    "measure_table_map": {
+        "[Calculation_1368249927221915648]": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+    },
+    "calculated_columns": [
+        {
+            "name": "[Calculation_774619140457381925]",
+            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+            "dax": "DATEDIFF(Orders_ECFCA1FB690A41FE803BC071773BA862[Order Date], Orders_ECFCA1FB690A41FE803BC071773BA862[Ship Date], DAY)"
+        }
+    ],
+    "parameters": [
+        {
+            "kind": "parameter",
+            "name": "[Parameter 1]",
+            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+            "dax": "2022",
+            "note": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
+        },
+        {
+            "kind": "parameter",
+            "name": "[Parameter 2]",
+            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+            "dax": "\"Pradeep Kumar G\"",
+            "note": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
+        },
+        {
+            "kind": "parameter",
+            "name": "[Calculation_774619140497559607]",
+            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+            "dax": "\" Hi There,\r\n\r\nThanks for downloading my viz!\r\nThis viz was created using the Sample Superstore dataset available in Tableau Desktop.\r\n\r\nThis viz was listed in Ten Most-Favorited Vizzes on Tableau Public.\r\nhttps://public.tableau.com/en-us/s/blog/2020/10/ten-most-favorited-vizzes-celebrate-ten-viz-tastic-years-tableau-public\r\n\r\nLearn how I built this viz:\r\nhttps://www.flerlagetwins.com/2020/04/si-eff-simple-effective-design-approach.html\r\n\r\nCheers,\r\nPradeep (@pradeep_zen) \"",
+            "note": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
+        },
+        {
+            "kind": "parameter",
+            "name": "[Calculation_774619140519575609]",
+            "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+            "dax": "\"Highlight\"",
+            "note": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
+        }
+    ],
     "skipped_measures": [
         {
-            "calculation_name": "[Parameter 1]",
-            "reason": "unsupported_expression"
-        },
-        {
-            "calculation_name": "[Parameter 2]",
-            "reason": "unsupported_expression"
-        },
-        {
             "calculation_name": "[% Diff Shape (copy)]",
-            "reason": "conditional_logic"
+            "reason": "references an unresolved field or another calculated field",
+            "taxonomy": "unresolved"
         },
         {
             "calculation_name": "[Calculation_1054123792576798720]",
-            "reason": "conditional_logic"
+            "reason": "unsupported function STR",
+            "taxonomy": "unsupported_fn"
         },
         {
             "calculation_name": "[Calculation_1069041984833634338]",
-            "reason": "conditional_logic"
+            "reason": "aggregation over a non-field expression (SUM)",
+            "taxonomy": "aggregate_of_expression"
         },
         {
             "calculation_name": "[Calculation_267682741503590407]",
-            "reason": "table_calculation"
-        },
-        {
-            "calculation_name": "[Calculation_774619140457381925]",
-            "reason": "unsupported_expression"
-        },
-        {
-            "calculation_name": "[Calculation_774619140497559607]",
-            "reason": "unsupported_expression"
-        },
-        {
-            "calculation_name": "[Calculation_774619140519575609]",
-            "reason": "unsupported_expression"
+            "reason": "window function WINDOW_MAX",
+            "taxonomy": "window_fn"
         },
         {
             "calculation_name": "[Calculation_870883616845938712]",
-            "reason": "conditional_logic"
+            "reason": "unsupported function STR",
+            "taxonomy": "unsupported_fn"
         },
         {
             "calculation_name": "[Calculation_870883616872980509]",
-            "reason": "table_calculation"
+            "reason": "table calculation RANK_UNIQUE",
+            "taxonomy": "table_calc"
         },
         {
             "calculation_name": "[Calculation_870883616948187188]",
-            "reason": "unsupported_expression"
+            "reason": "unsupported function DATE",
+            "taxonomy": "unsupported_fn"
         },
         {
             "calculation_name": "[Calculation_902971729521315845]",
-            "reason": "table_calculation"
+            "reason": "table calculation INDEX",
+            "taxonomy": "table_calc"
         },
         {
             "calculation_name": "[Max (copy)]",
-            "reason": "table_calculation"
+            "reason": "window function WINDOW_MIN",
+            "taxonomy": "window_fn"
         },
         {
             "calculation_name": "[Product Name (group)]",
-            "reason": "empty_formula"
+            "reason": "empty_formula",
+            "taxonomy": "empty_formula"
         },
         {
             "calculation_name": "[Sales  (copy)_774619140372635663]",
-            "reason": "conditional_logic"
+            "reason": "unsupported function STR",
+            "taxonomy": "unsupported_fn"
         }
     ]
 }
