@@ -54,8 +54,12 @@ comes from profiling the actual extract data, not from metadata guesses.
 
 > **Coverage** counts measures + calculated columns over total calculations.
 > Parameters (constant calcs) are reported in their own bucket and deliberately
-> excluded from the headline so four constants don't inflate it. Correctness is
-> measured separately by the [evaluation harness](docs/EVALUATION.md).
+> excluded from the headline so four constants don't inflate it.
+>
+> **Correctness (do not conflate the two numbers):** engine-verified correctness
+> is currently **0/0 (pending author hand-check in Power BI)**; proxy-correctness
+> is **1/1**. The proxy number validates the parser/IR, **not** the generated
+> DAX — see the [evaluation harness](docs/EVALUATION.md).
 
 ---
 

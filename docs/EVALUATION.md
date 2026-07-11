@@ -4,6 +4,13 @@ This document explains how to measure whether the DAX that `tab2pbi` generates
 actually reproduces Tableau's numbers, and — critically — what our automated
 number does and does **not** prove.
 
+> **Current status (Superstore):** engine-verified correctness is **0/0
+> (pending author hand-check)**; proxy-correctness is **1/1**. The proxy number
+> validates the parser/IR, not the generated DAX — do not read it as
+> engine-verified. The moment you fill `powerbi_value` in the ground-truth CSV,
+> the harness recomputes the engine-verified number automatically (no code
+> change needed).
+
 ## The two numbers (do not conflate them)
 
 The harness (`eval/evaluate.py`) reports two independent correctness figures:
@@ -49,7 +56,7 @@ For each measure you want to check, get the value Tableau itself computes:
 
 `examples/eval/ground_truth_superstore.csv` has columns:
 
-```
+```csv
 measure,tableau_value,powerbi_value
 [Calculation_1368249927221915648],0.1246724548,
 ```
@@ -83,3 +90,12 @@ This prints per-measure matches and the **proxy-correctness** percentage.
 
 Even hand-checking a handful of measures gives a real correctness anchor that
 the proxy number cannot provide. Record how many you checked in the handoff.
+
+### Calculated columns are a row-level spot-check
+
+The harness evaluates **grand-total scalars** (measures), so it cannot proxy a
+row-level calculated column such as the generated
+`DATEDIFF(Orders[Order Date], Orders[Ship Date], DAY)`. To engine-verify it,
+pick one specific order in both tools and compare the per-row value directly
+(Tableau row vs Power BI calculated-column value). This is a manual spot-check;
+note the result in the handoff rather than in the CSV.

@@ -6,7 +6,7 @@ semantic-ish versioning.
 
 ## [Unreleased]
 
-## [0.2.0] — Phase 2: research-grade
+## [0.2.0] — Phase 2: research-grade + demo (tag: `v0.2-research`)
 
 ### Added
 - **Real tokenizer + Pratt parser** (`ir/tokenizer.py`, `ir/parser.py`) replacing

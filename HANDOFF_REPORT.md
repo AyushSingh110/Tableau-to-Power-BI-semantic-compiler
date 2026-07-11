@@ -1,0 +1,229 @@
+# Handoff Report — tab2pbi (Tableau → Power BI semantic compiler)
+
+**Scope of this report:** Phase 2 (research-grade) Part A (architecture docs),
+Part B (parser + transpiler + schema + tests + CI + eval), and Part C (demo).
+Written to be self-contained — you can paste it into another assistant without
+repo access to plan the next step.
+
+`tab2pbi` compiles a Tableau `.twbx` into a Power BI Tabular Object Model (TOM)
+via a canonical semantic IR. It is deterministic and never fabricates: every
+un-translated calculation is reported with a reason and a failure-taxonomy
+bucket.
+
+---
+
+## ⚠️ Open items needing me (the human)
+
+These are the only things blocking a fully-anchored result. None block the code.
+
+1. **Engine-verify correctness in Power BI (the real anchor).**
+   - Open `data/Model.json` in Tabular Editor 2/3, load into Power BI Desktop.
+   - **Measure:** put `[Calculation_1368249927221915648]` on a card (no filters),
+     read the value, and write it into the `powerbi_value` column of
+     `examples/eval/ground_truth_superstore.csv`. Re-running
+     `python eval/evaluate.py --ground-truth examples/eval/ground_truth_superstore.csv`
+     then recomputes the **engine-verified** number automatically — no code
+     change needed.
+   - **Calculated column:** the generated `DATEDIFF(Orders[Order Date],
+     Orders[Ship Date], DAY)` is row-level, so it is a manual **spot-check** —
+     pick one order, compare Tableau's value to Power BI's calculated-column
+     value. Record the result here or in the CHANGELOG. (Details:
+     `docs/EVALUATION.md`.)
+   - Current status: **engine-verified 0/0 (pending); proxy 1/1.**
+
+2. **Confirm the `from_twb` dead-end decision (raised in Part A).**
+   Declared TWB relationships are extracted to `relationships_from_twb.json` but
+   **not merged** into the canonical/final model — only data-driven ones reach
+   the TOM. For Superstore the declared relationships are key-less query-time
+   joins (nothing actionable), but a workbook with explicit physical-join keys
+   would have them recorded-but-not-applied. **Decision needed:** implement a
+   merge of actionable declared relationships (Part-B TODO), or accept
+   data-driven-only and keep the documented note. See README stage guarantee +
+   `docs/ARCHITECTURE.md §4`.
+
+3. **Superstore redistribution / license.**
+   `examples/Superstore.twbx` is Tableau's sample dataset, widely redistributed
+   but **without a formal license grant** in this repo. Confirm current Tableau
+   sample-content terms before publishing the repo publicly, or swap in your own
+   workbook. Provenance is documented in `examples/README.md`.
+
+---
+
+## What was done, per part
+
+### Part A — architecture documentation (README)
+| Change | Rationale |
+| ------ | --------- |
+| Added `## Architecture` with a **Mermaid flowchart** matching real `src/tab2pbi` modules | Replace the old "11-stage" fiction with the true data flow |
+| Per-stage **input → output → guarantee** bullets | Make each stage's contract explicit |
+| **"Why an IR"** + semantic-mismatch table (LOD/table-calc, row-vs-agg, deferred joins, field identity) | Explain the core abstraction and the problem it solves |
+| Second **Mermaid class diagram** of the IR data model | One-glance view of Tables/Columns/Measures(AST)/Relationships |
+| Documented `from_twb` dangling node as a **known gap** (diagram note + stage guarantee + Known limitations) | Honesty: extracted-but-unmerged relationships must not look silently dropped |
+
+### Part B — research rigor
+| File | Change | Rationale |
+| ---- | ------ | --------- |
+| `src/tab2pbi/ir/tokenizer.py` | **New.** Tokenizer for Tableau calc syntax | Real lexing, comments handled in-loop (so `//` inside strings survives) |
+| `src/tab2pbi/ir/parser.py` | **New.** Pratt parser → typed AST; `build_ast` never raises | Structured parsing; garbage → `parse_error` node, never a crash |
+| `src/tab2pbi/ir/ast_utils.py` | **New.** Tree walk / `has_aggregation` / `field_tables` | Shared AST traversal for context, transpiler, evaluator |
+| `src/tab2pbi/ir/ast_builder.py` | **Removed.** | Replaced by tokenizer+parser |
+| `src/tab2pbi/rewrite/dax.py` | **Rewritten.** AST→DAX visitor + `TranspileError(taxonomy)`; measure/column/parameter split | Broader coverage; precise skip reasons; correct DAX placement |
+| `src/tab2pbi/ir/context.py` | **Rewritten.** Recursively annotate `field` nodes with owning table | Table-qualified DAX; supports the richer AST |
+| `src/tab2pbi/classify/classifier.py` | **Rewritten.** Report aligned to transpiler outcomes | Single source of truth; report-only |
+| `src/tab2pbi/ir/canonical.py`, `finalize.py` | Measures attached in finalize; report gains `coverage_pct`, `failure_taxonomy`, buckets | Machine-readable audit |
+| `src/tab2pbi/ir/schema/*.v1.schema.json`, `ir/validate.py` | **New.** Versioned IR JSON Schemas + validation wired into pipeline | Formalize the IR; fail loudly on malformed output |
+| `src/tab2pbi/evaluation.py` | **New.** pandas AST evaluator (grand-total scalars) | Proxy correctness against Tableau |
+| `eval/evaluate.py` | **New.** Harness reporting proxy + engine-verified separately | Correctness with an explicit validity caveat |
+| `src/tab2pbi/export/tom.py`, `cli.py`, `pipeline.py` | Emit calc columns + parameters; new summary/report keys; reordered stages | Support the split + validation |
+| `tests/` | **New.** `test_parser`, `test_transpiler`, `test_evaluation`, `test_schema`, `test_golden_e2e` | Unit per module + golden E2E (written first, kept green through the rewrite) |
+| `.github/workflows/ci.yml` | **New.** pytest + ruff on push (3.10/3.12) | CI |
+| `docs/ARCHITECTURE.md` | **New.** IR spec, semantic mismatch, related work (Calcite/sqlglot; Lenzerini; Cheney/Buneman provenance) | Frame as a tools/systems contribution |
+| `docs/EVALUATION.md` | **New.** Export steps + the shared-AST **threat to validity** | Don't let proxy masquerade as engine-verified |
+| `examples/README.md`, `examples/eval/ground_truth_superstore.csv` | **New.** Corpus provenance + ground-truth stand-in | Reproducible corpus |
+
+### Part C — demo
+| File | Change |
+| ---- | ------ |
+| `demo/run.sh`, `demo/run.ps1` | One-command compile + evaluate |
+| `demo/README.md` | Walkthrough (input → run → model → Tabular Editor) with **labeled screenshot placeholders** |
+| `demo/screenshots/README.md` | Exactly what each screenshot should show (author to capture) |
+
+---
+
+## Before/after metrics (Superstore)
+
+| Metric | Start of Phase 2 | Now |
+| ------ | ---------------- | --- |
+| Measures converted | 1 | 1 (anchor unchanged) |
+| Calculated columns | 0 | 1 (`DATEDIFF`) |
+| Parameters (own bucket) | 0 | 4 (constants) |
+| Skipped | 16 (coarse) | 11 (taxonomy-tagged) |
+| Coverage (measures+cols/total) | ~6% | **11.8%** |
+| Relationships | 1 | 1 |
+| Proxy correctness | n/a | **1/1 (100%)** |
+| Engine-verified correctness | n/a | **0/0 (pending hand-check)** |
+| Tests | 6 (golden only) | **39** |
+| CI | none | pytest + ruff |
+
+**Failure taxonomy now:** `unsupported_fn` 4 (mostly `STR`), `table_calc` 2
+(`RANK_UNIQUE`, `INDEX`), `window_fn` 2 (`WINDOW_MAX/MIN`),
+`aggregate_of_expression` 1 (`SUM(ZN(IF …))`), `unresolved` 1 (references another
+calc field), `empty_formula` 1 (a Tableau group).
+
+**Why coverage is still modest (not a regression):** the Superstore workbook is
+dominated by table calcs, window functions, and `STR`/`LOG`/`POWER` string
+formatting that are genuinely out of scope. The gains are real; the number was
+deliberately *not* inflated (constants are excluded from the headline).
+
+---
+
+## Decisions I made that were not explicitly specified
+
+1. **Coverage excludes parameters** (measures+columns / total). Per your
+   refinement, constants are surfaced as parameters in their own bucket so four
+   constants don't inflate the headline.
+2. **AST node vocabulary** (`constant/field/aggregation/binary/comparison/
+   logical/not/unary/conditional/function/unsupported/parse_error`). Chosen to
+   cover the triage list while staying small.
+3. **DAX mappings:** `AVG→AVERAGE`, `COUNTD→DISTINCTCOUNT`, multi-branch
+   `IF/CASE→SWITCH(TRUE(), …)`, single-branch `→IF()`, `AND/OR→&&/||`,
+   `DATEDIFF('day',a,b)→DATEDIFF(a,b,DAY)`, `ZN→COALESCE(x,0)`. These are the
+   conventional equivalents; the ones I was unsure about (see below) are skipped.
+4. **String concat `+` left as `+`** (not `&`). Without type inference I cannot
+   safely tell numeric `+` from string concat; the affected formatting measures
+   are skipped for other reasons anyway. **Open question** if you want string
+   concat support.
+5. **Aggregation only over a plain field**; `SUM(<expression>)` (e.g.
+   `SUM(ZN(IF …))`) is skipped as `aggregate_of_expression` rather than guessed
+   as `SUMX`. Honest but conservative.
+6. **Fact table = largest by column count**, overridable via `--fact-table`
+   (carried over from Phase 1); flagged in the report when inferred.
+7. **Evaluator scope = grand-total scalars.** Row-level columns / conditionals
+   are `not_evaluated` by the proxy. Per-dimension is a TODO.
+8. **Ground-truth stand-in** value computed from the extract
+   (`SUM(Profit)/SUM(Sales)`), clearly labeled to be replaced by a real Tableau
+   export. It is a placeholder, not a claim.
+9. **JSON Schemas cover semantic_model + final_model** (the two that matter most)
+   rather than every intermediate artifact.
+
+---
+
+## Known issues / TODOs / open questions
+
+- **[open, needs you]** Merge actionable declared TWB relationships (item 2 above).
+- **TODO** Conditional aggregations / parameter-dependent measures
+  (`SUM(IF year=[Parameter] …)`) → `CALCULATE`/`SUMX` with inlined parameters.
+- **TODO** Per-dimension correctness in the eval harness (currently grand totals).
+- **TODO** String-concat `+` → `&` with light type inference.
+- **TODO** `STR`/`FORMAT`, `DATEPARSE`, `LOG`/`POWER` for the SI-formatting measures.
+- **Limitation** TOM calculated columns are emitted without an explicit
+  `dataType` (engine infers on load); confirm this is acceptable in your target.
+- **Open question** Should parameters become Power BI **What-If/field
+  parameters** rather than constant calculated columns? (Currently a column +
+  note.)
+
+---
+
+## Commands verified working (this session)
+
+All run from the repo root; Python 3.13 locally (CI covers 3.10/3.12).
+
+```bash
+# Full pipeline (deterministic; regenerates data/)
+python run_pipeline.py --twbx examples/Superstore.twbx
+#   → Tables 3 | measures 1, calc columns 1, parameters 4, skipped 11
+#   → Coverage 11.8% | Relationships 1 | Fact Orders (inferred_by_size)
+
+# Evaluation harness
+python eval/evaluate.py --ground-truth examples/eval/ground_truth_superstore.csv
+#   → PROXY-correctness 1/1 (100.0%)
+#   → ENGINE-verified 0/0 (0 hand-checked)
+
+# Tests + lint (both green)
+python -m pytest -q            # 39 passed
+python -m ruff check src tests run_pipeline.py eval   # All checks passed!
+
+# One-command demo
+bash demo/run.sh               # compile + evaluate, prints model paths
+```
+
+Determinism spot-check: regenerated `data/*.json` byte-match
+`examples/expected_output/` for the golden run.
+
+---
+
+## Not committed / tagging
+
+Per your instruction, **nothing was committed**. The working tree contains all
+Part A/B/C changes (≈10 modified source files, new `tests/`, `docs/`, `eval/`,
+`demo/`, `.github/`, `src/tab2pbi/ir/{tokenizer,parser,ast_utils,validate}.py`,
+`src/tab2pbi/evaluation.py`, `ir/schema/`; `ir/ast_builder.py` deleted).
+
+After you commit, create the milestone tag:
+
+```bash
+git tag -a v0.2-research -m "Phase 2: research-grade + demo"
+```
+
+Suggested logical commits (one change each): `feat: tokenizer+parser`,
+`feat: broaden DAX transpiler + measure/column/parameter split`,
+`feat: IR JSON-Schema validation`, `feat: evaluation harness + docs`,
+`test: unit + golden e2e`, `ci: pytest+ruff workflow`,
+`docs: architecture + README diagrams + demo`.
+
+---
+
+## Ranked next steps
+
+1. **Engine-verify the 1 measure + 1 column in Power BI** (item 1). Turns
+   "proxy 1/1" into a real correctness claim — highest credibility-per-effort.
+2. **Decide + implement the `from_twb` merge** (item 2). Closes the one
+   no-silent-drops gap in the relationship path.
+3. **Add a second corpus workbook with an embedded extract** (license-checked)
+   to prove the pipeline generalizes beyond Superstore.
+4. **Conditional aggregations → CALCULATE/SUMX.** Biggest realistic coverage
+   gain on real workbooks.
+5. **Per-dimension evaluation.** Strengthens the correctness story beyond grand
+   totals.
+6. **String/date function breadth** (`STR`, `DATEPARSE`, `LOG`/`POWER`) for the
+   formatting-heavy measures — lower priority, high effort.
