@@ -5,6 +5,7 @@ category so skip reasons stay precise.
 """
 
 import pytest
+
 from tab2pbi.ir.parser import parse
 from tab2pbi.rewrite.dax import TranspileError, to_dax
 

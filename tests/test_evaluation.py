@@ -2,6 +2,7 @@
 
 import pandas as pd
 import pytest
+
 from tab2pbi.evaluation import NotEvaluable, evaluate
 from tab2pbi.ir.parser import parse
 

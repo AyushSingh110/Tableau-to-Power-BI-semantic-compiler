@@ -1,6 +1,7 @@
 """The golden run's artifacts must conform to the versioned IR schemas."""
 
 import pytest
+
 from tab2pbi.ir.validate import SchemaValidationError, validate
 
 

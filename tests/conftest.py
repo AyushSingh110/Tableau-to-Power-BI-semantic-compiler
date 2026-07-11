@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 
 import pytest
+
 from tab2pbi import pipeline
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
