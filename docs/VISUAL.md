@@ -82,3 +82,66 @@ Superstore.Report`.
    currently reports `skipped (schema not vendored)` because the schema's remote
    `$ref` tree cannot be resolved offline. The structural gate is the substantive
    check (it diffs against real Power BI output).
+
+---
+
+# V2 — end-to-end `.pbip` (model + visuals, coherently bound)
+
+V2 unifies the two halves: `.twbx` → a full **`.pbip`** = a **TMDL SemanticModel**
+(the compiler's own multi-table model) + a **PBIR Report** whose visuals bind to
+that model's real tables — not the flat spike table.
+
+```bash
+python -m tab2pbi build-pbip                      # or: tab2pbi build-pbip
+#   → data/pbip/Superstore.pbip
+#     data/pbip/Superstore.SemanticModel/  (TMDL: model, tables, relationships)
+#     data/pbip/Superstore.Report/         (PBIR visuals byPath → the model)
+```
+
+Options: `--twbx`, `--out` (default `data/pbip`), `--name`, `--data-dir`.
+
+## Data source (how the model actually loads data)
+
+Each TMDL table gets a **CSV import partition** sourcing the per-table CSV the
+pipeline already generates (`data/tables/*.csv`), with M code modeled on the
+reference SemanticModel.
+
+> ⚠️ **The `File.Contents(...)` path is ABSOLUTE** (as Power BI itself emits) so
+> the `.pbip` opens on this machine without hand-editing. **Moving the repo
+> breaks the path and the model loads empty — re-run `build-pbip` to
+> regenerate the CSVs and re-emit the absolute paths.** `--csv-dir` overrides the
+> base path.
+
+## ⚠️ Known deltas (documented, not bugs)
+
+- **No auto date-tables** (`__PBI_TimeIntelligenceEnabled = 0`): "by Order Date"
+  charts render against a **flat date column**, not a date hierarchy. This is an
+  expected simplification, *not* a binding failure.
+- **Multi-line DAX is skipped** in TMDL (a measure/column/parameter whose DAX
+  spans lines is not emitted — it would break model load). Counted in the build
+  report as `tmdl_skipped_multiline`. On Superstore: 1 parameter (viz-instruction
+  text).
+- **Layout is faithful-but-not-pixel-perfect**: dashboard zones → page positions,
+  clamped to a visible minimum and kept on-canvas; tiny/hidden helper-sheet zones
+  become small on-canvas tiles rather than 1px slivers.
+- **Measure / calc-column TMDL is the #1 render risk** — it's the one part not
+  grounded in the reference (which has no measures). We emit only minimal valid
+  properties. *If the model fails to load and the error points at a measure or
+  column, that's the place to look* — create one measure + one calc column
+  manually in Tabular Editor/Power BI, save to `.pbip`, and use it as TMDL ground
+  truth (same approach we used for `visual.json`).
+
+## Render-gate (the anchor — pending until you run it)
+
+1. Enable **PBIP + PBIR + TMDL** preview features in Power BI Desktop
+   (File → Options → Preview features).
+2. Open `data/pbip/Superstore.pbip`.
+3. Confirm **(a) the model loads**: tables `Orders_ECFCA…`, `People_…`,
+   `Returns_…`; the relationship `Orders.Region → People.Region`; the measure
+   `Calculation_1368…` and the `DATEDIFF` calc column.
+4. Confirm **(b) the visuals render** and bind to the compiler's tables (the
+   column charts, the two bubble maps, area/pie/line).
+5. Note **(c) any visual that broke vs the V1 flat-model render** — especially
+   anything expecting a date hierarchy (see deltas above).
+6. Record the result in `HANDOFF_REPORT.md`. **Structure-valid ≠ renders** — only
+   Power BI confirms it.

@@ -151,7 +151,7 @@ def emit(pages: list[PageNode], out_report_dir: Path, model_path: str) -> dict:
         (pdir / "visuals").mkdir(parents=True, exist_ok=True)
         (pdir / "page.json").write_text(json.dumps({
             "$schema": PAGE_SCHEMA, "name": page.id, "displayName": page.display_name,
-            "displayOption": "FitToPage", "height": 720, "width": 1280,
+            "displayOption": "FitToPage", "height": page.height, "width": page.width,
         }, indent=2), encoding="utf-8")
 
         for v in page.visuals:

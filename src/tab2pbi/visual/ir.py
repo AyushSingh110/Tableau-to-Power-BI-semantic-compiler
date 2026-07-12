@@ -80,3 +80,6 @@ class PageNode:
     name: str
     display_name: str
     visuals: list[VisualNode] = field(default_factory=list)
+    width: float = 1280
+    height: float = 720
+    layout: str = "auto-grid"   # "auto-grid" | "dashboard-zones"

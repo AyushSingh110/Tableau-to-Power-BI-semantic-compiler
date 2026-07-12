@@ -50,24 +50,52 @@ def parse_encoded_ref(ref: str) -> tuple[str | None, str, str | None]:
     return None, inner.lstrip(":"), None
 
 
-def _to_fieldref(ref: str, entity: str, columns_lc: dict[str, str]) -> tuple[FieldRef | None, dict | None]:
-    """Resolve one ref to a FieldRef, or return (None, unmapped-record)."""
+# A resolver maps a clean field name -> (entity, real_column) or None.
+# Flat mode binds every field to one table; multi-table mode resolves each field
+# to its true owning table so visuals bind coherently with the emitted model.
+
+def flat_resolver(entity: str, columns: list[str]):
+    cols_lc = {normalize_field_name(c): c for c in columns}
+    return lambda name: ((entity, cols_lc[normalize_field_name(name)])
+                         if normalize_field_name(name) in cols_lc else None)
+
+
+def multitable_resolver(mappings: list[dict], tables: dict):
+    """Resolve each field to its real owning table (fact-preferred if ambiguous)."""
+    from ..ir.context import build_field_to_table
+    field_to_table = build_field_to_table(mappings, tables)
+    field_to_col = {normalize_field_name(m["logical_field"]): m["physical_column"] for m in mappings}
+
+    def resolve(name):
+        n = normalize_field_name(name)
+        if n in field_to_table and n in field_to_col:
+            return field_to_table[n], field_to_col[n]
+        return None
+    return resolve
+
+
+def _to_fieldref_r(ref: str, resolver) -> tuple[FieldRef | None, dict | None]:
     prefix, name, _flag = parse_encoded_ref(ref)
-    norm = normalize_field_name(name)
-    if not norm or norm not in columns_lc:
-        return None, {"field": name, "reason": "no matching model column"}
-    real_col = columns_lc[norm]  # preserve exact model casing/spacing
-    if prefix in _AGG_PREFIXES:
-        return FieldRef(entity=entity, column=real_col, aggregation=prefix), None
-    # 'none', temporal, or bare -> dimension
-    return FieldRef(entity=entity, column=real_col, aggregation=None), None
+    hit = resolver(name)
+    if hit is None:
+        return None, {"field": name, "reason": "no matching model column/table"}
+    entity, real_col = hit
+    agg = prefix if prefix in _AGG_PREFIXES else None
+    return FieldRef(entity=entity, column=real_col, aggregation=agg), None
+
+
+def _to_fieldref(ref: str, entity: str, columns_lc: dict[str, str]) -> tuple[FieldRef | None, dict | None]:
+    """Backward-compatible flat resolution (used by the flat-mode API and tests)."""
+    resolver = lambda name: ((entity, columns_lc[normalize_field_name(name)])  # noqa: E731
+                             if normalize_field_name(name) in columns_lc else None)
+    return _to_fieldref_r(ref, resolver)
 
 
 def _refs_in(text: str | None) -> list[str]:
     return _REF_RE.findall(text) if text else []
 
 
-def _analyze_worksheet(ws: ET.Element, entity: str, columns_lc: dict[str, str]) -> VisualNode:
+def _analyze_worksheet(ws: ET.Element, resolver) -> VisualNode:
     name = ws.attrib.get("name", "?")
     marks = [m.attrib.get("class") for m in ws.findall(".//pane/mark") if m.attrib.get("class")]
     mark_type = next((m for m in _MARK_PRIORITY if m in marks), (marks[0] if marks else "Automatic"))
@@ -84,7 +112,7 @@ def _analyze_worksheet(ws: ET.Element, entity: str, columns_lc: dict[str, str]) 
     dims: list[FieldRef] = []
     measures: list[FieldRef] = []
     for ref in axis_refs:
-        fr, bad = _to_fieldref(ref, entity, columns_lc)
+        fr, bad = _to_fieldref_r(ref, resolver)
         if bad:
             node.unmapped_encodings.append({"shelf": "axis", **bad})
         elif fr.is_measure:
@@ -101,10 +129,11 @@ def _analyze_worksheet(ws: ET.Element, entity: str, columns_lc: dict[str, str]) 
     for tag, col in encodings:
         prefix, gname, _ = parse_encoded_ref(col)
         norm = normalize_field_name(gname)
-        if tag in ("lod", "detail") and norm in mapping.GEO_STANDARD and norm in columns_lc:
-            geo_standard_dim = FieldRef(entity=entity, column=columns_lc[norm], aggregation=None)
-        if tag in ("color", "size") and prefix in _AGG_PREFIXES and norm in columns_lc:
-            geo_measure = FieldRef(entity=entity, column=columns_lc[norm], aggregation=prefix)
+        hit = resolver(gname)
+        if tag in ("lod", "detail") and norm in mapping.GEO_STANDARD and hit:
+            geo_standard_dim = FieldRef(entity=hit[0], column=hit[1], aggregation=None)
+        if tag in ("color", "size") and prefix in _AGG_PREFIXES and hit:
+            geo_measure = FieldRef(entity=hit[0], column=hit[1], aggregation=prefix)
     for d in dims:
         if normalize_field_name(d.column) in mapping.GEO_STANDARD:
             geo_standard_dim = geo_standard_dim or d
@@ -164,11 +193,15 @@ def _grid_positions(n: int, cols: int = 3, page_w: float = 1280, page_h: float =
     return positions
 
 
-def extract(twb_root: ET.Element, entity: str, columns: list[str]) -> list[PageNode]:
-    """Build PageNodes (one per dashboard; loose worksheets -> default page)."""
-    columns_lc = {normalize_field_name(c): c for c in columns}
+def extract(twb_root: ET.Element, resolver) -> list[PageNode]:
+    """Build PageNodes (one per dashboard; loose worksheets -> default page).
+
+    ``resolver`` maps a field name to (entity, column); use ``flat_resolver`` for
+    single-table binding or ``multitable_resolver`` for coherent multi-table
+    binding to the compiler's own model.
+    """
     ws_by_name = {ws.attrib.get("name"): ws for ws in twb_root.findall(".//worksheet")}
-    nodes = {name: _analyze_worksheet(ws, entity, columns_lc) for name, ws in ws_by_name.items()}
+    nodes = {name: _analyze_worksheet(ws, resolver) for name, ws in ws_by_name.items()}
 
     dashboards = _dashboards(twb_root)
     used = set()
@@ -193,5 +226,12 @@ def extract(twb_root: ET.Element, entity: str, columns: list[str]) -> list[PageN
 
 
 def extract_from_twb(twb_path: Path, entity: str, columns: list[str]) -> list[PageNode]:
+    """Flat-mode extraction (one entity). Kept for V1 API / tests."""
     root = ET.parse(twb_path).getroot()
-    return extract(root, entity, columns)
+    return extract(root, flat_resolver(entity, columns))
+
+
+def extract_from_twb_multitable(twb_path: Path, mappings: list[dict], tables: dict) -> list[PageNode]:
+    """Coherent multi-table extraction: each field binds to its real owning table."""
+    root = ET.parse(twb_path).getroot()
+    return extract(root, multitable_resolver(mappings, tables))

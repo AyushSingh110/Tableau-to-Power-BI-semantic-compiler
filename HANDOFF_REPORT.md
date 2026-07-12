@@ -342,6 +342,64 @@ coherence gap); (3) **faithful dashboard layout/position** (replace auto-grid);
 (4) **broader mark coverage** (dual-axis combo charts, more geo/choropleth,
 scatter refinements); (5) vendor the PBIR schema for the best-effort gate.
 
+## V2 end-to-end pipeline (.twbx → full .pbip)
+
+**What was built** — additive, existing pipeline + V1 untouched and green
+(**74 tests pass**, ruff clean). V2 unifies the two halves into one command:
+
+- `src/tab2pbi/export/tmdl.py` — **TMDL model emitter**: canonical model → a
+  `*.SemanticModel/` folder (`model.tmdl`, `database.tmdl`, `relationships.tmdl`,
+  `cultures/en-US.tmdl`, `tables/*.tmdl` with columns + import partition +
+  measures + calc columns). Structure grounded in the reference SemanticModel;
+  measure/calc-column syntax grounded in the official TMDL docs.
+- `src/tab2pbi/visual/extract.py` — **coherent binding**: `multitable_resolver`
+  binds each field to its real owning table (fact-preferred for ambiguous names);
+  unresolved → `unmapped_encoding`. Flat `--entity` mode kept as fallback.
+- `src/tab2pbi/visual/layout.py` — **dashboard layout**: zones → PBIR page
+  positions (largest zone per sheet, clamped visible, on-canvas); auto-grid
+  fallback for loose sheets.
+- `src/tab2pbi/build_pbip.py` + `tab2pbi build-pbip` — orchestrates
+  `.twbx` → `.SemanticModel/` + `.Report/` (byPath → the model) + `.pbip` pointer
+  + `build_report.json`.
+
+**Does the unified `.pbip` open with model + visuals?** Structurally yes — it
+emits a complete `.pbip` and all 74 tests pass — but **render is PENDING**
+(pending your Power BI check; see `docs/VISUAL.md` V2 render-gate).
+
+**Coverage (Superstore, `tab2pbi build-pbip`):**
+
+| | |
+| - | - |
+| Model | 3 tables, **1 measure**, 1 calc column, 3 parameters, 1 relationship; **1 multi-line param skipped** (would break TMDL) |
+| Visuals | 32 worksheets → **9 emitted** (columnChart 4, map 2, area/pie/line 1), **23 skipped** by bucket; **all bound to `Orders_ECFCA…`**, not flat `hyper_raw_data` |
+
+**Data-source strategy:** one **CSV import partition per table** from the
+generated `data/tables/*.csv`, M grounded on the reference. The `File.Contents`
+path is **absolute** so it opens here without hand-editing — **moving the repo
+breaks it; re-run to regenerate** (documented in output + `docs/VISUAL.md`).
+
+**Decisions I made (unspecified):**
+- **Multi-line DAX → skipped** in TMDL (not emitted as fragile/invalid TMDL),
+  counted as `tmdl_skipped_multiline`. Protects model load (refinement #1).
+- **Auto date-tables skipped** (`__PBI_TimeIntelligenceEnabled = 0`) → "by Order
+  Date" charts render flat dates, not a hierarchy (documented delta, not a bug —
+  refinement #3).
+- **Layout clamped** to a 120×90 minimum + on-canvas so hidden/tiny designer
+  zones don't become 1px slivers (faithful-not-pixel-perfect).
+- **Deterministic uuid5 lineageTags**; page/visual ids = `sha1(name)[:20]`.
+- **No DAX rewrite needed** — model measures already reference multi-table
+  entities (refinement #4 was a no-op, as predicted).
+
+**Render-gate result: PENDING.** Steps in `docs/VISUAL.md` (V2 render-gate):
+confirm (a) model loads with the right tables/relationships/measures, (b) visuals
+bind + render, (c) note any delta vs the V1 flat render. **If the model fails to
+load at a measure/column**, that's the ungrounded TMDL — create one manually and
+hand back the `.pbip` as ground truth (the plan's path-B guard).
+
+**V2 next steps (ranked):** (1) **run the V2 render-gate**; (2) broader mark
+coverage + cross-table visuals; (3) n>1 workbook corpus; (4) then fold V2 into
+the paper.
+
 ## Ranked next steps
 
 1. **Build a 2–3 workbook corpus (move past n=1).** Every paper number comes

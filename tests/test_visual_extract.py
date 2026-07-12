@@ -38,6 +38,6 @@ def test_resolve_realworld_column_names():
 
 def test_unresolved_field_is_unmapped_not_guessed():
     fr, bad = _to_fieldref("[ds].[usr:Calculation_123:nk]", "hyper_raw_data", COLS_LC)
-    assert fr is None and bad["reason"] == "no matching model column"
+    assert fr is None and "no matching model column" in bad["reason"]
     fr, bad = _to_fieldref("[ds].[:Measure Names]", "hyper_raw_data", COLS_LC)
     assert fr is None and bad is not None

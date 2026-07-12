@@ -48,7 +48,7 @@ mappings, or coverage.
 
 ## Two compilers, one IR
 
-| | 🧮 **Data-model compiler** | 📊 **Visual compiler** `V1 · experimental` |
+| | **Data-model compiler** | **Visual compiler** `V1 · experimental` |
 | --- | --- | --- |
 | **Translates** | `.twbx` → Power BI **TOM** (tables, measures, relationships) | `.twb` worksheets → Power BI **PBIR** report (`visual.json`) |
 | **Command** | `tab2pbi run` | `tab2pbi visual` |
@@ -65,25 +65,25 @@ TMDL emitter is **V2**) — this gap is documented, not hidden.
 
 Compiling the bundled **Superstore** workbook (`examples/Superstore.twbx`):
 
-**🧮 Semantic model** — 17 calculations →
+**Semantic model** — 17 calculations →
 
 | | | |
 | --- | --- | --- |
-| ✅ measure | **1** | `SUM(Orders[Profit]) / SUM(Orders[Sales])` |
-| ✅ calc column | **1** | `DATEDIFF(Orders[Order Date], Orders[Ship Date], DAY)` |
-| ✅ parameters | **4** | constant calcs (own bucket) |
-| ⏭️ skipped | **11** | each with a taxonomy reason |
-| 📈 **coverage** | **11.8%** | measures + columns / total |
-| 🔗 relationship | **1** | `Orders.Region → People.Region` (coverage 1.0, data-driven) |
-| 🎯 correctness | **proxy 1/1 · engine-verified 1/1** | *n=1, tol 1e-3 — see below* |
+| measure | **1** | `SUM(Orders[Profit]) / SUM(Orders[Sales])` |
+| calc column | **1** | `DATEDIFF(Orders[Order Date], Orders[Ship Date], DAY)` |
+| parameters | **4** | constant calcs (own bucket) |
+| skipped | **11** | each with a taxonomy reason |
+| **coverage** | **11.8%** | measures + columns / total |
+| relationship | **1** | `Orders.Region → People.Region` (coverage 1.0, data-driven) |
+| correctness | **proxy 1/1 · engine-verified 1/1** | *n=1, tol 1e-3 — see below* |
 
-**📊 Report visuals** — 32 worksheets →
+**Report visuals** — 32 worksheets →
 
 | | | |
 | --- | --- | --- |
-| ✅ emitted | **9** | columnChart ×4, map ×2, area/pie/line ×1 |
-| ⏭️ skipped | **23** | `custom_shape` 11 · `insufficient_fields` 8 · `custom_geometry` 2 · `gantt` 1 · `dual_axis` 1 |
-| 📈 **coverage** | **28.1%** | emitted & schema-valid / total *(NOT render-verified)* |
+| emitted | **9** | columnChart ×4, map ×2, area/pie/line ×1 |
+| skipped | **23** | `custom_shape` 11 · `insufficient_fields` 8 · `custom_geometry` 2 · `gantt` 1 · `dual_axis` 1 |
+| **coverage** | **28.1%** | emitted & schema-valid / total *(NOT render-verified)* |
 
 > **Coverage is a floor, not a ceiling.** Superstore is a design showcase
 > dominated by table calcs, window functions, string-formatting logic, and
@@ -254,23 +254,23 @@ A `Measure.ast` is a typed tree from the tokenizer + Pratt parser
 ## What works today
 
 | Capability | Status |
-| ---------- | :----: |
-| Unzip `.twbx`, parse `.twb` XML (fields, calcs, filters, parameters) | ✅ |
-| Read `.hyper` schema + per-table data via the official Hyper API | ✅ |
-| Logical→physical field mapping (exact, case-insensitive) | ✅ |
-| Real tokenizer + Pratt parser → typed calc AST | ✅ |
-| DAX for aggregations, algebraic combos, `COUNTD`, `IF`/`CASE`, basic date fns | ✅ |
-| Measure vs. calculated-column split; constants → parameters | ✅ |
-| Data-driven relationship inference (PK/FK by referential coverage) | ✅ |
-| Machine-readable failure taxonomy + skip-with-reason report | ✅ |
-| Versioned IR JSON-Schema validation of every stage | ✅ |
-| pytest suite (58 tests) + GitHub Actions CI (pytest + ruff) | ✅ |
-| Evaluation harness (proxy + engine-verified correctness) | ✅ |
-| Power BI **TOM** + Tabular Editor `Model.json` export | ✅ |
-| **PBIR report** emitter (core charts + bubble maps), V1 | ✅ |
-| LOD / table-calc / window / conditional-aggregation transpilation | ⏭️ reported, not converted |
-| Merging declared TWB relationships into the model | ⏭️ extracted only |
-| Unifying visual bindings with the multi-table TOM + TMDL emitter | 🔜 V2 |
+| ---------- | ------ |
+| Unzip `.twbx`, parse `.twb` XML (fields, calcs, filters, parameters) | Done |
+| Read `.hyper` schema + per-table data via the official Hyper API | Done |
+| Logical→physical field mapping (exact, case-insensitive) | Done |
+| Real tokenizer + Pratt parser → typed calc AST | Done |
+| DAX for aggregations, algebraic combos, `COUNTD`, `IF`/`CASE`, basic date fns | Done |
+| Measure vs. calculated-column split; constants → parameters | Done |
+| Data-driven relationship inference (PK/FK by referential coverage) | Done |
+| Machine-readable failure taxonomy + skip-with-reason report | Done |
+| Versioned IR JSON-Schema validation of every stage | Done |
+| pytest suite (58 tests) + GitHub Actions CI (pytest + ruff) | Done |
+| Evaluation harness (proxy + engine-verified correctness) | Done |
+| Power BI **TOM** + Tabular Editor `Model.json` export | Done |
+| **PBIR report** emitter (core charts + bubble maps), V1 | Done |
+| LOD / table-calc / window / conditional-aggregation transpilation | Reported, not converted |
+| Merging declared TWB relationships into the model | Extracted only |
+| Unifying visual bindings with the multi-table TOM + TMDL emitter | Planned (V2) |
 
 ## How correctness is measured
 
@@ -312,10 +312,10 @@ Each stage writes a JSON artifact under `data/`; a labeled reference copy lives 
 
 ## Design principles
 
-🔒 **Deterministic** — same input, same output.
-🚫 **No silent drops / no fabrication** — anything unsupported is reported with a reason.
-🏷️ **Heuristics are labeled and overridable** — e.g. the fact-table pick is flagged in the report.
-📖 **Official interfaces only** — Hyper API + documented TWB XML; no reverse-engineering.
+- **Deterministic** — same input, same output.
+- **No silent drops / no fabrication** — anything unsupported is reported with a reason.
+- **Heuristics are labeled and overridable** — e.g. the fact-table pick is flagged in the report.
+- **Official interfaces only** — Hyper API + documented TWB XML; no reverse-engineering.
 
 ## Limitations
 

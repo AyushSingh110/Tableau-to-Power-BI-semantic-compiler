@@ -75,7 +75,42 @@ def build_parser() -> argparse.ArgumentParser:
     from .visual.cli import add_arguments as _visual_args
     visual_p = sub.add_parser("visual", help="Compile Tableau worksheets into a Power BI PBIR report (V1).")
     _visual_args(visual_p)
+
+    # Additive: V2 end-to-end .twbx -> full .pbip (TMDL model + PBIR visuals).
+    bp = sub.add_parser("build-pbip", help="Compile a .twbx into a full .pbip (model + visuals, coherently bound).")
+    bp.add_argument("twbx", nargs="?", type=Path, default=DEFAULT_TWBX)
+    bp.add_argument("--out", type=Path, default=Path("data/pbip"), help="Output folder for the .pbip project.")
+    bp.add_argument("--name", default="Superstore", help="Project name (folder/pointer base name).")
+    bp.add_argument("--data-dir", type=Path, default=DEFAULT_DATA_DIR)
+    bp.add_argument("-v", "--verbose", action="store_true", help="Debug logging.")
     return parser
+
+
+def _pbip_summary(c: dict) -> str:
+    m, v = c["model"], c["visuals"]
+    cr = m["conversion_report"]
+    lines = [
+        "", "=" * 64, " tab2pbi build-pbip — end-to-end (.twbx -> .pbip)", "=" * 64,
+        " MODEL (TMDL):",
+        f"   tables:            {m['tmdl']['tables']}",
+        f"   measures:          {m['tmdl']['measures']}   calc columns: {m['tmdl']['calculated_columns']}   parameters: {m['tmdl']['parameters']}",
+        f"   relationships:     {m['tmdl']['relationships']}",
+        f"   measure coverage:  {cr.get('coverage_pct', 0)}%",
+    ]
+    if m["tmdl_skipped_multiline"]:
+        lines.append(f"   TMDL skipped (multi-line DAX): {len(m['tmdl_skipped_multiline'])}")
+    lines += [
+        " VISUALS (PBIR, bound to the model's own tables):",
+        f"   worksheets:        {v['worksheets_total']}",
+        f"   emitted:           {v['visuals_emitted']}  {v['emitted_by_type']}",
+        f"   skipped:           {v['visuals_skipped']}  {v['skipped_by_bucket']}",
+        f"   visual coverage:   {v['coverage_pct_schema_valid']}%  (schema-valid, NOT render-verified)",
+        "=" * 64,
+        f" .pbip:              {c['pbip']}",
+        f" Render-verified:    {c['render_verified']}",
+        "",
+    ]
+    return "\n".join(lines)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -97,6 +132,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "visual":
         from .visual.cli import run as _visual_run
         return _visual_run(args)
+    if args.command == "build-pbip":
+        if not args.twbx.exists():
+            parser.error(f"workbook not found: {args.twbx}")
+        from . import build_pbip
+        combined = build_pbip.run(twbx_path=args.twbx, out_dir=args.out, name=args.name, data_dir=args.data_dir)
+        print(_pbip_summary(combined))
+        return 0
     return 1
 
 
