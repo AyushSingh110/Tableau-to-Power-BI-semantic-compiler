@@ -288,11 +288,21 @@ output; entity `hyper_raw_data`, map uses `visualType:"map"`, `Function:0`=Sum).
 | Skipped | **23** — `custom_shape` 11, `insufficient_fields` 8, `custom_geometry` 2, `gantt` 1, `dual_axis` 1 |
 | Coverage | **28.1%** (emitted & schema-valid / total worksheets) |
 
-**Render-gate result: PENDING (needs you).** Coverage is **schema-valid, NOT
-render-verified** — same stance as proxy-vs-engine-verified on the model side.
-Exact steps to pair the emitted Report with the reference `Superstore.SemanticModel`
-and open in Power BI Desktop are in `docs/VISUAL.md` (§ Render-gate). Confirm the
-9 visuals render, then record the result here.
+**Render-gate result: ✅ VERIFIED — 9/9 rendered (2026-07-12).** The emitted
+Report was paired with the reference `Superstore.SemanticModel` (entity
+`hyper_raw_data`) and opened in Power BI Desktop. All 9 emitted visuals rendered
+with real data: 4 column charts (Order Date, Category, Category+Order Date,
+Sub-Category, Product Name), 2 bubble maps (State, City), 1 line (Segment), 1 pie
+(Sub-Category), 1 area. Coverage **28.1%** is now **render-verified**, not just
+schema-valid.
+
+**Honest map finding (geocoder divergence, as predicted in V0):** the "Sales by
+City" map scatters bubbles worldwide — Power BI's Bing geocoder resolves
+ambiguous US city names to foreign cities. The visual renders correctly but
+geographic fidelity is imperfect. This is concrete evidence for the paper's
+"maps translate analytical *intent*, not exact geography" claim, and reinforces
+the choropleth/custom-geometry skip decisions. Not a defect — a documented
+boundary of the Tableau→Power BI geocoding mismatch.
 
 **⚠️ Entity/model coherence gap (known, not solved).** The visual layer binds to
 a **flat `hyper_raw_data`** table (the spike's saved model); the data-model

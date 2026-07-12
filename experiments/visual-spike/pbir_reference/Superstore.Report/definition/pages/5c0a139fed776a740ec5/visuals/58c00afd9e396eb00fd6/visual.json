@@ -1,16 +1,15 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.3.0/schema.json",
-  "name": "1719b2eb6f8c5ffbc2bb",
+  "name": "58c00afd9e396eb00fd6",
   "position": {
-    "x": 602.40339034154681,
-    "y": 419.89849076198936,
-    "z": 1,
-    "height": 300.51558652573749,
-    "width": 300.51558652573749,
-    "tabOrder": 1
+    "x": 856.0,
+    "y": 16.0,
+    "z": 2,
+    "width": 408.0,
+    "height": 221.33
   },
   "visual": {
-    "visualType": "map",
+    "visualType": "columnChart",
     "query": {
       "queryState": {
         "Category": {
@@ -23,16 +22,35 @@
                       "Entity": "hyper_raw_data"
                     }
                   },
-                  "Property": "State"
+                  "Property": "Category"
                 }
               },
-              "queryRef": "hyper_raw_data.State",
-              "nativeQueryRef": "State",
+              "queryRef": "hyper_raw_data.Category",
+              "nativeQueryRef": "Category",
               "active": true
             }
           ]
         },
-        "Size": {
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "hyper_raw_data"
+                    }
+                  },
+                  "Property": "Order Date"
+                }
+              },
+              "queryRef": "hyper_raw_data.Order Date",
+              "nativeQueryRef": "Order Date",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
           "projections": [
             {
               "field": {
@@ -58,42 +76,5 @@
       }
     },
     "drillFilterOtherVisuals": true
-  },
-  "filterConfig": {
-    "filters": [
-      {
-        "name": "944ff786e3d3f76d5068",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "hyper_raw_data"
-              }
-            },
-            "Property": "State"
-          }
-        },
-        "type": "Categorical"
-      },
-      {
-        "name": "46dd48fdc1891038534e",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "hyper_raw_data"
-                  }
-                },
-                "Property": "Sales"
-              }
-            },
-            "Function": 0
-          }
-        },
-        "type": "Advanced"
-      }
-    ]
   }
 }
