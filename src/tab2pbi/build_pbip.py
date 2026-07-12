@@ -23,8 +23,6 @@ from .visual import emit_pbir, extract, layout, report
 
 log = get_logger(__name__)
 
-PBIP_SCHEMA = "https://developer.microsoft.com/json-schemas/fabric/item/pbip/1.0.0/schema.json"
-
 
 def _twb_from_twbx(twbx: Path) -> Path:
     tmp = Path(tempfile.mkdtemp(prefix="pbip_"))
@@ -66,10 +64,13 @@ def run(twbx_path: Path, out_dir: Path, name: str = "Superstore",
     emit_info = emit_pbir.emit(pages, report_dir, model_path=f"../{name}.SemanticModel")
     visual_report = report.build_report(pages)
 
-    # 5) .pbip pointer.
+    # 5) .pbip pointer. Match Power BI's own output exactly (no $schema; the
+    #    Desktop validator rejects a mismatched one). Grounded in the reference
+    #    pbir_reference/Superstore.pbip.
     (out_dir / f"{name}.pbip").write_text(json.dumps({
-        "$schema": PBIP_SCHEMA, "version": "1.0",
-        "artifacts": [{"report": {"path": f"{name}.Report"}}], "settings": {},
+        "version": "1.0",
+        "artifacts": [{"report": {"path": f"{name}.Report"}}],
+        "settings": {"enableAutoRecovery": True},
     }, indent=2), encoding="utf-8")
 
     combined = {

@@ -32,6 +32,16 @@ def test_pbip_tree_exists(built):
     assert pbir["datasetReference"]["byPath"]["path"] == "../Superstore.SemanticModel"
 
 
+def test_pbip_pointer_matches_powerbi_shape(built):
+    # Power BI Desktop rejects a mismatched $schema on the .pbip pointer; its own
+    # output carries no $schema. Regression guard grounded in pbir_reference.
+    out, _ = built
+    pbip = json.loads((out / "Superstore.pbip").read_text(encoding="utf-8"))
+    assert "$schema" not in pbip
+    assert pbip["version"] == "1.0"
+    assert pbip["artifacts"] == [{"report": {"path": "Superstore.Report"}}]
+
+
 def test_model_has_three_tables(built):
     out, combined = built
     model = (out / "Superstore.SemanticModel/definition/model.tmdl").read_text(encoding="utf-8")
