@@ -37,7 +37,7 @@ tab2pbi = "tab2pbi.cli:main"
 where = ["src"]
 
 [tool.setuptools.package-data]
-tab2pbi = ["ir/schema/*.schema.json"]
+tab2pbi = ["ir/schema/*.schema.json", "visual/templates/**/*.json"]
 
 [tool.ruff]
 line-length = 100

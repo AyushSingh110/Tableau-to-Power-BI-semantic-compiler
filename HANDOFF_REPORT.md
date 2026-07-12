@@ -266,6 +266,72 @@ comment (abstract included — grep `source:` to audit). Pins:
 **Not committed.** `docs/paper/` is new, `HANDOFF_REPORT.md` modified. Suggested
 commit: `docs: add tool-demo paper draft + references`.
 
+## V1 visual compiler (Tableau worksheets → Power BI PBIR report)
+
+**What was built** — additive, isolated package `src/tab2pbi/visual/` (existing
+data-model pipeline untouched and still green: 6/6 golden, full suite 58 passed,
+ruff clean). Modules: `ir.py` (Visual IR + failure taxonomy), `mapping.py`
+(deterministic mark→visual table), `extract.py` (.twb → PageNodes, reuses
+`ir.context.normalize_field_name`, resolves real-world column names), `emit_pbir.py`
+(emits PBIR `visual.json` pinned to `visualContainer/2.3.0` + scaffolding + bundled
+theme; structural validation against the ground-truth reference), `report.py`,
+`cli.py` (+ `visual` subcommand and `python -m tab2pbi.visual`). Ground truth =
+the human-provided `experiments/visual-spike/pbir_reference/` (real Power BI
+output; entity `hyper_raw_data`, map uses `visualType:"map"`, `Function:0`=Sum).
+
+**Real coverage (Superstore, 32 worksheets)** — from
+`python -m tab2pbi.visual`:
+
+| | count |
+| - | - |
+| Visuals emitted | **9** (columnChart 4, map 2, areaChart 1, pieChart 1, lineChart 1) |
+| Skipped | **23** — `custom_shape` 11, `insufficient_fields` 8, `custom_geometry` 2, `gantt` 1, `dual_axis` 1 |
+| Coverage | **28.1%** (emitted & schema-valid / total worksheets) |
+
+**Render-gate result: PENDING (needs you).** Coverage is **schema-valid, NOT
+render-verified** — same stance as proxy-vs-engine-verified on the model side.
+Exact steps to pair the emitted Report with the reference `Superstore.SemanticModel`
+and open in Power BI Desktop are in `docs/VISUAL.md` (§ Render-gate). Confirm the
+9 visuals render, then record the result here.
+
+**⚠️ Entity/model coherence gap (known, not solved).** The visual layer binds to
+a **flat `hyper_raw_data`** table (the spike's saved model); the data-model
+compiler emits a **multi-table TOM** (`Orders_ECFCA…`, `People`). **The two halves
+target different models today — V1 visuals do NOT bind to the model compiler's
+output as-is.** This is acceptable for V1 (Report-only) but is a real integration
+gap: unifying visual bindings with the multi-table TOM + a **TMDL model emitter**
+is **V2**. Not hand-waved as end-to-end.
+
+**Decisions I made that weren't specified:**
+- **Auto-grid layout** (deterministic 3-col grid); faithful Tableau dashboard
+  positions deferred to V2 (as approved).
+- **Primary-mark priority** (Multipolygon > GanttBar > Pie > Bar > Line > Area >
+  Circle > Shape > Text > Automatic) to pick one visual per multi-mark worksheet;
+  **dual-axis** flagged only when ≥2 distinct marks from {Bar,Line,Area} co-occur
+  (so a map with pie overlays is not mis-skipped).
+- **Aggregation codes:** only `Sum` (`Function:0`) is reference-verified; avg/min/
+  max/count use documented enum codes, and any aggregation outside the supported
+  set routes to `unsupported_aggregation` rather than a guessed code.
+- **Deterministic ids** = `sha1(name)[:20]`.
+- **Validation:** structural conformance to the reference is the *enforced* gate;
+  JSON-schema against 2.3.0 is best-effort and currently reports `skipped (schema
+  not vendored)` — the schema's remote `$ref` tree won't resolve offline. Honest,
+  not hidden.
+- **Text→card vs tableEx** split by presence of a dimension; **Circle needs 2
+  measures** or it's `insufficient_fields` (no broken scatter).
+
+**V1 tests (19 new, wired into CI):** `test_visual_mapping`, `test_visual_extract`
+(incl. real-world `Sub-Category`/`Country/Region`/`Order Date` resolution + a
+calc-field → unmapped case), `test_visual_emit` (emitted JSON structurally matches
+the reference map skeleton), `test_visual_golden` (the 9-emitted / 23-skipped
+snapshot).
+
+**V1 next steps (ranked):** (1) **run the render-gate** and record it; (2) **TMDL
+model emitter** + unify visual bindings with the multi-table TOM (closes the
+coherence gap); (3) **faithful dashboard layout/position** (replace auto-grid);
+(4) **broader mark coverage** (dual-axis combo charts, more geo/choropleth,
+scatter refinements); (5) vendor the PBIR schema for the best-effort gate.
+
 ## Ranked next steps
 
 1. **Build a 2–3 workbook corpus (move past n=1).** Every paper number comes

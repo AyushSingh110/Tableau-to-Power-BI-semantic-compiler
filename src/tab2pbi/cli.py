@@ -69,6 +69,12 @@ def build_parser() -> argparse.ArgumentParser:
     run_p.add_argument("--fact-table", default=None,
                        help="Override the fact table (physical table name) instead of inferring by size.")
     run_p.add_argument("-v", "--verbose", action="store_true", help="Debug logging.")
+
+    # Additive: V1 visual compiler (Tableau worksheets -> PBIR report). Isolated
+    # in tab2pbi.visual; does not affect the `run` (data-model) pipeline.
+    from .visual.cli import add_arguments as _visual_args
+    visual_p = sub.add_parser("visual", help="Compile Tableau worksheets into a Power BI PBIR report (V1).")
+    _visual_args(visual_p)
     return parser
 
 
@@ -88,6 +94,9 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(_summary(result))
         return 0
+    if args.command == "visual":
+        from .visual.cli import run as _visual_run
+        return _visual_run(args)
     return 1
 
 
