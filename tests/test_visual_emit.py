@@ -10,8 +10,22 @@ from tab2pbi.visual.emit_pbir import StructuralError, structural_check
 from tab2pbi.visual.ir import FieldRef, PageNode, Position, VisualNode
 
 REPO = Path(__file__).resolve().parents[1]
-REF_MAP = (REPO / "experiments/visual-spike/pbir_reference/Superstore.Report/definition"
-           "/pages/569b84b0ac53502eb8a4/visuals/1719b2eb6f8c5ffbc2bb/visual.json")
+REF_PAGES = REPO / "experiments/visual-spike/pbir_reference/Superstore.Report/definition/pages"
+
+
+def _reference_visual(visual_type: str) -> dict | None:
+    """Find any committed reference visual.json of the given type (GUID-agnostic).
+
+    Power BI re-saves the reference with fresh GUIDs, so we discover by content
+    rather than hard-coding a path.
+    """
+    if not REF_PAGES.exists():
+        return None
+    for vj in REF_PAGES.rglob("visual.json"):
+        obj = json.loads(vj.read_text(encoding="utf-8"))
+        if obj.get("visual", {}).get("visualType") == visual_type:
+            return obj
+    return None
 
 
 def _map_node():
@@ -40,9 +54,11 @@ def test_emit_produces_valid_tree(tmp_path):
 
 
 def test_emitted_map_matches_reference_skeleton(tmp_path):
+    ref = _reference_visual("map")
+    if ref is None:
+        pytest.skip("no committed reference map visual.json to diff against")
     emit_pbir.emit([_map_node()], tmp_path / "R.Report", "../m")
     emitted = json.loads(next((tmp_path / "R.Report" / "definition/pages").rglob("visual.json")).read_text())
-    ref = json.loads(REF_MAP.read_text(encoding="utf-8"))
     assert emitted["$schema"] == ref["$schema"]
     assert emitted["visual"]["visualType"] == ref["visual"]["visualType"] == "map"
     assert set(emitted["visual"]["query"]["queryState"]) == set(ref["visual"]["query"]["queryState"])
