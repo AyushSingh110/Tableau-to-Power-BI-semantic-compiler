@@ -20,3 +20,5 @@ venv/
 # --- Power BI ---
 *.pbix
 docs/paper
+experiments/**/.pbi/
+experiments/**/*.abf

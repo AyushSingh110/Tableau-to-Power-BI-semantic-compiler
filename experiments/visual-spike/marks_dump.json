@@ -1,0 +1,795 @@
+[
+  {
+    "worksheet": "@Download",
+    "mark_types": [
+      "Text"
+    ],
+    "rows_shelf": "([Sample - Superstore (copy)].[none:Order ID:nk] / ([Sample - Superstore (copy)].[none:Customer Name:nk] / ([Sample - Superstore (copy)].[none:Segment:nk] / ([Sample - Superstore (copy)].[none:Order Date:ok] / ([Sample - Superstore (copy)].[none:State:nk] / ([Sample - Superstore (copy)].[none:Postal Code:ok] / ([Sample - Superstore (copy)].[none:Category:nk] / ([Sample - Superstore (copy)].[none:Ship Date:ok] / [Sample - Superstore (copy)].[none:Calculation_774619140457381925:ok]))))))))",
+    "cols_shelf": "[Sample - Superstore (copy)].[:Measure Names]",
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Multiple Values",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Header",
+    "mark_types": [
+      "Shape"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[min:Calculation_870883616920612898:qk]",
+    "cols_shelf": null,
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616920924200",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Header (2)",
+    "mark_types": [
+      "Shape"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[min:Calculation_870883616920612898:qk]",
+    "cols_shelf": null,
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616920924200",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Header (3)",
+    "mark_types": [
+      "Shape"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[min:Calculation_870883616920612898:qk]",
+    "cols_shelf": null,
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616920924200",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Header (4)",
+    "mark_types": [
+      "Shape"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[min:Calculation_870883616920612898:qk]",
+    "cols_shelf": null,
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616920924200",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Header (5)",
+    "mark_types": [
+      "Shape"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[min:Calculation_870883616920612898:qk]",
+    "cols_shelf": null,
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616920924200",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Header (6)",
+    "mark_types": [
+      "Shape"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[min:Calculation_870883616920612898:qk]",
+    "cols_shelf": null,
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616920924200",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Header (7)",
+    "mark_types": [
+      "Shape"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[min:Calculation_870883616920612898:qk]",
+    "cols_shelf": null,
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616920924200",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "I - Info",
+    "mark_types": [
+      "Shape"
+    ],
+    "rows_shelf": null,
+    "cols_shelf": null,
+    "encodings": [
+      {
+        "shelf": "color",
+        "field": "Calculation_902971729557098515",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "shape",
+        "field": "Calculation_774619140494204982",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "I - LinkedIn",
+    "mark_types": [
+      "Shape"
+    ],
+    "rows_shelf": null,
+    "cols_shelf": null,
+    "encodings": [
+      {
+        "shelf": "color",
+        "field": "Calculation_902971729557098515",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "shape",
+        "field": "Calculation_856809869386514454",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "I - Twitter",
+    "mark_types": [
+      "Shape"
+    ],
+    "rows_shelf": null,
+    "cols_shelf": null,
+    "encodings": [
+      {
+        "shelf": "color",
+        "field": "Calculation_902971729557168148",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "shape",
+        "field": "Calculation_856809869386264595",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Map - Color Legend",
+    "mark_types": [
+      "Line"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[sum:Sales:qk]",
+    "cols_shelf": null,
+    "encodings": [
+      {
+        "shelf": "color",
+        "field": "Sales",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "Sales"
+        }
+      },
+      {
+        "shelf": "text",
+        "field": "Sales  (copy)_774619140372635663",
+        "resolved": null
+      },
+      {
+        "shelf": "lod",
+        "field": "State",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "State"
+        }
+      }
+    ],
+    "is_geographic": true
+  },
+  {
+    "worksheet": "Monthly Sales Trend - Category",
+    "mark_types": [
+      "Bar"
+    ],
+    "rows_shelf": "([Sample - Superstore (copy)].[none:Category:nk] * ([Sample - Superstore (copy)].[sum:Sales:qk] + [Sample - Superstore (copy)].[Multiple Values]))",
+    "cols_shelf": "[Sample - Superstore (copy)].[tmn:Order Date:qk]",
+    "encodings": [
+      {
+        "shelf": "tooltip",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "tooltip",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "color",
+        "field": "Measure Names",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "tooltip",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Monthly Sales Trend - Region",
+    "mark_types": [
+      "Area",
+      "Line",
+      "Pie"
+    ],
+    "rows_shelf": "([Sample - Superstore (copy)].[none:Region:nk] * ([Sample - Superstore (copy)].[sum:Sales:qk] + [Sample - Superstore (copy)].[Multiple Values]))",
+    "cols_shelf": "[Sample - Superstore (copy)].[tmn:Order Date:qk]",
+    "encodings": [
+      {
+        "shelf": "tooltip",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "tooltip",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "tooltip",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "color",
+        "field": "Measure Names",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "lod",
+        "field": "Measure Names",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Order Details | Show/Hide",
+    "mark_types": [
+      "Text"
+    ],
+    "rows_shelf": "([Sample - Superstore (copy)].[none:Order ID:nk] / ([Sample - Superstore (copy)].[none:Customer Name:nk] / ([Sample - Superstore (copy)].[none:Segment:nk] / ([Sample - Superstore (copy)].[none:Order Date:ok] / ([Sample - Superstore (copy)].[none:State:nk] / ([Sample - Superstore (copy)].[none:Postal Code:ok] / ([Sample - Superstore (copy)].[none:Category:nk] / ([Sample - Superstore (copy)].[none:Ship Date:ok] / [Sample - Superstore (copy)].[sum:Calculation_774619140457381925:ok]))))))))",
+    "cols_shelf": "[Sample - Superstore (copy)].[:Measure Names]",
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Multiple Values",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Sales by Category",
+    "mark_types": [
+      "Bar"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[none:Category:nk]",
+    "cols_shelf": "[Sample - Superstore (copy)].[sum:Sales:qk]",
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "text",
+        "field": "sum:Sales",
+        "resolved": null
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Sales by City - Tooltip",
+    "mark_types": [
+      "Automatic"
+    ],
+    "rows_shelf": "([Sample - Superstore (copy)].[usr:Calculation_902971729521315845:ok] / [Sample - Superstore (copy)].[none:City:nk])",
+    "cols_shelf": "[Sample - Superstore (copy)].[sum:Sales:qk]",
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Sales by Region",
+    "mark_types": [
+      "Multipolygon",
+      "Text"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[none:Region:nk]",
+    "cols_shelf": "([Sample - Superstore (copy)].[min:Calculation_774619140366352391:qk] + [Sample - Superstore (copy)].[min:Calculation_774619140366352391:qk])",
+    "encodings": [
+      {
+        "shelf": "lod",
+        "field": "Region",
+        "resolved": {
+          "table": "People_D73023733B004CC1B3CB1ACF62F4A965",
+          "column": "Region"
+        }
+      },
+      {
+        "shelf": "geometry",
+        "field": "Geometry (generated)",
+        "resolved": null
+      },
+      {
+        "shelf": "text",
+        "field": "Region",
+        "resolved": {
+          "table": "People_D73023733B004CC1B3CB1ACF62F4A965",
+          "column": "Region"
+        }
+      },
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": true
+  },
+  {
+    "worksheet": "Sales by Segment",
+    "mark_types": [
+      "Circle",
+      "Line"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[none:Segment:nk]",
+    "cols_shelf": "([Sample - Superstore (copy)].[sum:Sales:qk] + [Sample - Superstore (copy)].[Multiple Values])",
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "text",
+        "field": "pcto:sum:Sales:qk:8",
+        "resolved": null
+      },
+      {
+        "shelf": "color",
+        "field": "Segment",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "Segment"
+        }
+      },
+      {
+        "shelf": "path",
+        "field": "Measure Names",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "tooltip",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "tooltip",
+        "field": "pcto:sum:Sales:qk:8",
+        "resolved": null
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Sales by State - Map",
+    "mark_types": [
+      "Automatic",
+      "Multipolygon",
+      "Pie"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[Latitude (generated)]",
+    "cols_shelf": "[Sample - Superstore (copy)].[Longitude (generated)]",
+    "encodings": [
+      {
+        "shelf": "lod",
+        "field": "Country/Region",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "Country/Region"
+        }
+      },
+      {
+        "shelf": "geometry",
+        "field": "Geometry (generated)",
+        "resolved": null
+      },
+      {
+        "shelf": "color",
+        "field": "Sales",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "Sales"
+        }
+      },
+      {
+        "shelf": "lod",
+        "field": "State",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "State"
+        }
+      },
+      {
+        "shelf": "tooltip",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "geometry",
+        "field": "Geometry (generated)",
+        "resolved": null
+      },
+      {
+        "shelf": "size",
+        "field": "Sales",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "Sales"
+        }
+      },
+      {
+        "shelf": "lod",
+        "field": "State",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "State"
+        }
+      },
+      {
+        "shelf": "tooltip",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": true
+  },
+  {
+    "worksheet": "Sales by Sub-Category",
+    "mark_types": [
+      "Bar"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[none:Sub-Category:nk]",
+    "cols_shelf": "([Sample - Superstore (copy)].[sum:Sales:qk] + [Sample - Superstore (copy)].[usr:Calculation_774619140392960029:qk])",
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "color",
+        "field": "Sales",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "Sales"
+        }
+      },
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "tooltip",
+        "field": "Sales",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "Sales"
+        }
+      },
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Sales by Sub-Category (HeatMap)",
+    "mark_types": [
+      "Pie"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[none:Sub-Category:nk]",
+    "cols_shelf": "[Sample - Superstore (copy)].[tmn:Order Date:qk]",
+    "encodings": [
+      {
+        "shelf": "color",
+        "field": "Sales",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "Sales"
+        }
+      },
+      {
+        "shelf": "tooltip",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Showing results (Indicator)",
+    "mark_types": [
+      "Text"
+    ],
+    "rows_shelf": null,
+    "cols_shelf": null,
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_1054123792576798720",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Top Manufacturers by Sales",
+    "mark_types": [
+      "Automatic",
+      "Bar",
+      "GanttBar"
+    ],
+    "rows_shelf": "([Sample - Superstore (copy)].[usr:Calculation_870883616872980509:ok:2] / [Sample - Superstore (copy)].[Product Name (group)])",
+    "cols_shelf": "([Sample - Superstore (copy)].[sum:Sales:qk] + [Sample - Superstore (copy)].[min:Calculation_870883616850096156:qk])",
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Top Sales by State - KPI",
+    "mark_types": [
+      "Text"
+    ],
+    "rows_shelf": null,
+    "cols_shelf": "[Sample - Superstore (copy)].[none:State:nk]",
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "text",
+        "field": "State",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "State"
+        }
+      }
+    ],
+    "is_geographic": true
+  },
+  {
+    "worksheet": "Top Sold Products - Tooltip",
+    "mark_types": [
+      "Bar"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[none:Product Name:nk]",
+    "cols_shelf": "[Sample - Superstore (copy)].[sum:Sales:qk]",
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "Product Name",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "Product Name"
+        }
+      },
+      {
+        "shelf": "text",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Weekly Sales Trend - Header",
+    "mark_types": [
+      "Area"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[sum:Sales:qk]",
+    "cols_shelf": "[Sample - Superstore (copy)].[twk:Order Date:qk]",
+    "encodings": [
+      {
+        "shelf": "tooltip",
+        "field": "Calculation_870883616845938712",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "YOY% -  Region",
+    "mark_types": [
+      "Text"
+    ],
+    "rows_shelf": "([Sample - Superstore (copy)].[none:Region:nk] * [Sample - Superstore (copy)].[min:Calculation_902971729561182230:qk])",
+    "cols_shelf": "([Sample - Superstore (copy)].[min:Calculation_902971729561182230:qk] + [Sample - Superstore (copy)].[min:Calculation_902971729561182230:qk])",
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "usr:Calculation_1069041984833634338:qk:23",
+        "resolved": null
+      },
+      {
+        "shelf": "color",
+        "field": "usr:% Diff Shape (copy):nk:1",
+        "resolved": null
+      },
+      {
+        "shelf": "text",
+        "field": "Calculation_774619140374282256",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "YOY% - Category",
+    "mark_types": [
+      "Text"
+    ],
+    "rows_shelf": "([Sample - Superstore (copy)].[none:Category:nk] * [Sample - Superstore (copy)].[min:Calculation_902971729561182230:qk])",
+    "cols_shelf": "([Sample - Superstore (copy)].[min:Calculation_902971729561182230:qk] + [Sample - Superstore (copy)].[min:Calculation_902971729561182230:qk])",
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "usr:Calculation_1069041984833634338:qk:23",
+        "resolved": null
+      },
+      {
+        "shelf": "color",
+        "field": "usr:% Diff Shape (copy):nk:1",
+        "resolved": null
+      },
+      {
+        "shelf": "text",
+        "field": "Calculation_774619140375007249",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "YOY% - Segment",
+    "mark_types": [
+      "Text"
+    ],
+    "rows_shelf": "([Sample - Superstore (copy)].[none:Segment:nk] * [Sample - Superstore (copy)].[min:Calculation_902971729561182230:qk])",
+    "cols_shelf": "([Sample - Superstore (copy)].[min:Calculation_902971729561182230:qk] + [Sample - Superstore (copy)].[min:Calculation_902971729561182230:qk])",
+    "encodings": [
+      {
+        "shelf": "text",
+        "field": "usr:Calculation_1069041984833634338:qk:23",
+        "resolved": null
+      },
+      {
+        "shelf": "color",
+        "field": "usr:% Diff Shape (copy):nk:1",
+        "resolved": null
+      },
+      {
+        "shelf": "text",
+        "field": "Calculation_774619140375007249",
+        "resolved": "calculated/derived (not a physical column)"
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "YOY% - Top States",
+    "mark_types": [
+      "Text"
+    ],
+    "rows_shelf": null,
+    "cols_shelf": "[Sample - Superstore (copy)].[none:State:nk]",
+    "encodings": [
+      {
+        "shelf": "color",
+        "field": "usr:% Diff Shape (copy):nk:1",
+        "resolved": null
+      },
+      {
+        "shelf": "text",
+        "field": "usr:Calculation_1069041984833634338:qk:23",
+        "resolved": null
+      }
+    ],
+    "is_geographic": false
+  },
+  {
+    "worksheet": "Year Filter - Buttons",
+    "mark_types": [
+      "Shape"
+    ],
+    "rows_shelf": "[Sample - Superstore (copy)].[min:Calculation_91479404189175814:qk]",
+    "cols_shelf": "[Sample - Superstore (copy)].[yr:Order Date:ok]",
+    "encodings": [
+      {
+        "shelf": "color",
+        "field": "Calculation_990228972985937921",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "lod",
+        "field": "Calculation_774619140519575609",
+        "resolved": "calculated/derived (not a physical column)"
+      },
+      {
+        "shelf": "text",
+        "field": "Order Date",
+        "resolved": {
+          "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+          "column": "Order Date"
+        }
+      }
+    ],
+    "is_geographic": false
+  }
+]
