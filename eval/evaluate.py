@@ -2,11 +2,13 @@ import argparse
 import json
 import sys
 from pathlib import Path
+
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from tab2pbi.evaluation import NotEvaluable, evaluate  # noqa: E402
+
 
 def _load_tables(data_dir: Path, schema: list[dict]) -> dict:
     import re
