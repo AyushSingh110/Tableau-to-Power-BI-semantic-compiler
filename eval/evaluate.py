@@ -1,34 +1,12 @@
-#!/usr/bin/env python
-"""Evaluation harness: compare generated measures to Tableau ground truth.
-
-Reports TWO independent numbers (never conflated — see docs/EVALUATION.md):
-
-  * proxy-correctness   : this repo's pandas AST-evaluator vs Tableau values.
-                          Validates the parser/IR, NOT the generated DAX.
-  * engine-verified     : Power BI / Tabular Editor values (hand-recorded in the
-                          ground-truth CSV) vs Tableau values. The real anchor.
-
-Ground-truth CSV columns:
-    measure          - calculation name, exactly as in the model (with brackets)
-    tableau_value    - value shown in Tableau (the source of truth)
-    powerbi_value    - OPTIONAL value read back from Power BI after loading the
-                       generated Model.json (leave blank if not hand-checked)
-
-Usage:
-    python eval/evaluate.py --ground-truth examples/eval/ground_truth_superstore.csv
-"""
-
 import argparse
 import json
 import sys
 from pathlib import Path
-
 import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from tab2pbi.evaluation import NotEvaluable, evaluate  # noqa: E402
-
 
 def _load_tables(data_dir: Path, schema: list[dict]) -> dict:
     import re
@@ -39,7 +17,6 @@ def _load_tables(data_dir: Path, schema: list[dict]) -> dict:
         if csv.exists():
             frames[entry["table"]] = pd.read_csv(csv)
     return frames
-
 
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="tab2pbi evaluation harness")
@@ -99,7 +76,7 @@ def main(argv=None) -> int:
               f"proxy={proxy:<12} match={row['proxy_match']}  [{row['status']}]")
 
     print("\n  PROXY-correctness (pandas AST vs Tableau) — validates parser, NOT DAX:")
-    print(f"    {proxy_ok}/{proxy_total} match"
+    print(f" {proxy_ok}/{proxy_total} match"
           + (f"  ({100*proxy_ok/proxy_total:.1f}%)" if proxy_total else "  (n/a)"))
     print("  ENGINE-verified (Power BI vs Tableau) — the real correctness anchor:")
     print(f"    {engine_ok}/{engine_total} match"

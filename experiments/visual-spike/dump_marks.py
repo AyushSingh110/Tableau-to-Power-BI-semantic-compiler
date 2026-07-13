@@ -1,23 +1,4 @@
-#!/usr/bin/env python
-"""Feasibility spike (Phase V0) — read-only dump of Tableau worksheet visuals.
-
-Parses a .twbx's .twb XML and dumps, per worksheet: the mark type(s), the
-rows/cols shelf expressions, the marks-card encodings (color/size/label/detail/
-shape/text/geometry/...), and the fields used — each resolved (best effort) to
-the physical table/column via the existing logical_physical_mapping.json.
-
-This is ISOLATED from the shipped src/tab2pbi pipeline: it imports nothing from
-the package and only *reads* the mapping artifact it already produced.
-
-Usage:
-    python experiments/visual-spike/dump_marks.py \
-        --twbx examples/Superstore.twbx \
-        --mapping data/logical_physical_mapping.json \
-        --out experiments/visual-spike/marks_dump.json
-"""
-
 from __future__ import annotations
-
 import argparse
 import json
 import re
@@ -27,12 +8,12 @@ import zipfile
 from collections import Counter
 from pathlib import Path
 
-# Marks-card / shelf encoding tags we care about (Tableau <encodings> children).
+# Marks-card / shelf encoding tags we care about 
 ENCODING_TAGS = {
     "color", "size", "shape", "label", "text", "detail", "lod",
     "tooltip", "geometry", "path", "angle", "level",
 }
-# Field names Tableau treats as geographic (used only as a heuristic flag).
+# Field names Tableau treats as geographic used only as a heuristic flag .
 GEO_NAMES = {
     "country", "country/region", "state", "state/province", "city",
     "region", "postal code", "zip code", "county", "latitude", "longitude",
@@ -43,9 +24,6 @@ _ROLE_FLAG_RE = re.compile(r"^[a-z]{2,3}$")
 
 def parse_field_ref(ref: str) -> str | None:
     """Extract a clean field name from a Tableau field reference.
-
-    Handles `[ds].[agg:Field:roleflag]`, `[ds].[Field]`, and bare fields.
-    Returns None for non-field tokens we don't model here.
     """
     if not ref:
         return None
