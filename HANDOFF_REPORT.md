@@ -390,15 +390,28 @@ breaks it; re-run to regenerate** (documented in output + `docs/VISUAL.md`).
 - **No DAX rewrite needed** — model measures already reference multi-table
   entities (refinement #4 was a no-op, as predicted).
 
-**Render-gate result: PENDING.** Steps in `docs/VISUAL.md` (V2 render-gate):
-confirm (a) model loads with the right tables/relationships/measures, (b) visuals
-bind + render, (c) note any delta vs the V1 flat render. **If the model fails to
-load at a measure/column**, that's the ungrounded TMDL — create one manually and
-hand back the `.pbip` as ground truth (the plan's path-B guard).
+**Render-gate result: ✅ VERIFIED end-to-end (2026-07-12).** The unified
+`data/pbip/Superstore.pbip` opened in Power BI Desktop; after **Refresh** (import
+model — data loads on first refresh, expected), the model loaded all 3 tables
+(Orders/People/Returns) + relationship + measure + DATEDIFF calc column, and **all
+9 visuals rendered with real data**, bound to the compiler's own multi-table
+entities (`Orders_ECFCA…`), not the flat spike model. `.twbx → unified .pbip
+(TMDL model + PBIR visuals)` is now render-verified.
 
-**V2 next steps (ranked):** (1) **run the V2 render-gate**; (2) broader mark
-coverage + cross-table visuals; (3) n>1 workbook corpus; (4) then fold V2 into
-the paper.
+Two fixes were required to reach render (both grounded in `pbir_reference`, both
+regression-tested): (1) the M partition path was double-escaped (`C:\\Users` →
+`C:\Users`); (2) the `.pbip` pointer carried a `$schema` Power BI rejects — its
+own output has none (removed; added `enableAutoRecovery`).
+
+**Known, expected (not bugs):** (a) the "Sales by City/State" bubble maps scatter
+to Europe/Africa — Bing geocoder resolving ambiguous US names abroad (the
+documented geocoder-divergence finding); (b) dashboard **layout is rough**
+(portrait canvas, spread-out visuals) — the zone→position translation is crude;
+cosmetic only, data/bindings correct.
+
+**V2 next steps (ranked):** (1) **polish dashboard layout** (positions/sizes look
+crude); (2) broader mark coverage + cross-table visuals; (3) n>1 workbook corpus;
+(4) prior-art search, then fold both compilers into the paper.
 
 ## Ranked next steps
 
