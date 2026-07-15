@@ -9,7 +9,7 @@ export default function Report({ report }: { report: CombinedReport }) {
   return (
     <div className="grid gap-5 lg:grid-cols-2">
       {/* Model */}
-      <Card title="Semantic model (TMDL)" icon={<span>🧮</span>}>
+      <Card title="Semantic model (TMDL)" icon={<span>🧮</span>} delay={80}>
         <div className="grid grid-cols-4 gap-2">
           <Stat label="measures" value={m.tmdl.measures} />
           <Stat label="calc cols" value={m.tmdl.calculated_columns} />
@@ -32,7 +32,7 @@ export default function Report({ report }: { report: CombinedReport }) {
       </Card>
 
       {/* Visuals */}
-      <Card title="Report visuals (PBIR)" icon={<span>📊</span>}>
+      <Card title="Report visuals (PBIR)" icon={<span>📊</span>} delay={200}>
         <div className="grid grid-cols-3 gap-2">
           <Stat label="worksheets" value={v.worksheets_total} />
           <Stat label="emitted" value={v.visuals_emitted} />

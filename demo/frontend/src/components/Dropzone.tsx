@@ -25,12 +25,12 @@ export default function Dropzone({ onFile, error }: { onFile: (f: File) => void;
           setDrag(false);
           pick(e.dataTransfer.files);
         }}
-        className={`cursor-pointer rounded-3xl border-2 border-dashed p-12 text-center transition
+        className={`cursor-pointer rounded-3xl border-2 border-dashed p-12 text-center transition-all duration-300
           ${drag
-            ? "border-brand bg-amber-50 dark:bg-amber-400/10"
-            : "border-slate-300 bg-white hover:border-brand hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800/50 dark:hover:bg-slate-800"}`}
+            ? "scale-[1.02] border-brand bg-amber-50 shadow-xl shadow-amber-200/50 dark:bg-amber-400/10 dark:shadow-amber-500/10"
+            : "border-slate-300 bg-white/70 backdrop-blur hover:-translate-y-0.5 hover:border-brand hover:bg-slate-50 hover:shadow-lg dark:border-slate-600 dark:bg-slate-800/50 dark:hover:bg-slate-800"}`}
       >
-        <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-brand/15 text-3xl">📊</div>
+        <div className={`anim-float mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-brand/15 text-3xl transition-transform ${drag ? "scale-125" : ""}`}>📊</div>
         <p className="text-lg font-semibold text-slate-800 dark:text-slate-100">
           Drop a Tableau <code className="rounded bg-slate-100 px-1 dark:bg-slate-700">.twbx</code> here
         </p>

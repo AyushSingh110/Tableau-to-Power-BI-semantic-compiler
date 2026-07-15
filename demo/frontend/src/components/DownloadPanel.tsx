@@ -11,7 +11,7 @@ export default function DownloadPanel({ report, onReset }: { report: CombinedRep
   ];
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm dark:border-slate-700 dark:from-slate-800/70 dark:to-slate-900/40">
+    <div className="anim-scale-in rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-lg shadow-slate-200/50 dark:border-slate-700 dark:from-slate-800/70 dark:to-slate-900/40 dark:shadow-black/20">
       <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-white">Your Power BI project is ready</h3>
@@ -23,7 +23,7 @@ export default function DownloadPanel({ report, onReset }: { report: CombinedRep
           <a
             href={downloadUrl(report.download.token)}
             download={report.download.filename}
-            className="rounded-xl bg-brand px-5 py-2.5 font-semibold text-brand-ink shadow transition hover:brightness-95 focus:outline-none focus:ring-2 focus:ring-brand"
+            className="shine rounded-xl bg-brand px-5 py-2.5 font-semibold text-brand-ink shadow-lg shadow-amber-300/40 transition hover:-translate-y-0.5 hover:shadow-xl hover:shadow-amber-300/50 focus:outline-none focus:ring-2 focus:ring-brand active:translate-y-0"
           >
             ⬇ Download .pbip
           </a>
@@ -42,7 +42,11 @@ export default function DownloadPanel({ report, onReset }: { report: CombinedRep
         </h4>
         <ol className="space-y-2">
           {steps.map((s, i) => (
-            <li key={i} className="flex gap-3 text-sm text-slate-700 dark:text-slate-300">
+            <li
+              key={i}
+              className="anim-fade-up flex gap-3 text-sm text-slate-700 dark:text-slate-300"
+              style={{ animationDelay: `${200 + i * 90}ms` }}
+            >
               <span className="grid h-5 w-5 flex-none place-items-center rounded-full bg-brand/20 text-xs font-bold text-amber-800 dark:text-amber-300">
                 {i + 1}
               </span>
