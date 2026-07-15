@@ -43,7 +43,9 @@
         }
     },
     "measures": {
-        "[Calculation_1368249927221915648]": "SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Profit]) / SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Sales])"
+        "[Calculation_1069041984833634338]": "SUMX(Orders_ECFCA1FB690A41FE803BC071773BA862, COALESCE(IF(YEAR(Orders_ECFCA1FB690A41FE803BC071773BA862[Order Date]) = 2022, Orders_ECFCA1FB690A41FE803BC071773BA862[Sales], BLANK()), 0) - COALESCE(IF(YEAR(Orders_ECFCA1FB690A41FE803BC071773BA862[Order Date]) = 2022 - 1, Orders_ECFCA1FB690A41FE803BC071773BA862[Sales], BLANK()), 0)) / SUMX(Orders_ECFCA1FB690A41FE803BC071773BA862, COALESCE(IF(YEAR(Orders_ECFCA1FB690A41FE803BC071773BA862[Order Date]) = 2022 - 1, Orders_ECFCA1FB690A41FE803BC071773BA862[Sales], BLANK()), 0))",
+        "[Calculation_1368249927221915648]": "SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Profit]) / SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Sales])",
+        "[% Diff Shape (copy)]": "SWITCH(TRUE(), [Calculation_1069041984833634338] > 0, \"Positive\", [Calculation_1069041984833634338] < 0, \"Negative\", \"No Change\")"
     },
     "relationships": [
         {
@@ -71,7 +73,9 @@
         "engine_assumptions": "none"
     },
     "measure_table_map": {
-        "[Calculation_1368249927221915648]": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+        "[Calculation_1069041984833634338]": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "[Calculation_1368249927221915648]": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "[% Diff Shape (copy)]": "Orders_ECFCA1FB690A41FE803BC071773BA862"
     },
     "calculated_columns": [
         {
@@ -112,26 +116,16 @@
     ],
     "conversion_report": {
         "total_calculations": 17,
-        "measures_converted": 1,
+        "measures_converted": 3,
         "columns_converted": 1,
         "parameters_converted": 4,
-        "skipped_count": 11,
-        "coverage_pct": 11.8,
+        "skipped_count": 9,
+        "coverage_pct": 23.5,
         "skipped_measures": [
-            {
-                "calculation_name": "[% Diff Shape (copy)]",
-                "reason": "references an unresolved field or another calculated field",
-                "taxonomy": "unresolved"
-            },
             {
                 "calculation_name": "[Calculation_1054123792576798720]",
                 "reason": "unsupported function STR",
                 "taxonomy": "unsupported_fn"
-            },
-            {
-                "calculation_name": "[Calculation_1069041984833634338]",
-                "reason": "aggregation over a non-field expression (SUM)",
-                "taxonomy": "aggregate_of_expression"
             },
             {
                 "calculation_name": "[Calculation_267682741503590407]",
@@ -181,8 +175,8 @@
             "custom_sql": 0,
             "parse_error": 0,
             "unsupported_fn": 4,
-            "unresolved": 1,
-            "aggregate_of_expression": 1,
+            "unresolved": 0,
+            "aggregate_of_expression": 0,
             "empty_formula": 1
         },
         "fact_table_inference": {
@@ -192,7 +186,17 @@
         },
         "measures_affected_by_fact_inference": [
             {
+                "measure": "[Calculation_1069041984833634338]",
+                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+                "note": "fact table inferred by size, not declared"
+            },
+            {
                 "measure": "[Calculation_1368249927221915648]",
+                "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+                "note": "fact table inferred by size, not declared"
+            },
+            {
+                "measure": "[% Diff Shape (copy)]",
                 "table": "Orders_ECFCA1FB690A41FE803BC071773BA862",
                 "note": "fact table inferred by size, not declared"
             }

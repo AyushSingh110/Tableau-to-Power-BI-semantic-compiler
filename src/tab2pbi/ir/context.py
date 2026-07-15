@@ -43,9 +43,28 @@ def run(semantic_model: dict, mappings: list[dict], data_dir: Path) -> dict:
     tables = semantic_model["tables"]
     field_to_table = build_field_to_table(mappings, tables)
 
-    annotated = 0
+    # Constant Tableau parameters (e.g. Parameter 1 = 2022). A field that names
+    # one is inlined to its current constant value — a faithful snapshot (the
+    # faithful interactive target is a Power BI What-If parameter; annotated
+    # elsewhere). This unlocks parameter-driven measures like YoY.
+    param_consts = {
+        normalize_field_name(name): m["ast"]
+        for name, m in semantic_model["measures"].items()
+        if m["ast"].get("node") == "constant"
+    }
+    inlined = 0
     for measure in semantic_model["measures"].values():
         for field in iter_fields(measure["ast"]):
+            key = normalize_field_name(field.get("name"))
+            const = param_consts.get(key)
+            if const is not None:
+                field.clear()
+                field.update(const)   # mutate field node -> constant node
+                inlined += 1
+
+    annotated = 0
+    for measure in semantic_model["measures"].values():
+        for field in iter_fields(measure["ast"]):   # re-walk: inlined ones are gone
             field["table"] = field_to_table.get(normalize_field_name(field.get("name")))
             if field["table"]:
                 annotated += 1

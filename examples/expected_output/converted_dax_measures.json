@@ -1,9 +1,13 @@
 {
     "measures": {
-        "[Calculation_1368249927221915648]": "SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Profit]) / SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Sales])"
+        "[Calculation_1069041984833634338]": "SUMX(Orders_ECFCA1FB690A41FE803BC071773BA862, COALESCE(IF(YEAR(Orders_ECFCA1FB690A41FE803BC071773BA862[Order Date]) = 2022, Orders_ECFCA1FB690A41FE803BC071773BA862[Sales], BLANK()), 0) - COALESCE(IF(YEAR(Orders_ECFCA1FB690A41FE803BC071773BA862[Order Date]) = 2022 - 1, Orders_ECFCA1FB690A41FE803BC071773BA862[Sales], BLANK()), 0)) / SUMX(Orders_ECFCA1FB690A41FE803BC071773BA862, COALESCE(IF(YEAR(Orders_ECFCA1FB690A41FE803BC071773BA862[Order Date]) = 2022 - 1, Orders_ECFCA1FB690A41FE803BC071773BA862[Sales], BLANK()), 0))",
+        "[Calculation_1368249927221915648]": "SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Profit]) / SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Sales])",
+        "[% Diff Shape (copy)]": "SWITCH(TRUE(), [Calculation_1069041984833634338] > 0, \"Positive\", [Calculation_1069041984833634338] < 0, \"Negative\", \"No Change\")"
     },
     "measure_table_map": {
-        "[Calculation_1368249927221915648]": "Orders_ECFCA1FB690A41FE803BC071773BA862"
+        "[Calculation_1069041984833634338]": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "[Calculation_1368249927221915648]": "Orders_ECFCA1FB690A41FE803BC071773BA862",
+        "[% Diff Shape (copy)]": "Orders_ECFCA1FB690A41FE803BC071773BA862"
     },
     "calculated_columns": [
         {
@@ -44,19 +48,9 @@
     ],
     "skipped_measures": [
         {
-            "calculation_name": "[% Diff Shape (copy)]",
-            "reason": "references an unresolved field or another calculated field",
-            "taxonomy": "unresolved"
-        },
-        {
             "calculation_name": "[Calculation_1054123792576798720]",
             "reason": "unsupported function STR",
             "taxonomy": "unsupported_fn"
-        },
-        {
-            "calculation_name": "[Calculation_1069041984833634338]",
-            "reason": "aggregation over a non-field expression (SUM)",
-            "taxonomy": "aggregate_of_expression"
         },
         {
             "calculation_name": "[Calculation_267682741503590407]",

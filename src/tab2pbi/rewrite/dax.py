@@ -15,7 +15,7 @@ What-If / field parameter is the more faithful target).
 import json
 from pathlib import Path
 
-from ..ir.ast_utils import field_tables, has_aggregation, has_field
+from ..ir.ast_utils import field_tables, has_aggregation, has_field, has_measure_ref, iter_fields
 from ..logging_config import get_logger
 
 log = get_logger(__name__)
@@ -36,6 +36,8 @@ _AGG_TO_DAX = {
     "COUNT": "COUNT", "COUNTD": "DISTINCTCOUNT", "MEDIAN": "MEDIAN",
     "STDEV": "STDEV.S", "STDEVP": "STDEV.P", "VAR": "VAR.S", "VARP": "VAR.P",
 }
+# Aggregation over a row-level expression -> the iterator ("X") form.
+_AGG_TO_X = {"SUM": "SUMX", "AVG": "AVERAGEX", "MIN": "MINX", "MAX": "MAXX", "COUNT": "COUNTX"}
 _DATEDIFF_PART = {
     "day": "DAY", "days": "DAY", "month": "MONTH", "year": "YEAR",
     "quarter": "QUARTER", "week": "WEEK", "hour": "HOUR",
@@ -82,14 +84,26 @@ def to_dax(node: dict) -> str:
             )
         return f"{table}[{node['name']}]"
 
+    if kind == "measure_ref":
+        return f"[{node['name']}]"
+
     if kind == "aggregation":
         arg = node["arg"]
-        if arg.get("node") != "field":
+        if arg.get("node") == "field":
+            return f"{_AGG_TO_DAX[node['agg']]}({to_dax(arg)})"
+        # aggregation over a row-level expression -> iterator form (SUMX/…),
+        # e.g. SUM(ZN(IF year=2022 THEN Sales)) -> SUMX(Orders, COALESCE(IF(…),0)).
+        if node["agg"] not in _AGG_TO_X:
             raise TranspileError(
-                f"aggregation over a non-field expression ({node['agg']})",
+                f"aggregation {node['agg']} over an expression", "aggregate_of_expression"
+            )
+        tables = field_tables(arg)
+        if len(tables) != 1:
+            raise TranspileError(
+                "aggregation over an expression spanning multiple/zero tables",
                 "aggregate_of_expression",
             )
-        return f"{_AGG_TO_DAX[node['agg']]}({to_dax(arg)})"
+        return f"{_AGG_TO_X[node['agg']]}({next(iter(tables))}, {to_dax(arg)})"
 
     if kind == "binary":
         return f"{to_dax(node['left'])} {node['op']} {to_dax(node['right'])}"
@@ -193,9 +207,10 @@ def analyze(name: str, ast: dict, fact_table: str | None) -> dict:
 
     is_agg = has_aggregation(ast)
     is_field = has_field(ast)
+    is_measure_ref = has_measure_ref(ast)
 
     # Pure constant → Tableau parameter.
-    if not is_agg and not is_field:
+    if not is_agg and not is_field and not is_measure_ref:
         try:
             dax = to_dax(ast)
         except TranspileError as e:
@@ -208,13 +223,14 @@ def analyze(name: str, ast: dict, fact_table: str | None) -> dict:
             "note": "Tableau parameter; a Power BI What-If/field parameter is the faithful target",
         }
 
-    if is_agg:
+    # Aggregation, or a measure that references another measure -> a measure.
+    if is_agg or is_measure_ref:
         try:
             dax = to_dax(ast)
         except TranspileError as e:
             return {"kind": "skipped", **_skip(name, e.reason, e.taxonomy)}
         tables = field_tables(ast)
-        owner = fact_table if fact_table in tables else (sorted(tables)[0] if tables else None)
+        owner = fact_table if (fact_table in tables or not tables) else sorted(tables)[0]
         return {"kind": "measure", "name": name, "table": owner, "dax": dax}
 
     # Row-level expression → calculated column.
@@ -257,6 +273,36 @@ def run(context_model: dict, data_dir: Path) -> dict:
             parameters.append(result)
         else:
             skipped.append({"calculation_name": name, "reason": result["reason"], "taxonomy": result["taxonomy"]})
+
+    # Second pass — calc-to-calc: a measure skipped as `unresolved` because it
+    # references another calc that we DID convert becomes a DAX measure
+    # reference. Only converts if the dependency is itself convertible.
+    converted_names = {k.strip().strip("[]").lower(): k.strip().strip("[]") for k in measures}
+    still_skipped: list[dict] = []
+    for s in skipped:
+        if s["taxonomy"] != "unresolved":
+            still_skipped.append(s)
+            continue
+        ast = context_model["measures"][s["calculation_name"]]["ast"]
+        replaced = 0
+        for f in list(iter_fields(ast)):
+            key = (f.get("name") or "").strip().strip("[]").lower()
+            if key in converted_names:
+                f.clear()
+                f.update({"node": "measure_ref", "name": converted_names[key]})
+                replaced += 1
+        if not replaced:
+            still_skipped.append(s)
+            continue
+        result = analyze(s["calculation_name"], ast, fact_table)
+        if result["kind"] == "measure":
+            measures[result["name"]] = result["dax"]
+            if result["table"]:
+                measure_table_map[result["name"]] = result["table"]
+        else:
+            still_skipped.append({"calculation_name": s["calculation_name"],
+                                  "reason": result["reason"], "taxonomy": result["taxonomy"]})
+    skipped = still_skipped
 
     output = {
         "measures": measures,

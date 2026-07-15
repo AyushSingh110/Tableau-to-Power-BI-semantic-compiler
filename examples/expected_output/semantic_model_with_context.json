@@ -254,9 +254,9 @@
                                                     ]
                                                 },
                                                 "right": {
-                                                    "node": "field",
-                                                    "name": "Parameter 1",
-                                                    "table": null
+                                                    "node": "constant",
+                                                    "dtype": "number",
+                                                    "value": 2022
                                                 }
                                             },
                                             "then": {
@@ -300,9 +300,9 @@
                                                     "node": "binary",
                                                     "op": "-",
                                                     "left": {
-                                                        "node": "field",
-                                                        "name": "Parameter 1",
-                                                        "table": null
+                                                        "node": "constant",
+                                                        "dtype": "number",
+                                                        "value": 2022
                                                     },
                                                     "right": {
                                                         "node": "constant",
@@ -357,9 +357,9 @@
                                                 "node": "binary",
                                                 "op": "-",
                                                 "left": {
-                                                    "node": "field",
-                                                    "name": "Parameter 1",
-                                                    "table": null
+                                                    "node": "constant",
+                                                    "dtype": "number",
+                                                    "value": 2022
                                                 },
                                                 "right": {
                                                     "node": "constant",

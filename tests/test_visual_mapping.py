@@ -40,6 +40,24 @@ def test_generated_geometry_skips():
     assert p.skip_reason == "custom_geometry"
 
 
+def test_generated_geometry_with_standard_dim_emits_map():
+    # Generated lat/long on a standard region (State) is a bubble map, not a skip.
+    p = classify("Multipolygon", [GEO], [M1], geo_standard_dim=GEO, generated_geometry=True)
+    assert p.visual_type == "map"
+    assert p.wells["Category"] == [GEO] and p.wells["Size"] == [M1]
+
+
+def test_dims_only_text_is_detail_table():
+    d2 = FieldRef("hyper_raw_data", "Segment", None)
+    p = classify("Text", [DIM, d2], [])
+    assert p.visual_type == "tableEx" and p.wells["Values"] == [DIM, d2]
+
+
+def test_single_dim_text_still_skips():
+    # one dim + no measure = a KPI whose value is an unconverted calc -> keep skip
+    assert classify("Text", [GEO], []).skip_reason == "insufficient_fields"
+
+
 def test_map_without_standard_region_skips():
     p = classify("Multipolygon", [DIM], [M1])  # no geo_standard_dim
     assert p.skip_reason == "custom_geometry"

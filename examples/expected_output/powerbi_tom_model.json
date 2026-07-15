@@ -124,8 +124,18 @@
                 ],
                 "measures": [
                     {
+                        "name": "[Calculation_1069041984833634338]",
+                        "expression": "SUMX(Orders_ECFCA1FB690A41FE803BC071773BA862, COALESCE(IF(YEAR(Orders_ECFCA1FB690A41FE803BC071773BA862[Order Date]) = 2022, Orders_ECFCA1FB690A41FE803BC071773BA862[Sales], BLANK()), 0) - COALESCE(IF(YEAR(Orders_ECFCA1FB690A41FE803BC071773BA862[Order Date]) = 2022 - 1, Orders_ECFCA1FB690A41FE803BC071773BA862[Sales], BLANK()), 0)) / SUMX(Orders_ECFCA1FB690A41FE803BC071773BA862, COALESCE(IF(YEAR(Orders_ECFCA1FB690A41FE803BC071773BA862[Order Date]) = 2022 - 1, Orders_ECFCA1FB690A41FE803BC071773BA862[Sales], BLANK()), 0))",
+                        "formatString": "General"
+                    },
+                    {
                         "name": "[Calculation_1368249927221915648]",
                         "expression": "SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Profit]) / SUM(Orders_ECFCA1FB690A41FE803BC071773BA862[Sales])",
+                        "formatString": "General"
+                    },
+                    {
+                        "name": "[% Diff Shape (copy)]",
+                        "expression": "SWITCH(TRUE(), [Calculation_1069041984833634338] > 0, \"Positive\", [Calculation_1069041984833634338] < 0, \"Negative\", \"No Change\")",
                         "formatString": "General"
                     }
                 ]
@@ -191,16 +201,8 @@
                 "value": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
             },
             {
-                "name": "SkippedMeasure::[% Diff Shape (copy)]",
-                "value": "references an unresolved field or another calculated field"
-            },
-            {
                 "name": "SkippedMeasure::[Calculation_1054123792576798720]",
                 "value": "unsupported function STR"
-            },
-            {
-                "name": "SkippedMeasure::[Calculation_1069041984833634338]",
-                "value": "aggregation over a non-field expression (SUM)"
             },
             {
                 "name": "SkippedMeasure::[Calculation_267682741503590407]",

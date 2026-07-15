@@ -50,6 +50,11 @@ def has_field(node: dict) -> bool:
     return any(n.get("node") == "field" for n in walk(node))
 
 
+def has_measure_ref(node: dict) -> bool:
+    """True if the tree references another (converted) measure."""
+    return any(n.get("node") == "measure_ref" for n in walk(node))
+
+
 def field_tables(node: dict) -> set[str]:
     """Set of resolved owning tables across all field nodes (skips unresolved)."""
     return {f["table"] for f in iter_fields(node) if f.get("table")}

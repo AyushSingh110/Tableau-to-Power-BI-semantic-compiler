@@ -52,7 +52,7 @@ def test_convert_download_happy_path():
     j = r.json()
     # report shape
     assert j["model"]["tmdl"]["tables"] == 3
-    assert j["visuals"]["visuals_emitted"] == 9
+    assert j["visuals"]["visuals_emitted"] == 11
     assert j["packaging"]["portable"] is True and j["packaging"]["bundled_csvs"]
     token = j["download"]["token"]
 

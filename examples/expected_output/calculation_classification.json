@@ -1,7 +1,19 @@
 [
     {
+        "calculation_name": "[Calculation_1069041984833634338]",
+        "formula": "(SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1] THEN [Sales] ELSE NULL END)\r\n-ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))\r\n/ (SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))",
+        "classification": "measure",
+        "note": "aggregation \u2192 DAX measure"
+    },
+    {
         "calculation_name": "[Calculation_1368249927221915648]",
         "formula": "SUM([Profit])/SUM([Sales])",
+        "classification": "measure",
+        "note": "aggregation \u2192 DAX measure"
+    },
+    {
+        "calculation_name": "[% Diff Shape (copy)]",
+        "formula": "if [Calculation_1069041984833634338]>0 then \"Positive\" \r\nELSEIF[Calculation_1069041984833634338]<0 then \"Negative\" \r\nelse \"No Change\" end",
         "classification": "measure",
         "note": "aggregation \u2192 DAX measure"
     },
@@ -36,22 +48,10 @@
         "note": "Tableau parameter; a Power BI What-If/field parameter is the faithful target"
     },
     {
-        "calculation_name": "[% Diff Shape (copy)]",
-        "formula": "if [Calculation_1069041984833634338]>0 then \"Positive\" \r\nELSEIF[Calculation_1069041984833634338]<0 then \"Negative\" \r\nelse \"No Change\" end",
-        "classification": "unresolved",
-        "note": "references an unresolved field or another calculated field"
-    },
-    {
         "calculation_name": "[Calculation_1054123792576798720]",
         "formula": "IF COUNTD([Calculation_870883616948187188])=1 THEN ATTR(STR(YEAR([Order Date])))\r\nELSE (STR(MIN(YEAR([Order Date])))+\" - \"+STR(MAX(YEAR([Order Date]))))\r\nEND",
         "classification": "unsupported_fn",
         "note": "unsupported function STR"
-    },
-    {
-        "calculation_name": "[Calculation_1069041984833634338]",
-        "formula": "(SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1] THEN [Sales] ELSE NULL END)\r\n-ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))\r\n/ (SUM(ZN(IF YEAR([Order Date])=[Parameters].[Parameter 1]-1 THEN [Sales] ELSE NULL END)))",
-        "classification": "aggregate_of_expression",
-        "note": "aggregation over a non-field expression (SUM)"
     },
     {
         "calculation_name": "[Calculation_267682741503590407]",

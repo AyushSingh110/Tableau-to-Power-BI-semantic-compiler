@@ -94,3 +94,13 @@ def test_unknown_function_is_unsupported_fn():
     with pytest.raises(TranspileError) as e:
         dax("STR([Sales])")
     assert e.value.taxonomy == "unsupported_fn"
+
+
+def test_aggregation_over_expression_becomes_sumx():
+    out = dax("SUM(ZN(IF [Sales] > 0 THEN [Sales] ELSE 0 END))")
+    assert out.startswith("SUMX(Orders, ")
+    assert "COALESCE(IF(Orders[Sales] > 0, Orders[Sales], 0), 0)" in out
+
+
+def test_measure_ref_dax():
+    assert to_dax({"node": "measure_ref", "name": "Profit Ratio"}) == "[Profit Ratio]"

@@ -526,6 +526,69 @@ for local dev, though `pip install -e .` is cleaner).
 constraints); (3) show a small live preview of the emitted page layout; (4) fold
 into the paper as the artifact's front door.
 
+## Coverage improvements (build the buildable, keep the impossible honest)
+
+Additive; already-converted items unchanged; **87 main + 11 backend tests pass**,
+ruff clean. Every new conversion is tied to a test.
+
+### Triage (Superstore)
+- **Buildable → built (4):** conditional aggregation `Calc_1069` (YoY%); calc→calc
+  `% Diff Shape`; the real `Sales by State - Map`; two order-detail tables.
+- **Impossible → kept as labeled skips:** table calcs (`RANK_UNIQUE`, `Index`),
+  window fns (`WINDOW_MAX/MIN`), custom-geometry map (`Sales by Region`), Gantt,
+  custom-shape design marks (11), `empty_formula` group, `ATTR`/`DATEPARSE`/
+  SI-unit string-formatting measures, and the `dual_axis` sheet (uses Measure
+  Values — converting would drop measures).
+- **Deferred to workbook #2** (can't validate on Superstore): LOD→`CALCULATE`
+  (no `{FIXED}` here), `dual_axis`→combo (Superstore's case is Measure Values),
+  and the general `STR`→`FORMAT` / `DATEPART`→`YEAR` building blocks.
+
+### Converters added (one logical change each + test)
+| Converter | File | What | Test |
+| --------- | ---- | ---- | ---- |
+| Parameter inlining | `ir/context.py` | a field naming a constant param → its value (`Parameter 1`→`2022`) | `test_coverage::test_parameter_inlined_conditional_aggregation` |
+| Conditional aggregation (SUMX) | `rewrite/dax.py` | `SUM(<row expr>)` → `SUMX(table, …)` w/ `ZN`→`COALESCE(.,0)` | `test_transpiler::test_aggregation_over_expression_becomes_sumx` |
+| Calc-to-calc reference | `rewrite/dax.py` (2nd pass) | field → `[measure]` **iff** the dependency converted; else keep skip | `test_coverage::test_calc_to_calc_reference` / `…_only_if_dependency_converts` |
+| Measure-ref DAX | `rewrite/dax.py`, `ir/ast_utils.py` | `measure_ref` node → `[Name]` | `test_transpiler::test_measure_ref_dax` |
+| Geo gate fix | `visual/extract.py` | geographic = map mark **or** geometry encoding (not any State/City dim); generated geometry alone isn't a skip | `test_visual_mapping::test_generated_geometry_with_standard_dim_emits_map` |
+| Dims-only detail table | `visual/mapping.py` | Text with ≥2 dims, 0 measures → `tableEx` | `test_visual_mapping::test_dims_only_text_is_detail_table` |
+| Proxy evaluator (row engine) | `evaluation.py` | evaluate conditional/SUMX row-wise so YoY is proxy-checked | `test_evaluation::test_conditional_aggregation_sumx` |
+
+### Before → after (Superstore)
+| | before | after |
+| - | - | - |
+| **Model** measures | 1 | **3** (`Profit/Sales`, YoY `Calc_1069`, `% Diff Shape`) |
+| Model coverage (measures+cols/total) | 11.8% | **23.5%** |
+| Model skips | 11 | **9** |
+| **Proxy-correctness** | 1/1 | **2/2** (YoY now evaluable + matches) |
+| **Engine-verified** | 1/1 | **1/1** (YoY `powerbi_value` pending your check) |
+| **Visual** emitted | 9 | **11** |
+| Visual coverage | 28.1% | **34.4%** |
+| Visual skips | 23 | **21** |
+
+**Correctness discipline held:** the geo fix also **corrected two previously
+mis-emitted maps** — `Map - Color Legend` (a legend) and `Sales by City - Tooltip`
+were wrongly bubble maps; they're now a labeled skip and a column chart, and the
+*real* `Sales by State - Map` emits. This changes which items emit (net +2) but
+removes plausible-but-wrong output — flagged, not hidden.
+
+### ⚠️ You must engine-verify (in Power BI)
+1. **YoY `[Calculation_1069…]`** — proxy value **0.2036** is in
+   `examples/eval/ground_truth_superstore.csv` as a stand-in; **replace with the
+   real Tableau value and fill `powerbi_value`** (`--tolerance 1e-3`). Note it
+   **inlines Parameter 1 = 2022** (a faithful snapshot; a What-If parameter is the
+   interactive target).
+2. **`% Diff Shape`** — returns **text**, so it's **not numerically
+   proxy-checkable**; eyeball it in Power BI (`SWITCH(TRUE(), [YoY] > 0,
+   "Positive", …)`).
+3. **The 3 new visuals** (State map + 2 detail tables) and the 2 reclassified ones
+   — confirm in the render-gate (`docs/VISUAL.md`).
+
+**Coverage next steps (ranked):** (1) **build the LOD→`CALCULATE` converter and
+validate on a 2nd workbook** (with `{FIXED}`); (2) the `dual_axis`→combo + general
+`STR`/`DATEPART` converters on that workbook; (3) then the **2–3 workbook corpus**;
+(4) fold the higher numbers into the paper.
+
 ## Ranked next steps
 
 1. **Build a 2–3 workbook corpus (move past n=1).** Every paper number comes

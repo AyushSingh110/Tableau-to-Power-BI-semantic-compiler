@@ -69,21 +69,21 @@ Compiling the bundled **Superstore** workbook (`examples/Superstore.twbx`):
 
 | | | |
 | --- | --- | --- |
-| measure | **1** | `SUM(Orders[Profit]) / SUM(Orders[Sales])` |
+| measures | **3** | `Profit/Sales`, YoY% (`SUMX`+`COALESCE`), a `SWITCH` classifier |
 | calc column | **1** | `DATEDIFF(Orders[Order Date], Orders[Ship Date], DAY)` |
 | parameters | **4** | constant calcs (own bucket) |
-| skipped | **11** | each with a taxonomy reason |
-| **coverage** | **11.8%** | measures + columns / total |
+| skipped | **9** | each with a taxonomy reason |
+| **coverage** | **23.5%** | measures + columns / total |
 | relationship | **1** | `Orders.Region → People.Region` (coverage 1.0, data-driven) |
-| correctness | **proxy 1/1 · engine-verified 1/1** | *n=1, tol 1e-3 — see below* |
+| correctness | **proxy 2/2 · engine-verified 1/1** | *tol 1e-3 — YoY engine-check pending* |
 
 **Report visuals** — 32 worksheets →
 
 | | | |
 | --- | --- | --- |
-| emitted | **9** | columnChart ×4, map ×2, area/pie/line ×1 |
-| skipped | **23** | `custom_shape` 11 · `insufficient_fields` 8 · `custom_geometry` 2 · `gantt` 1 · `dual_axis` 1 |
-| **coverage** | **28.1%** | emitted & schema-valid / total *(NOT render-verified)* |
+| emitted | **11** | columnChart ×5, tableEx ×2, map/area/pie/line ×1 |
+| skipped | **21** | `custom_shape` 11 · `insufficient_fields` 7 · `custom_geometry` 1 · `gantt` 1 · `dual_axis` 1 |
+| **coverage** | **34.4%** | emitted & schema-valid / total *(NOT render-verified)* |
 
 > **Coverage is a floor, not a ceiling.** Superstore is a design showcase
 > dominated by table calcs, window functions, string-formatting logic, and

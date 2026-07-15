@@ -19,9 +19,9 @@ COLUMNS = [
 
 # Snapshot — update deliberately when mapping/extraction changes.
 EXPECTED_WORKSHEETS = 32
-EXPECTED_EMITTED = 9
-EXPECTED_BY_TYPE = {"columnChart": 4, "map": 2, "areaChart": 1, "pieChart": 1, "lineChart": 1}
-EXPECTED_SKIP = {"custom_shape": 11, "insufficient_fields": 8, "custom_geometry": 2, "gantt": 1, "dual_axis": 1}
+EXPECTED_EMITTED = 11
+EXPECTED_BY_TYPE = {"columnChart": 5, "map": 1, "areaChart": 1, "pieChart": 1, "lineChart": 1, "tableEx": 2}
+EXPECTED_SKIP = {"custom_shape": 11, "insufficient_fields": 7, "custom_geometry": 1, "gantt": 1, "dual_axis": 1}
 
 
 @pytest.fixture(scope="module")
@@ -48,6 +48,6 @@ def test_skip_taxonomy(rep):
 
 
 def test_coverage_is_labeled_not_render_verified(rep):
-    assert rep["coverage_pct_schema_valid"] == 28.1
+    assert rep["coverage_pct_schema_valid"] == 34.4
     assert "NOT render-verified" in rep["coverage_label"]
     assert "pending" in rep["render_verified"]

@@ -47,12 +47,12 @@ def test_model_has_three_tables(built):
     model = (out / "Superstore.SemanticModel/definition/model.tmdl").read_text(encoding="utf-8")
     assert model.count("ref table ") == 3
     assert combined["model"]["tmdl"]["tables"] == 3
-    assert combined["model"]["tmdl"]["measures"] == 1
+    assert combined["model"]["tmdl"]["measures"] == 3
 
 
 def test_visuals_bind_to_model_entities(built):
     out, combined = built
-    assert combined["visuals"]["visuals_emitted"] == 9
+    assert combined["visuals"]["visuals_emitted"] == 11
     assert combined["visuals"]["bound_entities_are_multitable"] is True
     # every emitted visual.json binds to a real model table, not flat hyper_raw_data
     entities = set()

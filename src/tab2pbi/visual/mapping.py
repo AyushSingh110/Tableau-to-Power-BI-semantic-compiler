@@ -54,15 +54,16 @@ def classify(
         return Plan(skip_reason="gantt")
     if mark_type == "Shape":
         return Plan(skip_reason="custom_shape")
-    if generated_geometry:
-        return Plan(skip_reason="custom_geometry")
     if multi_mark:
         return Plan(skip_reason="dual_axis")
 
     # --- geographic (bubble map approximation) ---
-    if mark_type in ("Multipolygon", "Map") or geo_standard_dim is not None:
+    # A map is intended when the mark is a map, a location is geocodable, or the
+    # sheet carries generated geometry (Tableau's auto lat/long). Generated
+    # geometry alone is NOT a skip — only a *non-standard* location is (custom
+    # territory polygons that Bing/Azure can't geocode).
+    if mark_type in ("Multipolygon", "Map") or generated_geometry or geo_standard_dim is not None:
         if geo_standard_dim is None:
-            # a map mark but the location is not a standard geocodable region
             return Plan(skip_reason="custom_geometry")
         if not measures:
             return Plan(skip_reason="insufficient_fields")
@@ -106,6 +107,11 @@ def classify(
             return Plan(visual_type="card", wells={"Values": [measures[0]]})
         if dims and measures:
             return Plan(visual_type="tableEx", wells={"Values": dims + measures})
+        # Dims-only text with several columns is a detail table. A single dim
+        # is usually a KPI whose value is an (unconverted) calc — keep skipping
+        # that, since a 1-column table would misrepresent it.
+        if len(dims) >= 2 and not measures:
+            return Plan(visual_type="tableEx", wells={"Values": dims})
         return Plan(skip_reason="insufficient_fields")
 
     return Plan(skip_reason="unsupported_mark")

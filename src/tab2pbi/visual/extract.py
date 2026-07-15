@@ -120,25 +120,35 @@ def _analyze_worksheet(ws: ET.Element, resolver) -> VisualNode:
         else:
             dims.append(fr)
 
-    # Geographic detection from encodings (lod/geometry) and axis dims.
+    # Geographic detection — gated on an actual map: a map/polygon mark or a
+    # `geometry` encoding. A State/City column in a non-map sheet (e.g. a detail
+    # table) is just a dimension, not a map trigger.
+    has_geometry = any(tag == "geometry" for tag, _ in encodings)
+    is_geo = mark_type in ("Multipolygon", "Map") or has_geometry
     generated_geometry = any(
         tag == "geometry" and "generated" in (col or "").lower() for tag, col in encodings
     )
     geo_standard_dim = None
-    geo_measure = None
-    for tag, col in encodings:
-        prefix, gname, _ = parse_encoded_ref(col)
-        norm = normalize_field_name(gname)
-        hit = resolver(gname)
-        if tag in ("lod", "detail") and norm in mapping.GEO_STANDARD and hit:
-            geo_standard_dim = FieldRef(entity=hit[0], column=hit[1], aggregation=None)
-        if tag in ("color", "size") and prefix in _AGG_PREFIXES and hit:
-            geo_measure = FieldRef(entity=hit[0], column=hit[1], aggregation=prefix)
-    for d in dims:
-        if normalize_field_name(d.column) in mapping.GEO_STANDARD:
-            geo_standard_dim = geo_standard_dim or d
-    if geo_measure and not measures:
-        measures = [geo_measure]
+    if is_geo:
+        for tag, col in encodings:
+            prefix, gname, _ = parse_encoded_ref(col)
+            if tag in ("lod", "detail") and normalize_field_name(gname) in mapping.GEO_STANDARD:
+                hit = resolver(gname)
+                if hit:
+                    geo_standard_dim = FieldRef(entity=hit[0], column=hit[1], aggregation=None)
+        for d in dims:
+            if normalize_field_name(d.column) in mapping.GEO_STANDARD:
+                geo_standard_dim = geo_standard_dim or d
+
+    # A measure on the color/size shelf counts as the visual's measure (pie,
+    # heatmap, bubble map, …) when the axes carry no measure of their own.
+    if not measures:
+        for tag, col in encodings:
+            prefix, gname, _ = parse_encoded_ref(col)
+            hit = resolver(gname)
+            if tag in ("color", "size") and prefix in _AGG_PREFIXES and hit:
+                measures = [FieldRef(entity=hit[0], column=hit[1], aggregation=prefix)]
+                break
 
     plan = mapping.classify(
         mark_type, dims, measures,
