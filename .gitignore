@@ -22,3 +22,5 @@ venv/
 docs/paper
 experiments/**/.pbi/
 experiments/**/*.abf
+# Demo backend runtime workdir
+demo/backend/.work/

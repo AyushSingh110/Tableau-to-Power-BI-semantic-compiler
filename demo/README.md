@@ -1,96 +1,75 @@
-# Demo — Superstore, end to end
+# tab2pbi demo — web app
 
-A five-minute walkthrough: a Tableau workbook in, a Power BI model out, opened
-in Tabular Editor.
+A self-service web app: **upload a Tableau `.twbx`, see an honest conversion
+report in the browser, and download a portable Power BI `.pbip`** to open in
+Power BI Desktop.
 
-## 1. One command
+- **Backend** — `demo/backend/` (FastAPI): validates the upload, runs
+  `tab2pbi.build_pbip` in an isolated temp dir, and returns the conversion report
+  + a short-lived download token. Portability is handled by a demo-side packager
+  (`packaging.py`) — **the compiler itself is untouched.**
+- **Frontend** — `demo/frontend/` (React + Vite + Tailwind): drag-and-drop
+  upload, a clean report view (model + visual coverage, skip taxonomy with
+  reasons, honest labels), and a Download + "How to open" panel. Light/dark,
+  responsive, no runtime CDN calls.
 
-From the repo root:
+## Run it
+
+Two terminals from the repo root.
+
+**1. Backend** (needs the compiler installed):
 
 ```bash
-# macOS/Linux
-bash demo/run.sh
-# Windows PowerShell
-./demo/run.ps1
+pip install -e .                              # the tab2pbi compiler + deps
+pip install -r demo/backend/requirements.txt  # FastAPI, uvicorn
+uvicorn demo.backend.app:app --reload --port 8000
 ```
 
-This compiles `examples/Superstore.twbx` and runs the evaluation harness.
+**2. Frontend:**
 
-## 2. What you should see
-
-```
-============================================================
- tab2pbi summary — Superstore.twbx
-============================================================
- Tables:              3
- Calculations total:  17
-   measures:          1
-   calc columns:      1
-   parameters:        4
-   skipped:           11
- Coverage:            11.8%
- Relationships:       1
- Fact table:          Orders_… (inferred_by_size)
- Failure taxonomy:
-   unsupported_fn           4
-   table_calc               2
-   window_fn                2
-   unresolved               1
-   aggregate_of_expression  1
-   empty_formula            1
-============================================================
+```bash
+cd demo/frontend
+npm install
+npm run dev            # http://localhost:5173  (proxies /api → :8000)
 ```
 
-And from the evaluation harness:
+Open <http://localhost:5173>, drop in `examples/Superstore.twbx`, read the
+report, and click **Download .pbip**.
 
+## What it does (and the honest limits)
+
+- The report is **schema-valid coverage, NOT render-verified** — it means the
+  model + visuals compiled and validate, not that they render. Only opening the
+  `.pbip` in **Power BI Desktop** confirms that.
+- **You need Power BI Desktop** (with the PBIP + PBIR preview features enabled)
+  to open the output. The app produces the project; it doesn't render it.
+- **Portability:** the compiler writes an *absolute* CSV path in the model. The
+  download is **repackaged to be portable** — the per-table CSVs are bundled and
+  the path is a Power BI `DataFolder` **parameter**. After extracting, open the
+  `.pbip`, set `DataFolder` to the extracted `data` folder, and **Refresh**. If
+  it's left unset the model raises a clear error on refresh — it never silently
+  loads empty.
+- **Maps** use Bing/Azure geocoding, not Tableau's proprietary geocoder —
+  semantically right, not point-identical. Custom-geometry maps are reported as
+  unsupported.
+
+## Tests
+
+```bash
+# backend (from repo root)
+pip install -r demo/backend/requirements.txt
+pytest demo/backend/tests
+
+# frontend (typecheck + production build)
+cd demo/frontend && npm run build
 ```
- PROXY-correctness (pandas AST vs Tableau) — validates parser, NOT DAX:
-   1/1 match  (100.0%)
- ENGINE-verified (Power BI vs Tableau) — the real correctness anchor:
-   0/0 match  (0 hand-checked — load Model.json into Power BI and fill powerbi_value)
+
+## CLI alternative
+
+Prefer the command line? The same end-to-end compile is one command:
+
+```bash
+tab2pbi build-pbip examples/Superstore.twbx     # writes data/pbip/Superstore.pbip
 ```
 
-> The proxy number is **not** engine-verified correctness. See
-> [`../docs/EVALUATION.md`](../docs/EVALUATION.md).
-
-## 3. Inspect the generated model
-
-The pipeline writes a Tabular Editor–compatible model to `data/Model.json` and a
-Power BI TOM to `data/powerbi_tom_model.json`. The converted measure is
-table-qualified DAX:
-
-```
-[Calculation_1368…] = SUM(Orders_…[Profit]) / SUM(Orders_…[Sales])
-```
-
-the row-level `DATEDIFF` became a calculated column, the four constant
-calculations are surfaced as parameters (annotated), and the 11 unconvertible
-calculations are recorded with reasons — nothing is dropped silently.
-
-## 4. Open it in Tabular Editor
-
-1. Install [Tabular Editor 2 (free)](https://tabulareditor.com/) or 3.
-2. **File → Open → From File…** and choose `data/Model.json`.
-3. Expand the **Orders** table to see the generated measure, the `DATEDIFF`
-   calculated column, and the parameter columns; expand **Model → Relationships**
-   to see `Orders → People`.
-
-### Screenshots
-
-> **Placeholder — screenshots to be added by the author.** I (the assistant)
-> cannot launch Tabular Editor in this environment, so the images below are
-> intentionally left as placeholders. Capture them once and drop the PNGs into
-> [`screenshots/`](screenshots/); the filenames are already referenced here.
-
-| Step | Image |
-| ---- | ----- |
-| Model tree (tables, measure, calc column, parameters) | `screenshots/01-model-tree.png` |
-| The generated measure's DAX in the expression editor | `screenshots/02-measure-dax.png` |
-| The `Orders → People` relationship | `screenshots/03-relationship.png` |
-
-<!-- Once captured, embed them, e.g.:
-![Model tree](screenshots/01-model-tree.png)
--->
-
-See [`screenshots/README.md`](screenshots/README.md) for exactly what each image
-should show.
+See [`../docs/VISUAL.md`](../docs/VISUAL.md) for the render-gate checklist.

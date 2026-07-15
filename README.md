@@ -114,8 +114,12 @@ python eval/evaluate.py --ground-truth examples/eval/ground_truth_superstore.csv
 No install? Use `python run_pipeline.py --twbx …` and `python -m tab2pbi.visual …`.
 
 **Open the result:** `data/Model.json` opens directly in **Tabular Editor 2/3**
-(File → Open → From File…). A step-by-step walkthrough with screenshots lives in
-[`demo/`](demo/); the report render-gate is in [`docs/VISUAL.md`](docs/VISUAL.md).
+(File → Open → From File…); the report render-gate is in
+[`docs/VISUAL.md`](docs/VISUAL.md).
+
+**Prefer a browser?** [`demo/`](demo/) is a self-service web app (FastAPI +
+React) — upload a `.twbx`, see the conversion report, and download a portable
+`.pbip`.
 
 <details>
 <summary><code>tab2pbi run</code> options</summary>

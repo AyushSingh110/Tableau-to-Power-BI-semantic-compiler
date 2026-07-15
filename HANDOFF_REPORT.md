@@ -409,9 +409,122 @@ documented geocoder-divergence finding); (b) dashboard **layout is rough**
 (portrait canvas, spread-out visuals) — the zone→position translation is crude;
 cosmetic only, data/bindings correct.
 
-**V2 next steps (ranked):** (1) **polish dashboard layout** (positions/sizes look
-crude); (2) broader mark coverage + cross-table visuals; (3) n>1 workbook corpus;
-(4) prior-art search, then fold both compilers into the paper.
+## V2 dashboard layout polish
+
+**Root cause (from real numbers).** Tableau dashboard zones are **absolute** in a
+0–100000 space (confirmed in-bounds for content); PBIR positions are pixels. The
+scale and portrait aspect were already correct. The page looked scattered because
+the old `layout.apply` did raw proportional placement + a blanket 120×90 min-size
+clamp with **no de-overlap and no off-canvas handling**:
+1. **off-canvas tooltip sheets** (parked at `x≈100000` in Tableau — "Sales by City
+   - Tooltip", "Top Sold Products - Tooltip") were **clamped onto the canvas and
+   stacked on top of each other**;
+2. only 9 of ~24 worksheet zones are emitted, so content sat at true positions on
+   an 1822-tall canvas with **giant empty bands** where skipped sheets used to be;
+3. degenerate legend/KPI/header strips got inflated by the clamp and collided.
+
+**The fix (`layout.py`, row-compaction — approved strategy).**
+- **On-canvas test** rejects parked/tooltip zones (majority of the zone must fall
+  within 0..100000); off-canvas emitted visuals → a tidy **overflow grid** at the
+  bottom (not clamped into content).
+- **Cluster into rows** by vertical proximity; within a row, order left→right and
+  size widths **proportional to zone widths**; row height tracks the tallest zone.
+- **Stack rows with uniform 16px padding**, deleting the empty bands → no giant
+  gaps, and **no overlaps by construction**.
+- Min-size floor + on-canvas clamp applied within the row model; page dimensions
+  are **integers** (matching Power BI's own `page.json`). Deterministic.
+- Auto-grid fallback (uniform tiles, even spacing) for pages with no geometry.
+
+**Before → after (Superstore, `build-pbip`).**
+
+| | before | after |
+| - | - | - |
+| Canvas | 1280×**1822** (sparse) | 1280×**1242** |
+| Overlaps | tooltips stacked at (1160,0) | **none** (verified) |
+| Max vertical gap | large empty bands | **16px** (row spacing) |
+| Off-canvas tooltips | clamped into content | routed to overflow grid |
+| Layout | scattered/cramped | 5 content rows + 2-tile overflow |
+
+Bindings/data/coverage unchanged (still 9 emitted). Existing pipeline + model
+emission untouched. **78 tests pass** (3 new layout tests: overlap-free, row
+clustering, off-canvas overflow, compacted height, determinism, auto-grid), ruff
+clean.
+
+**Zone types not placed as content (with reason):** off-canvas **tooltip
+worksheets** (Tableau parks them at `x≈100000`) — routed to the overflow grid, not
+the main flow. (Note: a color-legend and a header sparkline are still *emitted*
+as visuals and placed as rows; re-classifying those is an emit-scope concern, not
+layout.)
+
+**Render-gate: PENDING (your anchor).** Steps in `docs/VISUAL.md` V2 render-gate,
+plus for this layout specifically: rebuild `tab2pbi build-pbip`, open
+`data/pbip/Superstore.pbip`, and confirm the page now looks **clean** — visuals
+sensibly sized, rows roughly matching the dashboard's top-to-bottom /
+left-to-right arrangement, **no giant empty gaps, no overlaps**. Pixel-perfect
+parity is *not* the goal (different layout engines) — "clean and recognizably
+faithful" is.
+
+**V2 next steps (ranked):** (1) **run the layout render-gate**; (2) broader mark
+coverage + cross-table visuals; (3) n>1 workbook corpus; (4) prior-art search,
+then fold both compilers into the paper.
+
+## Demo app (self-service web app)
+
+**What was built** — additive `demo/` web app; the compiler is **untouched**
+(existing **78 tests still pass**, ruff clean). Replaces the old CLI walkthrough
+(`run.sh`/`run.ps1`/`screenshots/` removed; a "CLI alternative" note folded into
+the new `demo/README.md`).
+
+- **Backend** `demo/backend/` (FastAPI, pinned): `POST /api/convert` (validates a
+  `.twbx` = zip w/ `.twb` + `.hyper`, 50 MB cap, runs `build_pbip.run` in an
+  isolated temp dir, returns the combined report + a 30-min download token),
+  `GET /api/download/{token}` (portable zip), `GET /api/health`. Clean JSON
+  errors (no stack traces), CORS for the dev frontend, TTL temp-dir cleanup.
+- **Frontend** `demo/frontend/` (React + Vite + Tailwind, pinned, no runtime
+  CDN): drag-and-drop upload with empty/loading states; a report view (model +
+  visual coverage, emitted-by-type, skipped-by-taxonomy with reasons) carrying
+  the honest labels (coverage %, "NOT render-verified", geocoder caveat); a
+  prominent Download + "How to open" panel; light/dark, responsive.
+
+**Portability decision (the critical one) + limitation.** The compiler writes an
+**absolute** `File.Contents` CSV path in TMDL — a downloaded `.pbip` would open
+empty elsewhere. Fixed in a **demo-side packager** (`packaging.py`, compiler
+untouched): the download **bundles the per-table CSVs** and rewrites partitions
+to `File.Contents(DataFolder & "\table.csv")` using a Power BI **`DataFolder`
+query parameter** (+ `expressions.tmdl`, + a `ref` in `model.tmdl`).
+**Limitation (documented in UI + `demo/README.md`):** the user must set
+`DataFolder` to the extracted `data` folder and Refresh once. If unset, the model
+raises a **clear error** on refresh — it **never silently loads empty**.
+(Rejected: inline base64 embed — silent-empty risk if the deflate format is off;
+local-only absolute path — opens empty for anyone else.)
+
+**What works (verified via `starlette.TestClient`):** upload Superstore → 200
+with the full report (3 tables, 1 measure, 9 visuals, coverage) → download a
+484 KB zip containing `.pbip` + `.SemanticModel` + `.Report` + `data/*.csv` +
+parameterized partitions + `expressions.tmdl`. Frontend `npm run build`
+(tsc + vite) passes. **CI:** added a backend-pytest step + ruff on `demo/backend`
++ a Node job that builds the frontend. Main `pytest` unchanged (still 78).
+
+**Demo-gate: PENDING (your anchor).** Structure-valid ≠ renders. Steps:
+1. `pip install -e . && pip install -r demo/backend/requirements.txt` then
+   `uvicorn demo.backend.app:app --reload --port 8000`.
+2. `cd demo/frontend && npm install && npm run dev` → open <http://localhost:5173>.
+3. Drop `examples/Superstore.twbx`, read the report, click **Download .pbip**.
+4. Unzip, open the `.pbip` in Power BI Desktop, set the `DataFolder` parameter to
+   the extracted `data` folder, **Refresh** — confirm model + visuals load/render.
+5. **Portability proof:** move the extracted folder somewhere else, re-point
+   `DataFolder`, Refresh — confirm it still loads (path isn't hard-coded).
+
+**Decisions I made (unspecified):** `DataFolder` default is an obvious
+placeholder (errors loudly if unset, never silent-empty); download tokens are
+30-min TTL with lazy temp-dir purge; project name derived from the uploaded
+filename (sanitized); backend imports the compiler from `src/` (no install needed
+for local dev, though `pip install -e .` is cleaner).
+
+**Demo next steps (ranked):** (1) **run the demo-gate**; (2) public hosting
+(container the backend + static frontend; note the Hyper API + Power BI Desktop
+constraints); (3) show a small live preview of the emitted page layout; (4) fold
+into the paper as the artifact's front door.
 
 ## Ranked next steps
 

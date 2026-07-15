@@ -1,0 +1,5 @@
+# Demo backend (FastAPI) — pinned. Separate from the compiler's requirements.
+# Install the compiler itself with `pip install -e .` from the repo root first.
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20

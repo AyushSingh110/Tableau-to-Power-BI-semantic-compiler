@@ -143,5 +143,10 @@ reference SemanticModel.
    column charts, the two bubble maps, area/pie/line).
 5. Note **(c) any visual that broke vs the V1 flat-model render** — especially
    anything expecting a date hierarchy (see deltas above).
-6. Record the result in `HANDOFF_REPORT.md`. **Structure-valid ≠ renders** — only
+6. Confirm **(d) the layout looks clean**: visuals sensibly sized, rows roughly
+   matching the dashboard's top-to-bottom / left-to-right arrangement, **no giant
+   empty gaps and no overlaps**. Off-canvas tooltip sheets appear as small tiles
+   in an overflow row at the bottom. Pixel-perfect parity is *not* the goal
+   (different layout engines) — "clean and recognizably faithful" is.
+7. Record the result in `HANDOFF_REPORT.md`. **Structure-valid ≠ renders** — only
    Power BI confirms it.
